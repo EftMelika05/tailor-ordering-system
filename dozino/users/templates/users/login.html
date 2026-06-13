@@ -5,17 +5,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>sign up</title>
+    <title>login</title>
 
     <link rel="shortcut icon" href="Assets/images/All/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="fonts/web/font-face.css">
     <link rel="stylesheet" href="assets/FontAwesome.Pro.7.2.0/css/all.css">
 
-
     <style>
         * {
             box-sizing: border-box;
-            margin: 0;
         }
 
         @font-face {
@@ -28,21 +26,29 @@
             font-style: normal;
         }
 
+
         html,
         body {
             height: 100%;
+            margin: 0;
         }
 
         body {
             font-family: Gandom, Calibri, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 18px;
             background: #f2f2f8;
-            color: #5b5b6a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* justify-content: center;
+            align-items: center; */
+            padding: 0;
+
         }
 
 
         /* Top Bar */
         .topbar {
+            width: 100%;
             height: 72px;
             background: #5A012E;
             display: flex;
@@ -90,36 +96,32 @@
             direction: ltr;
         }
 
-        .page {
-            min-height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 28px 16px;
-        }
+
 
         .auth-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             width: min(1120px, 100%);
+            height: 90%;
             background: #ffffff;
             border-radius: 22px;
             overflow: hidden;
-            box-shadow: #5a012e;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             box-shadow: -2px 0 10px rgba(110, 1, 77, 0.608);
-
         }
 
         .left {
-            padding: 56px 56px;
+            padding: 56px;
             background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 20px;
+            padding-bottom: 50px;
             justify-content: flex-start;
         }
 
@@ -135,100 +137,51 @@
             color: #2b2b3c;
         }
 
-        .title {
-            margin: 0 0 20px;
-            font-size: 32px;
-            letter-spacing: -.4px;
-            color: #2b2b3c;
-            text-align: center;
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, .06);
         }
 
-        .subtitle {
-            margin: 0 0 28px;
-            color: #8a8a9b;
-            font-size: 17px;
+        .tab {
+            flex: 1;
             text-align: center;
+            padding: 10px 0;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
         }
 
-        .form {
+        .tab.active {
+            border: 2px solid #d81b83;
+            border-radius: 5px;
+            color: #d81b83;
+        }
+
+        form {
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
 
-        /* Role group */
-        .role-group {
-            background: #f7f6fb;
-            border: 1px solid rgba(0, 0, 0, .06);
-            border-radius: 16px;
-            padding: 14px 14px 12px;
-            margin-bottom: 6px;
-        }
-
-        .role-label {
-            font-size: 15px;
-            color: #8a8a9b;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .role-options {
-            display: flex;
-            gap: 10px;
-        }
-
-        .role-option {
-            flex: 1;
-            background: #fff;
-            border: 1px solid rgba(0, 0, 0, .06);
-            border-radius: 14px;
-            padding: 12px 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: .2s;
-            user-select: none;
-        }
-
-        .role-option input {
-            accent-color: #b55273;
-        }
-
-        .role-option span {
-            font-weight: 600;
-            color: #3a3a4b;
-        }
-
-        .role-option:has(input:checked) {
-            border-color: rgba(216, 27, 131, .35);
-            box-shadow: 0 8px 22px rgba(216, 27, 131, .12);
-        }
-
         .field {
-            position: relative;
-            background: #f7f6fb;
-            border: 1px solid rgba(0, 0, 0, .06);
-            border-radius: 16px;
-            padding: 12px 14px;
             display: flex;
             align-items: center;
             gap: 10px;
+            background: #f7f6fb;
+            border: 1px solid rgba(0, 0, 0, .06);
+            border-radius: 16px;
+            padding: 12px;
         }
 
         .field input {
             width: 100%;
             border: none;
-            outline: none;
             background: transparent;
+            outline: none;
             font-size: 14px;
             color: #2b2b3c;
-            padding-inline: 2px;
-        }
-
-        .field input::placeholder {
-            color: #9a9ab0;
         }
 
         .field-icon {
@@ -245,18 +198,17 @@
             opacity: .7;
         }
 
-        /* Button */
         .btn {
-            margin-top: 8px;
+            margin-top: 10px;
             background: linear-gradient(90deg, #d81b83 0%, #5a012e 100%);
             color: #fff;
             border: none;
             border-radius: 999px;
             padding: 13px 16px;
             font-weight: 700;
-            font-size: 18px;
             cursor: pointer;
-            transition: .2s;
+            transition: all 0.2s;
+            font-size: 18px;
         }
 
         .btn:hover {
@@ -264,23 +216,23 @@
             transform: translateY(-2px);
         }
 
-        /* Login */
-        .login-link {
+        .link {
             margin: 8px 0 0;
-            font-size: 18px;
+            font-size: 16px;
             color: #8a8a9b;
             text-align: center;
         }
 
-        .login-link a {
-            color: #b55273;
+        .link a {
+            color: #d81b83;
             text-decoration: none;
             font-weight: 700;
         }
 
-        .login-link a:hover {
+        .link a:hover {
             text-decoration: underline;
         }
+
 
         .right {
             position: relative;
@@ -300,26 +252,21 @@
             object-position: center;
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
+        /* ریسپانسیو */
+        @media(max-width: 800px) {
             .auth-card {
                 grid-template-columns: 1fr;
             }
 
             .right {
-                min-height: 320px;
                 display: none;
-            }
-
-            .left {
-                padding: 36px 18px;
             }
         }
     </style>
-
 </head>
 
 <body>
+
     <header class="topbar">
 
         <a class="home-link" href="file:///C:/Users/user/Desktop/123/index.html" aria-label="صفحه اصلی"
@@ -332,72 +279,53 @@
         </a>
         <div class="logo">Dozino</div>
     </header>
-
-
-    <main class="page">
-        <section class="auth-card" aria-label="register form">
-            <!-- Left content -->
-            <div class="left">
-                <header class="brand">
-                    <img src="assets/imgs/logo.jpg" alt="logo" class="logo-mark">
-                    <div class="brand-name">Dozino</div>
-                </header>
-
-                <h1 class="title">به دوزینو خوش اومدی</h1>
-                <p class="subtitle">در یک دقیقه اکانت جدید بساز</p>
-
-                <form class="form" mrthod="POST">
-                    {% csrf_token %}
-                    <!-- Role toggle -->
-                    <div class="role-group">
-                        <div class="role-label">نقش شما در دوزینو</div>
-                        <div class="role-options">
-                            <label class="role-option">
-                                <input type="radio" name="role" value="customer" checked />
-                                <span>مشتری</span>
-                            </label>
-
-                            <label class="role-option">
-                                <input type="radio" name="role" value="tailor" />
-                                <span>خیاط</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="field-icon" aria-hidden="true">👤</label>
-                        <input type="text" name="username" placeholder="Username" required />
-                    </div>
-
-                    <div class="field">
-                        <label class="field-icon" aria-hidden="true">✉️</label>
-                        <input type="email" name="email" placeholder="Email Address" required />
-                    </div>
-
-                    <div class="field">
-                        <label class="field-icon" aria-hidden="true">🔒</label>
-                        <input type="password" name="password1" placeholder="Password" required />
-                    </div>
-                    
-                    <div class="field">
-                        <label class="field-icon" aria-hidden="true">🔒</label>
-                        <input type="password" name="password2" placeholder="Confirm Password" required />
-                    </div>
-
-                    <button class="btn" type="submit">ثبت نام</button>
-
-                    <p class="login-link">
-                        قبلا ثبت نام کردی؟<a href="{% url 'login' %}"> وارد شو </a>
-                    </p>
-                </form>
+    <br>
+    <div class="auth-card">
+        <div class="left">
+            <header class="brand">
+                <img src="assets/imgs/logo.jpg" alt="logo" class="logo-mark">
+                <div class="brand-name">Dozino</div>
+            </header>
+            <div class="tabs">
+                <div class="tab active" data-role="customer">مشتری</div>
+                <div class="tab" data-role="tailor">خیاط</div>
             </div>
 
-            <div class="right">
-                <img src="assets/imgs/sign up.jpg" alt="" class="image">
-            </div>
+            <form mrthod='post' id="loginForm">
+                {% csrf_token %}
+                <div class="field">
+                    <label class="field-icon" aria-hidden="true">✉️</label>
+                    <input type="text" name="username" placeholder="Username" required />
+                </div>
+                <div class="field">
+                    <label class="field-icon" aria-hidden="true">🔒</label>
+                    <input type="password" name="password" placeholder="Password" required />
+                </div>
+                <button type="submit" class="btn">ورود</button>
 
-        </section>
-    </main>
+                <p class="link">
+                    هنوز اکانت نداری؟ <a href="{% url 'register' %}" >ثبت نام کن</a>
+                </p>
+                <p class="link">
+                    پسوردت رو فراموش کردی؟ <a href="{% url 'password_reset' %}">ریست کن</a>
+                </p>
+
+            </form>
+        </div>
+        <div class="right">
+            <img src="assets/imgs/sign up.jpg" alt="image" />
+        </div>
+    </div>
+
+    <script>
+        // تغییر نقش بر اساس کلیک بر روی تب‌ها
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
     <br>
 </body>
 
