@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!doctype html>
+<html lang="fa" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>login</title>
+
+    <link rel="shortcut icon" href="Assets/images/All/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="fonts/web/font-face.css">
+    <link rel="stylesheet" href="assets/FontAwesome.Pro.7.2.0/css/all.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'Gandom';
+            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot');
+            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot?#iefix') format('embedded-opentype'),
+                url('assets/font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
+                url('assets/font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: Gandom, Calibri, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f2f2f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* justify-content: center;
+            align-items: center; */
+            padding: 0;
+
+        }
+
+
+        /* Top Bar */
+        .topbar {
+            width: 100%;
+            height: 72px;
+            background: #5A012E;
+            display: flex;
+            align-items: center;
+            padding: 0 35px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            direction: rtl;
+            text-align: right;
+            border-radius: 0 0 35px 35px;
+        }
+
+        .home-link {
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .home-link:hover {
+            background: rgba(255, 255, 255, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .home-icon {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+
+
+        .logo {
+            font-family: "Playfair Display", serif;
+            font-style: italic;
+            font-size: 34px;
+            color: #fff;
+            line-height: 1;
+            margin-left: 0;
+            margin-right: auto;
+            direction: ltr;
+        }
+
+
+
+        .auth-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: min(1120px, 100%);
+            height: 90%;
+            background: #ffffff;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: -2px 0 10px rgba(110, 1, 77, 0.608);
+        }
+
+        .left {
+            padding: 56px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 50px;
+            justify-content: flex-start;
+        }
+
+        .logo-mark {
+            width: 42px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 24px;
+            color: #2b2b3c;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, .06);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border: 2px solid #d81b83;
+            border-radius: 5px;
+            color: #d81b83;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f7f6fb;
+            border: 1px solid rgba(0, 0, 0, .06);
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .field input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            color: #2b2b3c;
+        }
+
+        .field-icon {
+            width: 26px;
+            text-align: center;
+            opacity: .7;
+        }
+
+        .eye {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: .7;
+        }
+
+        .btn {
+            margin-top: 10px;
+            background: linear-gradient(90deg, #d81b83 0%, #5a012e 100%);
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 13px 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+
+        .btn:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+        }
+
+        .link {
+            margin: 8px 0 0;
+            font-size: 16px;
+            color: #8a8a9b;
+            text-align: center;
+        }
+
+        .link a {
+            color: #d81b83;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+
+        .right {
+            position: relative;
+            min-height: 520px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+        }
+
+        .right img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* ریسپانسیو */
+        @media(max-width: 800px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+            }
+
+            .right {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="topbar">
+
+        <a class="home-link" href="file:///C:/Users/user/Desktop/123/index.html" aria-label="صفحه اصلی"
+            title="صفحه اصلی">
+            <!-- SVG Home Icon -->
+            <svg class="home-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 3.2 3 10.4v10.4c0 .6.4 1 1 1h5.5v-7.2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1V22H20c.6 0 1-.4 1-1V10.4l-9-7.2z" />
+            </svg>
+        </a>
+        <div class="logo">Dozino</div>
+    </header>
+    <br>
+    <div class="auth-card">
+        <div class="left">
+            <header class="brand">
+                <img src="assets/imgs/logo.jpg" alt="logo" class="logo-mark">
+                <div class="brand-name">Dozino</div>
+            </header>
+            <div class="tabs">
+                <div class="tab active" data-role="customer">مشتری</div>
+                <div class="tab" data-role="tailor">خیاط</div>
+            </div>
+
+            <form id="loginForm">
+                <div class="field">
+                    <label class="field-icon" aria-hidden="true">✉️</label>
+                    <input type="text" placeholder="Email" required />
+                </div>
+                <div class="field">
+                    <label class="field-icon" aria-hidden="true">🔒</label>
+                    <input type="password" placeholder="Password" required />
+                </div>
+                <button type="submit" class="btn">ورود</button>
+
+                <p class="link">
+                    هنوز اکانت نداری؟ <a href="register.html">ثبت نام کن</a>
+                </p>
+                <p class="link">
+                    پسوردت رو فراموش کردی؟ <a href="reset.html">ریست کن</a>
+                </p>
+
+            </form>
+        </div>
+        <div class="right">
+            <img src="assets/imgs/sign up.jpg" alt="image" />
+        </div>
+    </div>
+
+    <script>
+        // تغییر نقش بر اساس کلیک بر روی تب‌ها
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+    <br>
+</body>
+
+</html>
+{% endblock content %}

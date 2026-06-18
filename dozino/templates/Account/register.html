@@ -1,0 +1,401 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!doctype html>
+<html lang="fa" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sign up</title>
+
+    <link rel="shortcut icon" href="Assets/images/All/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="fonts/web/font-face.css">
+    <link rel="stylesheet" href="assets/FontAwesome.Pro.7.2.0/css/all.css">
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        @font-face {
+            font-family: 'Gandom';
+            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot');
+            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot?#iefix') format('embedded-opentype'),
+                url('assets/font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
+                url('assets/font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: Gandom, Calibri, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 18px;
+            background: #f2f2f8;
+            color: #5b5b6a;
+        }
+
+
+        /* Top Bar */
+        .topbar {
+            height: 72px;
+            background: #5A012E;
+            display: flex;
+            align-items: center;
+            padding: 0 35px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            direction: rtl;
+            text-align: right;
+            border-radius: 0 0 35px 35px;
+        }
+
+        .home-link {
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .home-link:hover {
+            background: rgba(255, 255, 255, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .home-icon {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+
+
+        .logo {
+            font-family: "Playfair Display", serif;
+            font-style: italic;
+            font-size: 34px;
+            color: #fff;
+            line-height: 1;
+            margin-left: 0;
+            margin-right: auto;
+            direction: ltr;
+        }
+
+        .page {
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 16px;
+        }
+
+        .auth-card {
+            width: min(1120px, 100%);
+            background: #ffffff;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: #5a012e;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            box-shadow: -2px 0 10px rgba(110, 1, 77, 0.608);
+
+        }
+
+        .left {
+            padding: 56px 56px;
+            background: #fff;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: flex-start;
+        }
+
+        .logo-mark {
+            width: 42px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 24px;
+            color: #2b2b3c;
+        }
+
+        .title {
+            margin: 0 0 20px;
+            font-size: 32px;
+            letter-spacing: -.4px;
+            color: #2b2b3c;
+            text-align: center;
+        }
+
+        .subtitle {
+            margin: 0 0 28px;
+            color: #8a8a9b;
+            font-size: 17px;
+            text-align: center;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Role group */
+        .role-group {
+            background: #f7f6fb;
+            border: 1px solid rgba(0, 0, 0, .06);
+            border-radius: 16px;
+            padding: 14px 14px 12px;
+            margin-bottom: 6px;
+        }
+
+        .role-label {
+            font-size: 15px;
+            color: #8a8a9b;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .role-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .role-option {
+            flex: 1;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, .06);
+            border-radius: 14px;
+            padding: 12px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: .2s;
+            user-select: none;
+        }
+
+        .role-option input {
+            accent-color: #b55273;
+        }
+
+        .role-option span {
+            font-weight: 600;
+            color: #3a3a4b;
+        }
+
+        .role-option:has(input:checked) {
+            border-color: rgba(216, 27, 131, .35);
+            box-shadow: 0 8px 22px rgba(216, 27, 131, .12);
+        }
+
+        .field {
+            position: relative;
+            background: #f7f6fb;
+            border: 1px solid rgba(0, 0, 0, .06);
+            border-radius: 16px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .field input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            color: #2b2b3c;
+            padding-inline: 2px;
+        }
+
+        .field input::placeholder {
+            color: #9a9ab0;
+        }
+
+        .field-icon {
+            width: 26px;
+            text-align: center;
+            opacity: .7;
+        }
+
+        .eye {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: .7;
+        }
+
+        /* Button */
+        .btn {
+            margin-top: 8px;
+            background: linear-gradient(90deg, #d81b83 0%, #5a012e 100%);
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 13px 16px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+        }
+
+        /* Login */
+        .login-link {
+            margin: 8px 0 0;
+            font-size: 18px;
+            color: #8a8a9b;
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #b55273;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .right {
+            position: relative;
+            min-height: 520px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+        }
+
+        .right img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+            }
+
+            .right {
+                min-height: 320px;
+                display: none;
+            }
+
+            .left {
+                padding: 36px 18px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <header class="topbar">
+
+        <a class="home-link" href="file:///C:/Users/user/Desktop/123/index.html" aria-label="صفحه اصلی"
+            title="صفحه اصلی">
+            <!-- SVG Home Icon -->
+            <svg class="home-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 3.2 3 10.4v10.4c0 .6.4 1 1 1h5.5v-7.2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1V22H20c.6 0 1-.4 1-1V10.4l-9-7.2z" />
+            </svg>
+        </a>
+        <div class="logo">Dozino</div>
+    </header>
+
+
+    <main class="page">
+        <section class="auth-card" aria-label="register form">
+            <!-- Left content -->
+            <div class="left">
+                <header class="brand">
+                    <img src="assets/imgs/logo.jpg" alt="logo" class="logo-mark">
+                    <div class="brand-name">Dozino</div>
+                </header>
+
+                <h1 class="title">به دوزینو خوش اومدی</h1>
+                <p class="subtitle">در یک دقیقه اکانت جدید بساز</p>
+
+                <form class="form">
+                    <!-- Role toggle -->
+                    <div class="role-group">
+                        <div class="role-label">نقش شما در دوزینو</div>
+                        <div class="role-options">
+                            <label class="role-option">
+                                <input type="radio" name="role" value="customer" checked />
+                                <span>مشتری</span>
+                            </label>
+
+                            <label class="role-option">
+                                <input type="radio" name="role" value="tailor" />
+                                <span>خیاط</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="field-icon" aria-hidden="true">👤</label>
+                        <input type="text" name="username" placeholder="Username" required />
+                    </div>
+
+                    <div class="field">
+                        <label class="field-icon" aria-hidden="true">✉️</label>
+                        <input type="email" name="email" placeholder="Email Address" required />
+                    </div>
+
+                    <div class="field">
+                        <label class="field-icon" aria-hidden="true">🔒</label>
+                        <input type="password" name="password" placeholder="Password" required />
+                    </div>
+
+                    <button class="btn" type="submit">ثبت نام</button>
+
+                    <p class="login-link">
+                        قبلا ثبت نام کردی؟<a href="login.html"> وارد شو </a>
+                    </p>
+                </form>
+            </div>
+
+            <div class="right">
+                <img src="assets/imgs/sign up.jpg" alt="" class="image">
+            </div>
+
+        </section>
+    </main>
+    <br>
+</body>
+
+</html>
+{% endblock content %}
