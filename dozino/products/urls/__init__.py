@@ -1,1 +1,2 @@
 from .product_urls import *
+from .product_urls import urlpatterns
