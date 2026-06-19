@@ -14,7 +14,7 @@ class TimestampMixin(models.Model):
 class CustomProductBase(TimestampMixin):
 
     product = models.OneToOneField(
-        "Product",
+        "products.Product",
         on_delete=models.CASCADE
     )
 
