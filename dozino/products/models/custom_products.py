@@ -37,4 +37,4 @@ class CustomPants(CustomProductBase):
         choices=LEG_TYPES
     )
 
-    has_pocket = models.BooleanField(default=True)
+    has_pocket = models.BooleanField(default=False)
