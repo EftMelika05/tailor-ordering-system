@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-
+import re
 User = get_user_model()
 
 
@@ -12,7 +12,12 @@ def register(request):
 
         role = request.POST.get('role')
         username = request.POST.get('username')
+        
         phone_number = request.POST.get('phone_Number')
+        if not re.match(r'^09\d{9}$', phone_number):
+          messages.error(request,'شماره موبایل معتبر نیست')
+          return redirect('profile')
+        
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
 
@@ -90,18 +95,18 @@ def profile(request):
     if request.method == 'POST':
 
         user = request.user
-
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
+        user.full_name=request.POST.get('full_name')
 
         new_phone = request.POST.get('phone_number')
+        if not re.match(r'^09\d{9}$', new_phone):
+          messages.error(request,'شماره موبایل معتبر نیست')
+          return redirect('profile')
+        
         if User.objects.filter(phone_number=new_phone).exclude(id=user.id).exists():
           messages.error(request,'این شماره قبلاً استفاده شده')
           return redirect('profile')
         
         user.phone_number = new_phone
-
-        user.postal_code = request.POST.get('postal_code')
         user.address = request.POST.get('address')
         
         user.save()
@@ -119,6 +124,9 @@ def resetpass(request):
     if request.method == 'POST':
 
         phone_number = request.POST.get('phone_number')
+        if not re.match(r'^09\d{9}$', phone_number):
+          messages.error(request,'شماره موبایل معتبر نیست')
+          return redirect('profile')
 
         user = User.objects.filter(phone_number=phone_number).first()
 
