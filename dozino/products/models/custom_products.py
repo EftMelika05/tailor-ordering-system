@@ -8,6 +8,7 @@ class CustomTshirt(CustomProductBase):
     COLLAR_TYPES = (
         ("round", "گرد"),
         ("v", "هفت"),
+        ("round-v","دلبری"),
     )
 
     collar_type = models.CharField(

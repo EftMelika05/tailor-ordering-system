@@ -6,6 +6,7 @@ class ReadyProduct(models.Model):
     COLLAR_TYPES = (
         ("round", "گرد"),
         ("v", "هفت"),
+        ("round-v","دلبری"),
     )
 
     SLEEVE_TYPES = (
