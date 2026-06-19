@@ -12,7 +12,7 @@ def register(request):
 
         role = request.POST.get('role')
         username = request.POST.get('username')
-        phone_number = request.POST.get('phoneNumber')
+        phone_number = request.POST.get('phone_Number')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
 
@@ -44,32 +44,36 @@ def register(request):
     return render(request, 'Account/register.html')
 
 
-def login(request):
+def user_login(request):
 
     if request.method == 'POST':
 
-        role = request.POST.get('role')
         username = request.POST.get('username')
         password = request.POST.get('password')
 
         user = auth.authenticate(username=username, password=password )
 
         if user is not None:
-        
-             if user.role == role:
+              
               auth.login(request, user)
-              messages.success(request,'شما وارد سایت شدید' )
-              return redirect('index')
+
+              if user.role == 'customer':
+                 messages.success(request,'شما وارد سایت شدید' )
+                 return redirect('index')
+
+              elif user.role == 'tailor':
+                  messages.success(request,'شما وارد سایت شدید' )
+                  return redirect('tailor_panel')
+              
 
         messages.error( request,'نام کاربری یا رمز عبور اشتباه است' )
-
         return redirect('login')
 
     return render(request, 'Account/login.html')
 
 
 @login_required
-def logout(request):
+def user_logout(request):
 
     if request.method == 'POST':
 
@@ -89,12 +93,17 @@ def profile(request):
 
         user.first_name = request.POST.get('first_name')
         user.last_name = request.POST.get('last_name')
-        user.username = request.POST.get('username')
-        user.email = request.POST.get('email')
-        user.phone_number = request.POST.get('phone_number')
+
+        new_phone = request.POST.get('phone_number')
+        if User.objects.filter(phone_number=new_phone).exclude(id=user.id).exists():
+          messages.error(request,'این شماره قبلاً استفاده شده')
+          return redirect('profile')
+        
+        user.phone_number = new_phone
+
         user.postal_code = request.POST.get('postal_code')
         user.address = request.POST.get('address')
-
+        
         user.save()
 
         messages.success( request,'اطلاعات پروفایل با موفقیت بروزرسانی شد')
