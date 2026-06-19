@@ -349,6 +349,7 @@
                 <p class="subtitle">در یک دقیقه اکانت جدید بساز</p>
 
                 <form class="form">
+                  {% csrf_token %}
                     <!-- Role toggle -->
                     <div class="role-group">
                         <div class="role-label">نقش شما در دوزینو</div>

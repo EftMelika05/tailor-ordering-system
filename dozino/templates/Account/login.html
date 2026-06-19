@@ -294,6 +294,7 @@
             </div>
 
             <form id="loginForm">
+             {% csrf_token %}
                 <div class="field">
                     <label class="field-icon" aria-hidden="true">✉️</label>
                     <input type="text" placeholder="Email" required />
