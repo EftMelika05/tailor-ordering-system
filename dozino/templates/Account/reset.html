@@ -1,6 +1,3 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
 <!doctype html>
 <html lang="fa" dir="ltr">
 
@@ -9,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>reset password</title>
 
-    <link rel="shortcut icon" href="Assets/images/All/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="imag/Dozino_Logo_Transparent.png" type="image/x-icon">
     <link rel="stylesheet" href="fonts/web/font-face.css">
     <link rel="stylesheet" href="assets/FontAwesome.Pro.7.2.0/css/all.css">
 
@@ -48,15 +45,15 @@
         /* Top Bar */
         .topbar {
             width: 100%;
-            height: 72px;
-            background: #5A012E;
+            height: 90px;
+            background: #000000;
             display: flex;
             align-items: center;
             padding: 0 35px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             direction: rtl;
             text-align: right;
-            border-radius: 0 0 35px 35px;
+            border-radius: 0 0 10px 10px;
         }
 
         .home-link {
@@ -80,15 +77,16 @@
         .home-icon {
             width: 24px;
             height: 24px;
-            fill: #fff;
+            fill: #c9a86a;
         }
 
 
         .logo {
-            font-family: "Playfair Display", serif;
-            font-style: italic;
+            font-family: Tahoma, sans-serif !important;
+            /* font-family: "Playfair Display", serif; */
+            /* font-style: italic; */
             font-size: 34px;
-            color: #fff;
+            color: #c9a86a;
             line-height: 1;
             margin-left: 0;
             margin-right: auto;
@@ -102,8 +100,7 @@
             background: #fff;
             border-radius: 22px;
             overflow: hidden;
-            box-shadow: -2px 0 10px rgba(110, 1, 77, 0.608);
-
+            box-shadow: -2px 0 10px rgba(45, 48, 0, 0.4);
         }
 
         .left {
@@ -182,7 +179,7 @@
 
         .btn {
             margin-top: 10px;
-            background: linear-gradient(90deg, #d81b83 0%, #5a012e 100%);
+            background: linear-gradient(90deg, #c9a86a 0%, #22231f 100%);
             color: #fff;
             border: none;
             border-radius: 999px;
@@ -192,11 +189,12 @@
             cursor: pointer;
             transition: all 0.2s;
             font-size: 15px;
+
         }
 
         .btn:hover {
             filter: brightness(1.05);
-            transform: translateY(-2px);
+            transform: translateY(-5px);
         }
 
         .right {
@@ -208,7 +206,96 @@
         .right img {
             max-width: 100%;
             height: auto;
-            border-radius: 16px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .step.hidden {
+            display: none;
+        }
+
+        .hint {
+            text-align: end;
+            font-size: 13px;
+            color: #8a8a98;
+            margin: 2px 0 0;
+        }
+
+        .resend-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #5b5b6a;
+        }
+
+        .resend-link {
+            color: #c9a86a;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .resend-link[disabled],
+        .resend-link.disabled {
+            color: #b9b9c2;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .login-row {
+            margin-top: 22px;
+            text-align: end;
+            font-size: 14px;
+            color: #5b5b6a;
+        }
+
+        .login-row a {
+            color: #c9a86a;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .login-row a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-secondary {
+            margin-top: 0;
+            background: transparent;
+            color: #5b5b6a;
+            border: 1px solid rgba(0, 0, 0, .1);
+            border-radius: 999px;
+            padding: 13px 16px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: #f7f6fb;
+        }
+
+        .alert-box {
+            display: none;
+            text-align: end;
+            font-size: 13px;
+            color: #1f8a4c;
+            background: #eaf7ef;
+            border: 1px solid #cdeedc;
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+
+        .alert-box.show {
+            display: block;
         }
 
         @media(max-width: 800px) {
@@ -228,8 +315,7 @@
 
     <header class="topbar">
 
-        <a class="home-link" href="file:///C:/Users/user/Desktop/123/index.html" aria-label="صفحه اصلی"
-            title="صفحه اصلی">
+        <a class="home-link" href="" aria-label="صفحه اصلی" title="صفحه اصلی">
             <!-- SVG Home Icon -->
             <svg class="home-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -242,34 +328,125 @@
     <div class="auth-card">
         <div class="left">
             <header class="brand">
-                <img src="assets/imgs/logo.jpg" alt="logo" class="logo-mark">
+                <img src="imag/logo.png" alt="logo" class="logo-mark">
                 <div class="brand-name">Dozino</div>
             </header>
             <h2>رمزتو فراموش کردی؟</h2>
-            <p>ایمیل خود را وارد کنید تا لینک بازیابی پسورد برای شما ارسال شود</p>
-            <form id="resetForm">
-                  {% csrf_token %}
+            <p>شمارت خود را وارد کنید تا کد یکبار مصرف برای شما ارسال شود</p>
+
+            <!-- Step 1: Enter phone number -->
+            <form id="phoneForm" class="step" novalidate>
                 <div class="field">
-                    <label class="field-icon" aria-hidden="true">✉️</label>
-                    <input type="email" name="email" placeholder="Email Address" required />
+                    <label class="field-icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></label>
+                    <input type="tel" id="phoneInput" name="phoneInput" placeholder="شماره موبایل" required
+                        autocomplete="tel" inputmode="tel" />
                 </div>
-                <button type="submit" class="btn">ارسال لینک بازیابی</button>
+                <button type="submit" class="btn">ارسال کد</button>
             </form>
+
+            <!-- Step 2: Enter OTP code -->
+            <form id="codeForm" class="step hidden" novalidate>
+                <p class="hint" id="codeHint">کد ارسال شده به شماره خود را وارد کنید</p>
+                <div class="field">
+                    <label class="field-icon" aria-hidden="true"><i class="fas fa-key"></i></label>
+                    <input type="text" id="codeInput" name="codeInput" placeholder="کد یکبار مصرف" required
+                        inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" />
+                </div>
+                <div class="resend-row">
+                    <span id="timerText">ارسال مجدد کد تا <span id="countdown">60</span> ثانیه دیگر</span>
+                    <a href="javascript:void(0)" id="resendLink" class="resend-link disabled">ارسال مجدد</a>
+                </div>
+                <button type="submit" class="btn">تایید کد</button>
+                <button type="button" id="backBtn" class="btn-secondary">ویرایش شماره</button>
+                <div class="alert-box" id="successBox">کد با موفقیت تایید شد.</div>
+            </form>
+
+            <div class="login-row">
+                رمز خود را به خاطر آوردید؟ <a href="login.html">ورود به حساب کاربری</a>
+            </div>
         </div>
         <div class="right">
-            <img src="assets/imgs/sign up.jpg" alt="image" />
+            <img src="imag/home/L-R.png" alt="image" />
         </div>
     </div>
 
     <script>
-        document.getElementById('resetForm').addEventListener('submit', function (e) {
+        const phoneForm = document.getElementById('phoneForm');
+        const codeForm = document.getElementById('codeForm');
+        const phoneInput = document.getElementById('phoneInput');
+        const codeInput = document.getElementById('codeInput');
+        const codeHint = document.getElementById('codeHint');
+        const resendLink = document.getElementById('resendLink');
+        const timerText = document.getElementById('timerText');
+        const countdownEl = document.getElementById('countdown');
+        const backBtn = document.getElementById('backBtn');
+        const successBox = document.getElementById('successBox');
+
+        let timer = null;
+
+        function startCountdown(seconds) {
+            clearInterval(timer);
+            let remaining = seconds;
+            countdownEl.textContent = remaining;
+            timerText.style.display = 'inline';
+            resendLink.classList.add('disabled');
+
+            timer = setInterval(function () {
+                remaining -= 1;
+                countdownEl.textContent = remaining;
+                if (remaining <= 0) {
+                    clearInterval(timer);
+                    timerText.style.display = 'none';
+                    resendLink.classList.remove('disabled');
+                }
+            }, 1000);
+        }
+
+        function sendCode(phone) {
+            // TODO: replace with real API call to send OTP to `phone`
+            codeHint.textContent = 'کد ارسال شده به شماره ' + phone + ' را وارد کنید';
+            phoneForm.classList.add('hidden');
+            codeForm.classList.remove('hidden');
+            codeInput.value = '';
+            successBox.classList.remove('show');
+            startCountdown(60);
+            codeInput.focus();
+        }
+
+        phoneForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            alert('لینک بازیابی رمز به ایمیل شما ارسال شد.');
-            // اینجا می‌تونید درخواست به سرور ارسال کنید
+            const phone = phoneInput.value.trim();
+            if (!phone) {
+                phoneInput.focus();
+                return;
+            }
+            sendCode(phone);
+        });
+
+        codeForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const code = codeInput.value.trim();
+            if (!code) {
+                codeInput.focus();
+                return;
+            }
+            // TODO: replace with real API call to verify OTP
+            successBox.classList.add('show');
+        });
+
+        resendLink.addEventListener('click', function () {
+            if (resendLink.classList.contains('disabled')) return;
+            sendCode(phoneInput.value.trim());
+        });
+
+        backBtn.addEventListener('click', function () {
+            clearInterval(timer);
+            codeForm.classList.add('hidden');
+            phoneForm.classList.remove('hidden');
+            phoneInput.focus();
         });
     </script>
     <br>
 </body>
 
 </html>
-{% endblock content %}

@@ -10,13 +10,12 @@ def register(request):
 
     if request.method == 'POST':
 
-        role = request.POST.get('role')
         username = request.POST.get('username')
         
         phone_number = request.POST.get('phone_Number')
         if not re.match(r'^09\d{9}$', phone_number):
           messages.error(request,'شماره موبایل معتبر نیست')
-          return redirect('profile')
+          return redirect('register')
         
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
@@ -36,14 +35,12 @@ def register(request):
         user = User.objects.create_user(
             username=username,
             password=password,
-            role=role,
             phone_number=phone_number
         )
 
         auth.login(request, user)
 
         messages.success(request,'ثبت نام با موفقیت انجام شد' )
-
         return redirect('index')
 
     return render(request, 'Account/register.html')
@@ -60,15 +57,11 @@ def user_login(request):
 
         if user is not None:
               
-              auth.login(request, user)
+             auth.login(request, user)
+             ##C>if user is tailor
+             messages.success(request,'شما با موفقیت وارد سایت شدید' )
+             return redirect('index')
 
-              if user.role == 'customer':
-                 messages.success(request,'شما وارد سایت شدید' )
-                 return redirect('index')
-
-              elif user.role == 'tailor':
-                  messages.success(request,'شما وارد سایت شدید' )
-                  return redirect('tailor_panel')
               
 
         messages.error( request,'نام کاربری یا رمز عبور اشتباه است' )
@@ -77,7 +70,7 @@ def user_login(request):
     return render(request, 'Account/login.html')
 
 
-@login_required
+@login_required #just users  that logged in already 
 def user_logout(request):
 
     if request.method == 'POST':
@@ -101,32 +94,32 @@ def profile(request):
         if not re.match(r'^09\d{9}$', new_phone):
           messages.error(request,'شماره موبایل معتبر نیست')
           return redirect('profile')
-        
+        ###C>check below part
         if User.objects.filter(phone_number=new_phone).exclude(id=user.id).exists():
           messages.error(request,'این شماره قبلاً استفاده شده')
           return redirect('profile')
         
         user.phone_number = new_phone
         user.address = request.POST.get('address')
-        
+        user.postal_code=request.POST.get('postal_code')
+        user.gender=request.POST.get('gender')
+          ###C>check email &  calender part
         user.save()
 
         messages.success( request,'اطلاعات پروفایل با موفقیت بروزرسانی شد')
-
         return redirect('profile')
 
-    return render(request,'Account/profile.html',
-                  { 'user': request.user})
+    return render(request,'Account/profile.html',{ 'user': request.user})
 
 
-def resetpass(request):
+def resetpassword(request):
 
     if request.method == 'POST':
 
         phone_number = request.POST.get('phone_number')
         if not re.match(r'^09\d{9}$', phone_number):
           messages.error(request,'شماره موبایل معتبر نیست')
-          return redirect('profile')
+          return redirect('resetpassword')
 
         user = User.objects.filter(phone_number=phone_number).first()
 
@@ -134,16 +127,13 @@ def resetpass(request):
 
             request.session['reset_user_id'] = user.id
 
-            return redirect('resetpassword')
+            return redirect('')#check url
+            ##verify
 
         messages.error(request,'کاربری با این شماره یافت نشد')
-
         return redirect('resetpassword')
 
-    return render(
-        request,
-        'Account/reset.html'
-    )
+    return render(request, 'Account/reset.html')
 
 
 def new_password(request):
@@ -156,14 +146,13 @@ def new_password(request):
         if password != password2:
 
             messages.error(request,'رمزها مطابقت ندارند')
-
             return redirect('new_password')
 
         user_id = request.session.get('reset_user_id')
 
         if not user_id:
 
-            return redirect('resetpass')
+            return redirect('new_password')
 
         user = User.objects.get(id=user_id)
 
@@ -173,10 +162,6 @@ def new_password(request):
         del request.session['reset_user_id']
 
         messages.success(request,'رمز عبور با موفقیت تغییر کرد')
-
         return redirect('login')
 
-    return render(
-        request,
-        'Account/new_password.html'
-    )
+    return render(request,'Account/new_password.html')
