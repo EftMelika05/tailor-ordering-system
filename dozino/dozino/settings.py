@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'Account.apps.AccountConfig',
     #'pages.apps.PagesConfig',
+    'orders',
     'products',
     'rest_framework',
     'cart',
