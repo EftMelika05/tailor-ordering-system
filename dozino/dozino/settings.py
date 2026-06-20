@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'Account.apps.AccountConfig',
+    #'pages.apps.PagesConfig',
     'products',
     'rest_framework',
     'cart',
@@ -80,6 +82,7 @@ WSGI_APPLICATION = 'dozino.wsgi.application'
 
 DATABASES = {
     'default': {
+       
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Dozino_DB',
         'USER' : 'postgres',
@@ -124,5 +127,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT=os.path.join(BASE_DIR,'static')
+STATICFILES_DIR=[
+    os.path.join(BASE_DIR,'dozino/static')
+]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTH_USER_MODEL='Account.user'

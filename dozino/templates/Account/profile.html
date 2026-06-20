@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پروفایل | Dozino</title>
+    <link rel="shortcut icon" href="imag/Dozino_Logo_Transparent.png" type="image/x-icon">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" href="css/Profile.css">
+</head>
+<body>
+
+        <header class="topbar">
+
+        <a class="home-link" href="" aria-label="صفحه اصلی"
+            title="صفحه اصلی">
+            <!-- SVG Home Icon -->
+            <svg class="home-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 3.2 3 10.4v10.4c0 .6.4 1 1 1h5.5v-7.2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1V22H20c.6 0 1-.4 1-1V10.4l-9-7.2z" />
+            </svg>
+        </a>
+        <div class="logo">Dozino</div>
+        
+    </header>
+
+<div class="container">
+
+    <!-- بخش راست -->
+    <div class="right-panel">
+
+        <div class="profile-card">
+
+            <div class="logo-bg">
+                <img src="images/logo.png">
+            </div>
+
+            <div class="profile-image">
+                <img src="images/profile.jpg">
+                <button class="change-image">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+            </div>
+
+            <h2>نگین محمدی</h2>
+
+            <p>عضو خانواده Dozino </p>
+
+        </div>
+
+
+        <div class="quick-access">
+
+            <h3>دسترسی سریع</h3>
+
+            <a href="#" class="item">
+                سفارش‌های من
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+
+            <a href="#" class="item">
+                سبد خرید 
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>   
+
+        </div>
+
+    </div>
+
+
+    <!-- فرم -->
+    <div class="main-box">
+
+        <div class="title">
+            <i class="fa-regular fa-circle-user"></i>
+            <h1>اطلاعات پروفایل</h1>
+        </div>
+
+        <p class="subtitle">
+            اطلاعات خود را مدیریت و به‌روزرسانی کنید.
+        </p>
+
+
+        <form>
+
+            <!-- ردیف اول -->
+            <div class="row">
+
+                <div class="input-box">
+                    <label>
+                        نام و نام خانوادگی
+                        <span>*</span>
+                    </label>
+                    <input type="text">
+                </div>
+
+                <div class="input-box">
+                    <label>
+                        نام کاربری (غیرقابل تغییر)
+                    </label>
+                    <input type="text" readonly>
+                </div>
+
+            </div>
+
+
+            <!-- ردیف دوم -->
+            <div class="row">
+
+                <div class="input-box">
+                    <label>
+                        ایمیل
+                        <span>*</span>
+                    </label>
+                    <input type="email">
+                </div>
+
+                <div class="input-box">
+                    <label>
+                        شماره تماس
+                        <span>*</span>
+                    </label>
+                    <input type="text">
+                </div>
+
+            </div>
+
+
+            <!-- ردیف سوم -->
+            <div class="row">
+
+                <div class="input-box">
+                    <label>
+                        تاریخ تولد
+                    </label>
+                    <input type="date">
+                </div>
+
+                <div class="input-box">
+                    <label>
+                        جنسیت
+                        <span>*</span>
+                    </label>
+
+                    <select>
+                        <option>زن</option>
+                        <option>مرد</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <!-- ردیف چهارم -->
+            <div class="row">
+
+                <div class="input-box zip">
+                    <label>
+                        کد پستی
+                    </label>
+
+                    <input type="text">
+                </div>
+
+
+                <div class="input-box address">
+                    <label>
+                        آدرس
+                        <span>*</span>
+                    </label>
+
+                    <input type="text">
+                </div>
+
+            </div>
+
+
+            <div class="required">
+                <span>*</span>
+                فیلدهای اجباری
+            </div>
+
+
+            <div class="buttons">
+
+                <button class="save-btn">
+                    <i class="fa-solid fa-check"></i>
+                    ذخیره تغییرات
+                </button>
+
+                <button class="cancel-btn">
+                    انصراف
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
