@@ -1,0 +1,218 @@
+@font-face {
+  font-family: 'Gandom';
+  src: url('../font/gandom-font-v0.5.1/Gandom.eot');
+  src: url('../font/gandom-font-v0.5.1/Gandom.eot?#iefix') format('embedded-opentype'),
+    url('../font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
+    url('../font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+:root {
+  --primary: #5A012E;
+  --bg: #FCF9F7;
+  --border: #e5e5e5;
+  --danger: #e74c3c;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  /* font-family: Gandom; */
+  font-family:Vazirmatn,sans-serif;
+  background-color: #ffffff;
+
+}
+
+
+/* Top Bar */
+.topbar {
+  height: 90px;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  padding: 0 35px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  direction: rtl;
+  text-align: right;
+  border-radius: 0 0 10px 10px;
+}
+
+.home-link {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.home-link:hover {
+  background: rgba(255, 255, 255, 0.55);
+  transform: translateY(-1px);
+}
+
+.home-icon {
+  width: 24px;
+  height: 24px;
+  fill: #c9a86a;
+}
+
+
+.logo {
+  font-family: Tahoma, sans-serif !important;
+  /* font-family: "Playfair Display", serif; */
+  /* font-style: italic; */
+  font-size: 34px;
+  color: #c9a86a;
+  line-height: 1;
+  margin-left: 0;
+  margin-right: auto;
+  direction: ltr;
+}
+
+/* layout */
+
+.wrapper {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 50px;
+  background-color: #fff;
+  box-shadow: -2px 0 10px rgba(86, 84, 62, 0.47);
+  border-radius: 25px 25px 25px 25px;
+}
+
+.cart-container {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+}
+
+/* table */
+
+.cart-table {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 120px 1.6fr 85px 170px 150px 30px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 10px;
+  font-size: 14px;
+  color: #3a3622;
+
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 80px 1.6fr 120px 150px 150px 40px;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  transition: .3s;
+}
+
+.cart-title {
+  font-family: inherit !important;
+  color: #c9a86a;
+}
+
+.product-img {
+  width: 65px;
+  height: 65px;
+  background:#c9a86a;
+  border-radius: 10px;
+}
+
+/* counter */
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #000000;
+}
+
+.counter button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--primary);
+}
+
+/* trash */
+
+.delete-btn {
+  border: none;
+  background: none;
+  color: #999;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.delete-btn svg {
+  width: 22px;
+}
+
+.delete-btn:hover {
+  color: var(--danger);
+  transform: scale(1.1);
+}
+
+
+.summary-column {
+  background-color: #ffffff;
+  box-shadow: -2px 0 10px rgba(91, 99, 37, 0.186);
+  border-radius: 25px 25px 25px 25px;
+  padding: 25px;
+  margin: 110px 0 15px auto;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  color: #000000;
+  font-family: inherit;
+}
+
+.total-price-box {
+  background: #ffffff;
+  border: 1px solid #c9a86a;
+  padding: 18px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  color: #000000;
+  font-family: inherit;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(90deg, #c9a86a 0%, #22231f 100%);
+  color: #ffffff;
+  font-size: 17px;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  transition: all 0.2s ease;
+}
+
+.checkout-btn:hover {
+  /* background: linear-gradient(90deg, #6f68014f 0%, hsla(60, 30%, 86%, 0.136) 100%); */
+  transform: translateY(-5px);
+  box-shadow: 0 10px 22px rgba(102, 97, 0, 0.22);
+}

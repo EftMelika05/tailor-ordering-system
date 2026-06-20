@@ -1,21 +1,22 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پروفایل | Dozino</title>
-    <link rel="shortcut icon" href="imag/Dozino_Logo_Transparent.png" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
 
-    <!-- Font Awesome -->
+    <!-- Font Awesome blow hrf -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <link rel="stylesheet" href="css/Profile.css">
+    <link rel="stylesheet" href="{% static 'css/Profile.css' %}">
 </head>
 <body>
 
         <header class="topbar">
-
+       <!-- comment href home -->
         <a class="home-link" href="" aria-label="صفحه اصلی"
             title="صفحه اصلی">
             <!-- SVG Home Icon -->
@@ -36,11 +37,11 @@
         <div class="profile-card">
 
             <div class="logo-bg">
-                <img src="images/logo.png">
+                <img src="{%static 'images/logo.png' %}">
             </div>
 
             <div class="profile-image">
-                <img src="images/profile.jpg">
+                <img src="{% static 'images/profile.jpg' %}">
                 <button class="change-image">
                     <i class="fa-solid fa-camera"></i>
                 </button>
@@ -84,9 +85,13 @@
             اطلاعات خود را مدیریت و به‌روزرسانی کنید.
         </p>
 
-
-        <form>
-
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+        <form method="POST" >
+            {% csrf_token %}
             <!-- ردیف اول -->
             <div class="row">
 
@@ -95,14 +100,15 @@
                         نام و نام خانوادگی
                         <span>*</span>
                     </label>
-                    <input type="text">
+                    <input type="text" name="full_name">
                 </div>
 
                 <div class="input-box">
                     <label>
                         نام کاربری (غیرقابل تغییر)
                     </label>
-                    <input type="text" readonly>
+                    <input type="text" name="username"
+                     value="{{user.username}}" readonly>
                 </div>
 
             </div>
@@ -124,7 +130,8 @@
                         شماره تماس
                         <span>*</span>
                     </label>
-                    <input type="text">
+                    <input type="text" name="phone_number" 
+                    value="{{user.phone_number}}">
                 </div>
 
             </div>
@@ -146,9 +153,14 @@
                         <span>*</span>
                     </label>
 
-                    <select>
-                        <option>زن</option>
-                        <option>مرد</option>
+                    <select name="gender">
+                        <option value="woman">
+                            زن
+                        </option>
+
+                        <option value="man">
+                            مرد
+                        </option>
                     </select>
                 </div>
 
@@ -163,7 +175,7 @@
                         کد پستی
                     </label>
 
-                    <input type="text">
+                    <input type="text" name="postal_code">
                 </div>
 
 
@@ -173,7 +185,7 @@
                         <span>*</span>
                     </label>
 
-                    <input type="text">
+                    <input type="text" name="address">
                 </div>
 
             </div>
@@ -187,7 +199,7 @@
 
             <div class="buttons">
 
-                <button class="save-btn">
+                <button class="save-btn" type="submit">
                     <i class="fa-solid fa-check"></i>
                     ذخیره تغییرات
                 </button>

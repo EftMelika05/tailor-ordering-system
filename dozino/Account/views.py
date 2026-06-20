@@ -12,7 +12,7 @@ def register(request):
 
         username = request.POST.get('username')
         
-        phone_number = request.POST.get('phone_Number')
+        phone_number = request.POST.get('phone_number')
         if not re.match(r'^09\d{9}$', phone_number):
           messages.error(request,'شماره موبایل معتبر نیست')
           return redirect('register')
@@ -58,7 +58,7 @@ def user_login(request):
         if user is not None:
               
              auth.login(request, user)
-             ##C>if user is tailor
+             ##C>>if user is tailor
              messages.success(request,'شما با موفقیت وارد سایت شدید' )
              return redirect('index')
 
@@ -70,7 +70,7 @@ def user_login(request):
     return render(request, 'Account/login.html')
 
 
-@login_required #just users  that logged in already 
+#@login_required #just users  that logged in already 
 def user_logout(request):
 
     if request.method == 'POST':
@@ -82,12 +82,13 @@ def user_logout(request):
     return redirect('index')
 
 
-@login_required
+#@login_required
 def profile(request):
 
     if request.method == 'POST':
 
         user = request.user
+        user.username=request.POST.get('username')
         user.full_name=request.POST.get('full_name')
 
         new_phone = request.POST.get('phone_number')
@@ -100,9 +101,9 @@ def profile(request):
           return redirect('profile')
         
         user.phone_number = new_phone
+        user.gender=request.POST.get('gender')
         user.address = request.POST.get('address')
         user.postal_code=request.POST.get('postal_code')
-        user.gender=request.POST.get('gender')
           ###C>check email &  calender part
         user.save()
 
@@ -128,7 +129,7 @@ def resetpassword(request):
             request.session['reset_user_id'] = user.id
 
             return redirect('')#check url
-            ##verify
+            ##verify  codeInput
 
         messages.error(request,'کاربری با این شماره یافت نشد')
         return redirect('resetpassword')

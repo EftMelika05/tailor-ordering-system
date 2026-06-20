@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="fa" dir="ltr">
 
@@ -6,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dozino | login</title>
 
-    <link rel="shortcut icon" href="imag/Dozino_Logo_Transparent.png" type="image/x-icon">
-    <link rel="stylesheet" href="fonts/web/font-face.css">
-    <link rel="stylesheet" href="assets/FontAwesome.Pro.7.2.0/css/all.css">
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'fonts/web/font-face.css' %}">
+    <link rel="stylesheet" href="{$ static 'assets/FontAwesome.Pro.7.2.0/css/all.css' %}">
 
     <style>
         * {
@@ -257,31 +258,39 @@
     <div class="auth-card">
         <div class="left">
             <header class="brand">
-                <img src="imag/logo.png" alt="logo" class="logo-mark">
+                <img src="{% static 'imag/logo.png' %}"  alt="logo" class="logo-mark">
                 <div class="brand-name">Dozino</div>
             </header>
-            <form id="loginForm">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                            
+            <form id="loginForm" method="POST">
+                     {% csrf_token %}
                 <div class="field">
                     <label class="field-icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></label>
-                    <input type="tel" id="phoneInput" name="phoneInput" placeholder="phone number" required />
+                    <input type="tel" id="phoneInput" name="phone_number" placeholder="phone number" required />
                 </div>
                 <div class="field">
                     <label class="field-icon" aria-hidden="true">🔒</label>
-                    <input type="password" placeholder="Password" required />
+                    <input type="password"  name="password" placeholder="Password" required />
                 </div>
                 <button type="submit" class="btn">ورود</button>
 
                 <p class="link">
-                    هنوز اکانت نداری؟ <a href="register.html">ثبت نام کن</a>
+                    هنوز اکانت نداری؟ <a href="{% url 'register' %}">ثبت نام کن</a>
                 </p>
                 <p class="link">
-                    پسوردت رو فراموش کردی؟ <a href="reset.html">با شمارت وارد شو</a>
+                    پسوردت رو فراموش کردی؟ <a href="{% url 'resetpassword' %}">با شمارت وارد شو</a>
                 </p>
 
-            </form>
+            </form >
         </div>
         <div class="right">
-            <img src="imag/home/L-R.png" alt="image" />
+            <img src="{% static 'imag/home/L-R.png' %}" alt="image" />
         </div>
     </div>
 
