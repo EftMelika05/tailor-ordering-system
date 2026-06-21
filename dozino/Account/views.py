@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 import re
 User = get_user_model()
 
+##C>messages 
 
 def register(request):
 
@@ -104,7 +105,10 @@ def profile(request):
         user.gender=request.POST.get('gender')
         user.address = request.POST.get('address')
         user.postal_code=request.POST.get('postal_code')
-          ###C>check email &  calender part
+        if not re.match(r'^\d{10}$', user.postal_code):
+          messages.error(request, 'کد پستی باید 10 رقم باشد')
+        ###C>check email &  calender part
+        ##profle image
         user.save()
 
         messages.success( request,'اطلاعات پروفایل با موفقیت بروزرسانی شد')
@@ -117,19 +121,30 @@ def resetpassword(request):
 
     if request.method == 'POST':
 
-        phone_number = request.POST.get('phone_number')
-        if not re.match(r'^09\d{9}$', phone_number):
-          messages.error(request,'شماره موبایل معتبر نیست')
-          return redirect('resetpassword')
+        step= request.POST.get('step')
+
+        if step=='verify':
+            code=request.POST.get('codeInput')
+            if code=='123456' :
+                return redirect('new_password')
+            
+            messages.error(request,'کد وارد شده صحیح نیست')
+            return render(request , 'Account/reset.html', {'show_form2':True})
+
+        else:
+
+            phone_number = request.POST.get('phone_number')
+            if not re.match(r'^09\d{9}$', phone_number):
+              messages.error(request,'شماره موبایل معتبر نیست')
+              return redirect('resetpassword')
 
         user = User.objects.filter(phone_number=phone_number).first()
 
         if user:
 
             request.session['reset_user_id'] = user.id
+            return render(request , 'Account/reset.html', {'show_form2':True})
 
-            return redirect('')#check url
-            ##verify  codeInput
 
         messages.error(request,'کاربری با این شماره یافت نشد')
         return redirect('resetpassword')
@@ -153,7 +168,7 @@ def new_password(request):
 
         if not user_id:
 
-            return redirect('new_password')
+            return redirect('resetpassword')
 
         user = User.objects.get(id=user_id)
 
