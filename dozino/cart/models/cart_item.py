@@ -116,18 +116,24 @@ class CartItem(models.Model):
 
     pants_length = models.FloatField(
         null=True,
-        blank=True
+        blank=True,
     )
-
+    
     waist = models.FloatField(
         null=True,
-        blank=True
+        blank=True,
+    )
+    
+    hip_width = models.FloatField(
+        null=True,
+        blank=True,
+    )
+    
+    thigh_width = models.FloatField(
+        null=True,
+        blank=True,
     )
 
-    crotch_width = models.FloatField(
-        null=True,
-        blank=True
-    )
 
     LEG_TYPES = (
         ("straight", "راسته"),
