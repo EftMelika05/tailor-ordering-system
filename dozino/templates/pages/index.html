@@ -1,1 +1,357 @@
-<h1> home</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dozino</title>
+
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/new stayle.css' %}">
+
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <header>
+
+        <nav>
+            <ul>
+                
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="product listing.html">محصولات آماده</a></li>
+                <li><a href="#custom-section">دوخت سفارشی</a></li>
+                <li><a href="#about">درباره ما</a></li>
+            </ul>
+        </nav>
+
+        <div class="logo"> DOZINO </div>
+
+        <div class="header-icons">
+            <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="Profile.html"><i class="fa-regular fa-user"></i></a>
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+
+    </header>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                لباس خودت
+                رو طراحی کن
+            </h1>
+
+            <p>
+                انتخاب رنگ، سایز، مدل یقه،
+                آستین و جزئیات اختصاصی
+                <br>
+                همراه با مدل های آماده برای هر سلیقه
+            </p>
+
+            <a href="#custom-section"><button class="btn-primary"> شروع طراحی </button></a>
+
+        </div>
+
+    </section>
+
+    <section class="how-it-works">
+
+        <h2>نحوه کار سایت</h2>
+
+        <div class="steps">
+
+            <div class="step-box">
+                <i class="fa-solid fa-shirt"></i>
+                <h3>انتخاب قالب لباس</h3>
+                <p>مدل مورد نظر را انتخاب کنید.</p>
+            </div>
+
+            <div class="step-box">
+                <i class="fa-solid fa-ruler"></i>
+                <h3>ثبت اندازه</h3>
+                <p>اندازه‌های خود را وارد کنید.</p>
+            </div>
+
+            <div class="step-box">
+                <i class="fa-solid fa-palette"></i>
+                <h3>انتخاب رنگ</h3>
+                <p>رنگ و پارچه دلخواه را انتخاب کنید.</p>
+            </div>
+
+            <div class="step-box">
+                <i class="fa-solid fa-pen-ruler"></i>
+                <h3>طراحی اختصاصی</h3>
+                <p>جزئیات لباس را مشخص کنید.</p>
+            </div>
+
+            <div class="step-box">
+                <i class="fa-solid fa-truck"></i>
+                <h3>دوخت و ارسال</h3>
+                <p>سفارش شما آماده و ارسال می‌شود.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="custom-section" id="custom-section">
+
+        <h2>دوخت سفارشی</h2>
+
+        <div class="custom-grid">
+
+            <div class="custom-card">
+
+                <img src="{% static 'imag/home/تیشرت و تاپودورس.png' %}" alt="تیشرت، بلوز و تاپ">
+
+                <h3>تیشرت، بلوز و تاپ</h3>
+
+                <p>
+                    تیشرت خودت رو طراحی کن
+                </p>
+
+                <a href="T-shirt.html"><button class="btn-secondary">شروع طراحی</button></a>
+
+            </div>
+
+            <div class="custom-card">
+
+                <img src="{% static 'imag/home/شلوار و شلوارک.png' %}" alt="شلوار و شلوارک">
+
+                <h3>شلوار و شلوارک</h3>
+
+                <p>
+                    شلوار اختصاصی خودت رو طراحی کن
+                </p>
+
+                <a href="dors.html"><button class="btn-secondary">شروع طراحی</button></a>
+
+            </div>
+
+            <div class="custom-card">
+
+                <img src="{% static 'imag/home/هودی و سوشرت .png' %}" alt="هودی و سویشرت">
+
+                <h3>هودی و سویشرت</h3>
+
+                <p>
+                    هودی اختصاصی خودت رو طراحی کن
+                </p>
+
+                <a href="pants.html"><button class="btn-secondary">شروع طراحی</button></a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="products">
+
+        <h2>محصولات آماده</h2>
+
+        <p>جدیدترین محصولات آماده دوزینو</p>
+
+        <div class="product-grid">
+
+            <div class="product-card">
+
+                <img src="{% static 'imag/home/1.png' %}" alt="تیشرت طرح دار">
+
+                <h3>تیشرت طرح دار</h3>
+
+                <span>850,000 تومان</span>
+
+                <a href="#"><button class="btn-cart">
+                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
+                    </button></a>
+
+            </div>
+
+            <div class="product-card">
+
+                <img src="{% static 'imag/home/2.png' %}" alt="تیشرت با طرح خرگوشی">
+
+                <h3>تیشرت با طرح خرگوشی</h3>
+
+                <span>850,000 تومان</span>
+
+                <a href="#"><button class="btn-cart">
+                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
+                    </button></a>
+
+            </div>
+
+            <div class="product-card">
+
+                <img src="{% static 'imag/home/3.png' %}" alt="بلوز طرح قاصدک">
+
+                <h3>بلوز طرح قاصدک</h3>
+
+                <span>950,000 تومان</span>
+
+                <a href="#"><button class="btn-cart">
+                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
+                    </button></a>
+
+            </div>
+
+            <div class="product-card">
+
+                <img src="{% static 'imag/home/5.png' %}" alt="دورس مشکی">
+
+                <h3>دورس مشکی</h3>
+
+                <span>1,300,000 تومان</span>
+
+                <a href="#"><button class="btn-cart">
+                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
+                    </button></a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="features">
+
+        <div class="feature">
+            <i class="fa-solid fa-headset"></i>
+            <h3>پشتیبانی 24/7</h3>
+            <p>در هر زمان پاسخگوی شما هستیم</p>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-truck-fast"></i>
+            <h3>ارسال سریع</h3>
+            <p>تحویل در سریع ترین زمان</p>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-award"></i>
+            <h3>ضمانت کیفیت</h3>
+            <p>بهترین متریال و پارچه</p>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h3>پرداخت امن</h3>
+            <p>امنیت کامل اطلاعات</p>
+        </div>
+
+    </section>
+
+    <section class="about" id="about">
+
+        <div class="about-text">
+
+            <h2>درباره دوزینو</h2>
+
+            <p>
+                دوزینو بستری برای طراحی و سفارش لباس های
+                مطابق سلیقه شماست. <br>
+                اینجا علاوه بر دوخت لباس با سایز و مدل دلخواه مدل های آماده
+                نیز قرار گرفته .
+                <br>
+                دوزینو با هدف ترکیب سلیقه شما با دوخت با کیفیت و پارچه ممتاز
+                تاسیس و شروع به کار کرد <br>
+                و ما مفتخریم که شما عضوی از خانواده بزرگ دوزینو هستید .
+            </p>
+
+            <a href="#"><button class="btn-primary">تماس با ما</button></a>
+
+        </div>
+
+        <div class="about-image">
+
+            <img src="{% static 'imag/home/درباره ما.png' %}" alt="درباره دوزینو">
+
+        </div>
+
+    </section>
+
+    <footer>
+
+        <div class="footer-col">
+
+            <h2>DOZINO</h2>
+
+            <p>
+                همراه شما در طراحی و دوخت لباس
+            </p>
+
+            <div class="social">
+
+                <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام">
+                    <i class="fa-brands fa-telegram"></i>
+                </a>
+
+                <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>دسترسی سریع</h3>
+
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="product listing.html">محصولات آماده</a></li>
+                <li><a href="#custom-section">دوخت سفارشی</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خدمات مشتریان</h3>
+
+            <ul>
+                <li><a href="#">راهنمای خرید</a></li>
+                <li><a href="#">پشتیبانی</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خبرنامه</h3>
+
+            <input type="email" placeholder="ایمیل شما">
+
+            <button class="btn-subscribe">
+                <i class="fa-regular fa-envelope"></i> عضویت
+            </button>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>تماس با ما</h3>
+
+            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

@@ -21,4 +21,5 @@ urlpatterns = [
     #path('',include('pages.urls')),
     path('account/',include('Account.urls')),
     path('admin/', admin.site.urls),
+    path('', include('pages.urls'))
 ]

@@ -107,6 +107,7 @@ def profile(request):
         user.postal_code=request.POST.get('postal_code')
         if not re.match(r'^\d{10}$', user.postal_code):
           messages.error(request, 'کد پستی باید 10 رقم باشد')
+          return redirect('profile')
         ##profle image
         user.save()
 
