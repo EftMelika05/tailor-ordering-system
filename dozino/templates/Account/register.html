@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="fa" dir="ltr">
 
@@ -6,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>sign up</title>
 
-    <link rel="shortcut icon" href="imag/Dozino_Logo_Transparent.png" type="image/x-icon">
-    <link rel="stylesheet" href="fonts/web/font-face.css">
-    <link rel="stylesheet" href="assets/FontAwesome.Pro.7.2.0/css/all.css">
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'font/font-face.css' %}">
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 
     <style>
@@ -19,10 +20,10 @@
 
         @font-face {
             font-family: 'Gandom';
-            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot');
-            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot?#iefix') format('embedded-opentype'),
-                url('assets/font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
-                url('assets/font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
+            src: url('font/gandom-font-v0.5.1/Gandom.eot');
+            src: url('font/gandom-font-v0.5.1/Gandom.eot?#iefix') format('embedded-opentype'),
+                url('font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
+                url('font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -288,14 +289,21 @@
             <!-- Left content -->
             <div class="left">
                 <header class="brand">
-                    <img src="imag/logo.png" alt="logo" class="logo-mark">
+                    <img src="{% static 'imag/logo.png' %}" alt="logo" class="logo-mark">
                     <div class="brand-name">Dozino</div>
                 </header>
 
                 <h1 class="title">به دوزینو خوش اومدی</h1>
                 <p class="subtitle">در یک دقیقه اکانت جدید بساز</p>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
 
-                <form class="form">
+
+                <form class="form" method="POST" >
+                        {% csrf_token %}
                     <div class="field">
                         <label class="field-icon" aria-hidden="true"><i class="fas fa-user"></i></label>
                         <input type="text" name="username" placeholder="Username" required />
@@ -303,7 +311,7 @@
 
                     <div class="field">
                         <label class="field-icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></label>
-                        <input type="tel" name="phone" placeholder="phone number" required autocomplete="tel"
+                        <input type="tel" name="phone_number" placeholder="phone number" required autocomplete="tel"
                             inputmode="tel" />
                     </div>
 
@@ -317,8 +325,8 @@
 
                     <div class="field">
                         <label class="field-icon" aria-hidden="true"><i class="fas fa-lock"></i></label>
-                        <input type="password" name="confirmPassword" placeholder="Confirm Password" required />
-                        <button type="button" class="eye" aria-label="نمایش رمز عبور" data-target="confirmPassword">
+                        <input type="password" name="password2" placeholder="Confirm Password" required />
+                        <button type="button" class="eye" aria-label="نمایش رمز عبور" data-target="Password2">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -326,13 +334,13 @@
                     <button class="btn" type="submit">ثبت نام</button>
 
                     <p class="login-link">
-                        قبلا ثبت نام کردی؟<a href="login.html"> وارد شو </a>
+                        قبلا ثبت نام کردی؟<a href="{% url 'login' %}"> وارد شو </a>
                     </p>
                 </form>
             </div>
 
             <div class="right">
-                <img src="imag/home/L-R.png" alt="" class="image">
+                <img src="{% static 'imag/home/L-R.png' %}" alt="" class="image">
             </div>
 
         </section>
@@ -363,7 +371,7 @@
         // confirm password validation
         document.querySelector('.form').addEventListener('submit', function (e) {
             const password = document.querySelector('input[name="password"]');
-            const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+            const confirmPassword = document.querySelector('input[name="password2"]');
 
             if (password.value !== confirmPassword.value) {
                 e.preventDefault();
@@ -374,10 +382,11 @@
             }
         });
 
-        document.querySelector('input[name="confirmPassword"]').addEventListener('input', function () {
+        document.querySelector('input[name="password2"]').addEventListener('input', function () {
             this.setCustomValidity('');
         });
     </script>
+
 </body>
 
 </html>

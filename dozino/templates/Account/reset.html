@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="fa" dir="ltr">
 
@@ -6,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>reset password</title>
 
-    <link rel="shortcut icon" href="imag/Dozino_Logo_Transparent.png" type="image/x-icon">
-    <link rel="stylesheet" href="fonts/web/font-face.css">
-    <link rel="stylesheet" href="assets/FontAwesome.Pro.7.2.0/css/all.css">
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'fonts/web/font-face.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/FontAwesome.Pro.7.2.0/css/all.css' %}">
 
     <style>
         * {
@@ -328,27 +329,37 @@
     <div class="auth-card">
         <div class="left">
             <header class="brand">
-                <img src="imag/logo.png" alt="logo" class="logo-mark">
+                <img src="{% static 'imag/logo.png' %}" alt="logo" class="logo-mark">
                 <div class="brand-name">Dozino</div>
             </header>
             <h2>رمزتو فراموش کردی؟</h2>
             <p>شمارت خود را وارد کنید تا کد یکبار مصرف برای شما ارسال شود</p>
 
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                
             <!-- Step 1: Enter phone number -->
-            <form id="phoneForm" class="step" novalidate>
+            <form id="phoneForm" class="step" novalidate method="POST">
+                {% csrf_token %}
                 <div class="field">
                     <label class="field-icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></label>
-                    <input type="tel" id="phoneInput" name="phoneInput" placeholder="شماره موبایل" required
+                    <input type="tel" id="phoneInput" name="phone_number" placeholder="شماره موبایل" required
                         autocomplete="tel" inputmode="tel" />
                 </div>
                 <button type="submit" class="btn">ارسال کد</button>
             </form>
 
             <!-- Step 2: Enter OTP code -->
-            <form id="codeForm" class="step hidden" novalidate>
+             {% if show_form2 %}
+            <form id="codeForm" class="step" novalidate  method="POST">
+                        {% csrf_token %}
                 <p class="hint" id="codeHint">کد ارسال شده به شماره خود را وارد کنید</p>
                 <div class="field">
                     <label class="field-icon" aria-hidden="true"><i class="fas fa-key"></i></label>
+                    <input type="hidden" name="step" value="verify">
                     <input type="text" id="codeInput" name="codeInput" placeholder="کد یکبار مصرف" required
                         inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" />
                 </div>
@@ -360,13 +371,14 @@
                 <button type="button" id="backBtn" class="btn-secondary">ویرایش شماره</button>
                 <div class="alert-box" id="successBox">کد با موفقیت تایید شد.</div>
             </form>
+            {% endif %}
 
             <div class="login-row">
-                رمز خود را به خاطر آوردید؟ <a href="login.html">ورود به حساب کاربری</a>
+                رمز خود را به خاطر آوردید؟ <a href="{% url 'login' %}">ورود به حساب کاربری</a>
             </div>
         </div>
         <div class="right">
-            <img src="imag/home/L-R.png" alt="image" />
+            <img src="{% static 'imag/home/L-R.png' %}" alt="image" />
         </div>
     </div>
 
@@ -412,27 +424,6 @@
             startCountdown(60);
             codeInput.focus();
         }
-
-        phoneForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const phone = phoneInput.value.trim();
-            if (!phone) {
-                phoneInput.focus();
-                return;
-            }
-            sendCode(phone);
-        });
-
-        codeForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const code = codeInput.value.trim();
-            if (!code) {
-                codeInput.focus();
-                return;
-            }
-            // TODO: replace with real API call to verify OTP
-            successBox.classList.add('show');
-        });
 
         resendLink.addEventListener('click', function () {
             if (resendLink.classList.contains('disabled')) return;

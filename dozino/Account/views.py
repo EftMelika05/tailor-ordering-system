@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 import re
 User = get_user_model()
 
+##C>messages 
 
 def register(request):
 
@@ -12,7 +13,7 @@ def register(request):
 
         username = request.POST.get('username')
         
-        phone_number = request.POST.get('phone_Number')
+        phone_number = request.POST.get('phone_number')
         if not re.match(r'^09\d{9}$', phone_number):
           messages.error(request,'شماره موبایل معتبر نیست')
           return redirect('register')
@@ -58,7 +59,7 @@ def user_login(request):
         if user is not None:
               
              auth.login(request, user)
-             ##C>if user is tailor
+             ##C>>if user is tailor
              messages.success(request,'شما با موفقیت وارد سایت شدید' )
              return redirect('index')
 
@@ -70,7 +71,7 @@ def user_login(request):
     return render(request, 'Account/login.html')
 
 
-@login_required #just users  that logged in already 
+#@login_required #just users  that logged in already 
 def user_logout(request):
 
     if request.method == 'POST':
@@ -82,12 +83,13 @@ def user_logout(request):
     return redirect('index')
 
 
-@login_required
+#@login_required
 def profile(request):
 
     if request.method == 'POST':
 
         user = request.user
+        user.username=request.POST.get('username')
         user.full_name=request.POST.get('full_name')
 
         new_phone = request.POST.get('phone_number')
@@ -100,10 +102,12 @@ def profile(request):
           return redirect('profile')
         
         user.phone_number = new_phone
+        user.gender=request.POST.get('gender')
         user.address = request.POST.get('address')
         user.postal_code=request.POST.get('postal_code')
-        user.gender=request.POST.get('gender')
-          ###C>check email &  calender part
+        if not re.match(r'^\d{10}$', user.postal_code):
+          messages.error(request, 'کد پستی باید 10 رقم باشد')
+        ##profle image
         user.save()
 
         messages.success( request,'اطلاعات پروفایل با موفقیت بروزرسانی شد')
@@ -116,19 +120,30 @@ def resetpassword(request):
 
     if request.method == 'POST':
 
-        phone_number = request.POST.get('phone_number')
-        if not re.match(r'^09\d{9}$', phone_number):
-          messages.error(request,'شماره موبایل معتبر نیست')
-          return redirect('resetpassword')
+        step= request.POST.get('step')
+
+        if step=='verify':
+            code=request.POST.get('codeInput')
+            if code=='123456' :
+                return redirect('new_password')
+            
+            messages.error(request,'کد وارد شده صحیح نیست')
+            return render(request , 'Account/reset.html', {'show_form2':True})
+
+        else:
+
+            phone_number = request.POST.get('phone_number')
+            if not re.match(r'^09\d{9}$', phone_number):
+              messages.error(request,'شماره موبایل معتبر نیست')
+              return redirect('resetpassword')
 
         user = User.objects.filter(phone_number=phone_number).first()
 
         if user:
 
             request.session['reset_user_id'] = user.id
+            return render(request , 'Account/reset.html', {'show_form2':True})
 
-            return redirect('')#check url
-            ##verify
 
         messages.error(request,'کاربری با این شماره یافت نشد')
         return redirect('resetpassword')
@@ -152,7 +167,7 @@ def new_password(request):
 
         if not user_id:
 
-            return redirect('new_password')
+            return redirect('resetpassword')
 
         user = User.objects.get(id=user_id)
 
