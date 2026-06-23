@@ -16,9 +16,6 @@ class User(AbstractUser):
 
   gender_choice=[('woman' , 'زن') , ('man' , 'مرد')]
   gender=models.CharField(max_length=20 , choices=gender_choice)
-
-  role_choices=[('customer','مشتری'),('tailor','خیاط')]
-  role=models.CharField(max_length=20 , choices=role_choices ,default='customer')
-    
+ 
   def __str__(self):
     return self.username
