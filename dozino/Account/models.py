@@ -14,15 +14,10 @@ class User(AbstractUser):
 
   postal_code=models.CharField(max_length=10,blank=True)
 
-  gender_choice=[('woman' , 'زن') , ('man' , 'مرد')]
+  gender_choice=[('woman' ,'زن') , ('man' , 'مرد')]
   gender=models.CharField(max_length=20 , choices=gender_choice)
   #profile image
-
-  '''
-  role_choices=[('customer','مشتری'),('tailor','خیاط')]
-  role=models.CharField(max_length=20 , choices=role_choices)
-
-  '''
+  #testt
     
   def __str__(self):
     return self.username
