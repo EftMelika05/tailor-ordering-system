@@ -75,13 +75,14 @@
                     <span>سبد خرید</span>
                     <i class="fa-solid fa-cart-shopping"></i>
                 </a>
-
+                {% if user.is_authenticated %}
                 <form action="{% url 'logout' %}" method="POST">
                    {% csrf_token %}
                 <button type="submit" class="item logout">
                    خروج
                  </button>
                 </form>
+                {% endif %}
 
             </div>
 
@@ -105,7 +106,7 @@
                     {% endfor %}
                 {% endif %}
 
-            <form id="profileForm" method="POST" >
+            <form id="profileForm" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
                 <!-- ردیف اول -->
                 <div class="row">
@@ -312,7 +313,7 @@
                         }
 
                         // ذخیره در حافظه مرورگر برای سینک شدن با بقیه صفحات
-                        localStorage.setItem('user_profile_avatar', base64Image);
+                        //localStorage.setItem('user_profile_avatar', base64Image);
                     };
                     reader.readAsDataURL(file);
                 }

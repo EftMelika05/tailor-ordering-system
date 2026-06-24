@@ -71,7 +71,7 @@ def user_login(request):
     return render(request, 'Account/login.html')
 
 
-#@login_required #just users  that logged in already 
+@login_required #just users  that logged in already 
 def user_logout(request):
 
     if request.method == 'POST':
@@ -88,6 +88,8 @@ def profile(request):
 
     if request.method == 'POST':
 
+
+        print(request.POST)
         user = request.user
         user.username=request.POST.get('username')
         user.full_name=request.POST.get('full_name')
@@ -99,15 +101,17 @@ def profile(request):
         ###C>check below part
         if User.objects.filter(phone_number=new_phone).exclude(id=user.id).exists():
           messages.error(request,'این شماره قبلاً استفاده شده')
-          return redirect('profile')
-        
+          return redirect('profile')        
         user.phone_number = new_phone
+
         user.gender=request.POST.get('gender')
         user.address = request.POST.get('address')
-        user.postal_code=request.POST.get('postal_code')
-        if not re.match(r'^\d{10}$', user.postal_code):
+        
+        postal_code=request.POST.get('postal_code')
+        if not re.match(r'^\d{10}$', postal_code):
           messages.error(request, 'کد پستی باید 10 رقم باشد')
           return redirect('profile')
+        user.postal_code=postal_code
         ##profle image
         user.save()
 
