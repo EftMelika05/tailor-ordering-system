@@ -1,0 +1,563 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزئیات محصول | دوزینو</title>
+
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/product detail.css' %}">
+
+</head>
+
+<body>
+
+    <!-- start nav -->
+    <header class="topbar">
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{url 'index'}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+            </ul>
+        </nav>
+
+        <div class="logo">DOZINO</div>
+
+        <div class="header-icons">
+            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+
+    </header>
+    <!-- end nav -->
+
+    <section class="product-detail">
+        <div class="container">
+            <!-- بخش اصلی -->
+            <div class="product-main">
+                <!-- سمت راست - گالری -->
+                <div class="product-gallery">
+                    <img src="{% static 'imag/product detail/PicsArt_05-31-03.28.46.jpg' %}" alt="تصویر اصلی تیشرت طرح پروانه"
+                        class="main-image" id="mainImage"
+                         onclick="changeImage(this)">
+                    <div class="thumbnail-list">
+
+                        <img src="{% static 'imag/product detail/PicsArt_05-31-03.28.46.jpg' %}" alt="تصویر اصلی"
+                            data-image="{% static 'imag/product detail/PicsArt_05-31-03.28.46.jpg' %}"
+                            class="thumbnail active"
+                             onclick="changeImage(this)">
+                        
+                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 122_12_04 PM.png' %}" alt="رنگ دوم"
+                            data-image="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 122_12_04 PM.png' %}"
+                            class="thumbnail"
+                            onclick="changeImage(this)">
+
+                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_043 PM.png' %}" alt="رنگ سوم"
+                            data-image="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_043 PM.png' %}"
+                            class="thumbnail"
+                             onclick="changeImage(this)">
+
+                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_204 PM.png' %}" alt="رنگ چهارم"
+                            data-image="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_204 PM.png' %}"
+                            class="thumbnail"
+                             onclick="changeImage(this)">
+                    </div>
+                </div>
+
+                <!-- سمت چپ - اطلاعات محصول -->
+                <div class="product-info-detail">
+                    <h1 class="product-title">تیشرت طرح پروانه</h1>
+
+                    <div class="product-price-section">
+                        <span class="current-price">۴۵۰,۰۰۰ تومان</span>
+                        <span class="old-price">۵۰۰,۰۰۰ تومان</span>
+                        <span class="discount-badge"><i class="fa-solid fa-fire"></i> ۳۰٪ تخفیف ویژه</span>
+                    </div>
+
+                    <!-- انتخاب سایز -->
+                    <div class="size-selector">
+                        <div class="selector-title">
+                            <i class="fas fa-ruler-combined"></i> انتخاب سایز:
+                        </div>
+                        <div class="size-buttons">
+                            <button class="size-btn active-size" data-size="M">M</button>
+                            <button class="size-btn" data-size="L">L</button>
+                            <button class="size-btn" data-size="XL">XL</button>
+                            <button class="size-btn" data-size="XXL">XXL</button>
+                        </div>
+                    </div>
+
+                    <!-- انتخاب رنگ -->
+                    <div class="color-selector">
+                        <div class="selector-title">
+                            <i class="fas fa-palette"></i> انتخاب رنگ:
+                        </div>
+                        <div class="color-buttons">
+                            <div class="color-btn" style="background-color: #1e1e2f;" data-color="مشکی"
+                                onclick="selectColor(this, 'مشکی')"></div>
+                            <div class="color-btn active-color" style="background-color: #ac8888;" data-color="گلبهی"
+                                onclick="selectColor(this, 'گلبهی')"></div>
+                            <div class="color-btn" style="background-color: #a9c4df;" data-color="آبی"
+                                onclick="selectColor(this, 'آبی')"></div>
+                            <div class="color-btn" style="background-color: #abd4bd;" data-color="سبز ملایم"
+                                onclick="selectColor(this, 'سبز ملایم')"></div>
+                        </div>
+                        <div class="selected-color-text" id="selectedColorText">رنگ انتخاب شده: گلبهی</div>
+                    </div>
+
+                    <!-- انتخاب تعداد -->
+                    <div class="quantity-selector">
+                        <div class="quantity-box">
+                            <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                            <input type="text" id="quantityInput" class="quantity-input" value="1" readonly>
+                            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary add-to-cart-detail" onclick="addToCartDetail()">
+                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
+                    </button>
+                    <div id="cartMessage" class="cart-message"></div>
+                </div>
+            </div>
+
+            <!-- تب‌های توضیحات -->
+            <div class="product-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active-tab" data-tab="desc"><i class="fas fa-align-right"></i> توضیحات
+                        محصول</button>
+                    <button class="tab-btn" data-tab="specs"><i class="fas fa-cog"></i> مشخصات فنی</button>
+                    <button class="tab-btn" data-tab="shipping"><i class="fas fa-truck"></i> راهنمای سایز و
+                        ارسال</button>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active-pane" id="desc">
+                        <h3>معرفی تیشرت طرح پروانه</h3>
+                        <p>این لباس با طراحی جذاب و استفاده از پارچه‌های درجه یک ایرانی، انتخابی عالی است. دوخت دقیق و
+                            ظریف، پارچه نرم و طرح زیبا از ویژگی‌های بارز این محصول می‌باشد.</p>
+                        <br>
+                        <p><strong>ویژگی‌های برجسته:</strong></p>
+                        <ul>
+                            <li><i class="fa-solid fa-check"></i> جنس: پارچه تریکو مرغوب با کیفیت بالا</li>
+                            <li><i class="fa-solid fa-check"></i> دارای پارچه نرم و طرح پروانه در جلو</li>
+                            <li><i class="fa-solid fa-check"></i> مناسب برای: خانه، دورهمی‌های دوستانه</li>
+                            <li><i class="fa-solid fa-check"></i> روش شستشو: ماشین لباسشویی</li>
+                            <li><i class="fa-solid fa-check"></i> ارسال سریع</li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane" id="specs">
+                        <ul class="specs-list">
+                            <li><i class="fa-solid fa-tshirt"></i> <strong>جنس پارچه:</strong> تریکو درجه یک</li>
+                            <li><i class="fa-solid fa-circle"></i> <strong>مدل یقه:</strong> گرد</li>
+                            <li><i class="fa-solid fa-arrow-up"></i> <strong>آستین:</strong> کوتاه</li>
+                            <li><i class="fa-solid fa-weight-scale"></i> <strong>ضخامت پارچه:</strong> متوسط</li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-pane" id="shipping">
+                        <h3><i class="fas fa-ruler-combined"></i> جدول سایزبندی</h3>
+
+                        <!-- جدول بچگانه -->
+                        <div id="kidsTable" class="size-table-container" style="display: none;">
+                            <table class="size-table">
+                                <thead>
+                                    <tr>
+                                        <th>کدک</th>
+                                        <th>قد لباس (سانتی‌متر)</th>
+                                        <th>پایین لباس (سانتی‌متر)</th>
+                                        <th>قد آستین (سانتی‌متر)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>۲ سال</td>
+                                        <td>۳۱</td>
+                                        <td>۳۰</td>
+                                        <td>۱۲</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۳ سال</td>
+                                        <td>۳۶.۵</td>
+                                        <td>۳۲</td>
+                                        <td>۱۳</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۴ سال</td>
+                                        <td>۳۷</td>
+                                        <td>۳۲</td>
+                                        <td>۱۳</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۵ سال</td>
+                                        <td>۴۰.۵</td>
+                                        <td>۳۴</td>
+                                        <td>۱۴</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۶ سال</td>
+                                        <td>۴۳</td>
+                                        <td>۳۴</td>
+                                        <td>۱۵</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۷ سال</td>
+                                        <td>۴۶.۵</td>
+                                        <td>۳۸</td>
+                                        <td>۱۶</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۹-۱۰ سال</td>
+                                        <td>۴۹</td>
+                                        <td>۴۰</td>
+                                        <td>۱۷</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۱۱-۱۲ سال</td>
+                                        <td>۵۱.۵</td>
+                                        <td>۴۲</td>
+                                        <td>۱۷</td>
+                                    </tr>
+                                    <tr>
+                                        <td>۱۳-۱۴ سال</td>
+                                        <td>۵۴</td>
+                                        <td>۴۲</td>
+                                        <td>۱۷</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- جدول مردانه -->
+                        <div id="menTable" class="size-table-container" style="display: none;">
+                            <table class="size-table">
+                                <thead>
+                                    <tr>
+                                        <th>سایز</th>
+                                        <th>قد لباس</th>
+                                        <th>پایین لباس</th>
+                                        <th>قد آستین</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>S</td>
+                                        <td>۷۱</td>
+                                        <td>۵۴</td>
+                                        <td>۲۲</td>
+                                    </tr>
+                                    <tr>
+                                        <td>M</td>
+                                        <td>۷۲</td>
+                                        <td>۵۷</td>
+                                        <td>۲۴</td>
+                                    </tr>
+                                    <tr>
+                                        <td>L</td>
+                                        <td>۷۳</td>
+                                        <td>۵۸</td>
+                                        <td>۲۵</td>
+                                    </tr>
+                                    <tr>
+                                        <td>XL</td>
+                                        <td>۷۴</td>
+                                        <td>۶۳</td>
+                                        <td>۲۵</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- جدول زنانه -->
+                        <div id="womenTable" class="size-table-container" style="display: block;">
+                            <table class="size-table">
+                                <thead>
+                                    <tr>
+                                        <th>سایز</th>
+                                        <th>قد لباس</th>
+                                        <th>پایین لباس</th>
+                                        <th>قد آستین</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>M</td>
+                                        <td>۶۱.۵</td>
+                                        <td>۵۲</td>
+                                        <td>۱۸</td>
+                                    </tr>
+                                    <tr>
+                                        <td>L</td>
+                                        <td>۶۶</td>
+                                        <td>۵۶</td>
+                                        <td>۱۸.۵</td>
+                                    </tr>
+                                    <tr>
+                                        <td>XL</td>
+                                        <td>۶۷.۵</td>
+                                        <td>۶۰</td>
+                                        <td>۲۱</td>
+                                    </tr>
+                                    <tr>
+                                        <td>XXL</td>
+                                        <td>۶۹.۵</td>
+                                        <td>۶۵</td>
+                                        <td>۲۳</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <br>
+                        <h3><i class="fas fa-truck"></i> شرایط ارسال</h3>
+                        <p>ارسال رایگان برای خرید‌های بالای ۷۰۰ هزار تومان. زمان تحویل ۲ تا ۴ روز کاری در کرمان و ۳ تا ۷
+                            روز کاری در سایر شهرها.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- محصولات مرتبط -->
+            <div class="related-products">
+                <h2 class="related-title"><i class="fas fa-tag"></i> محصولات مرتبط</h2>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_25_355 PM.png' %}" alt="تیشرت پسرانه"
+                            class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name"><a href="#">تیشرت پسرانه</a></h3>
+                            <div class="product-price-related">۵۰۰,۰۰۰ تومان</div>
+                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
+                                    محصول</button></a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="{% static 'imag/product detail/gemini-2.5-flash-image-preview (nano-banana)_a_Scene_&_Surface__P (8).png' %}"
+                            alt="تیشرت طرح دار" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name"><a href="#">تیشرت طرح دار</a></h3>
+                            <div class="product-price-related">۷۰۰,۰۰۰ تومان</div>
+                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
+                                    محصول</button></a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="{% static 'imag/product detail/PicsArt_05-31-03.26.21.jpg' %}" alt="دورس طرح پریا"
+                            class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name"><a href="#">دورس طرح پریا</a></h3>
+                            <div class="product-price-related">۸۰۰,۰۰۰ تومان</div>
+                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
+                                    محصول</button></a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="{% static 'imag/product detail/gemini-2.5-flash-image-preview (nano-banana)_a_پارچه_لباس_رو_این_قر (1).png' %}"
+                            alt="تیشرت با پارچه طرح دار" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name"><a href="#">تیشرت با پارچه طرح دار</a></h3>
+                            <div class="product-price-related">۹۸۰,۰۰۰ تومان</div>
+                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
+                                    محصول</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer>
+
+        <div class="footer-col">
+
+            <h2>DOZINO</h2>
+
+            <p>
+                همراه شما در طراحی و دوخت لباس
+            </p>
+
+            <div class="social">
+
+                <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام">
+                    <i class="fa-brands fa-telegram"></i>
+                </a>
+
+                <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>دسترسی سریع</h3>
+
+            <ul>
+                <li><a href="{url 'index'}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="#custom-section">دوخت سفارشی</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خدمات مشتریان</h3>
+
+            <ul>
+                <li><a href="#">راهنمای خرید</a></li>
+                <li><a href="#">پشتیبانی</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خبرنامه</h3>
+
+            <input type="email" placeholder="ایمیل شما">
+
+            <button class="btn-subscribe">
+                <i class="fa-regular fa-envelope"></i> عضویت
+            </button>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>تماس با ما</h3>
+
+            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+
+        </div>
+
+    </footer>
+    <!-- end footer -->
+
+    <script>
+        // تغییر عکس اصلی با کلیک روی تصاویر کوچک
+        function changeImage(element) {
+            const imgSrc = element.dataset.image;
+            document.getElementById('mainImage').src = imgSrc;
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // انتخاب سایز
+        const sizeBtns = document.querySelectorAll('.size-btn');
+        sizeBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                sizeBtns.forEach(b => b.classList.remove('active-size'));
+                this.classList.add('active-size');
+            });
+        });
+
+        // انتخاب رنگ
+        function selectColor(element, colorName) {
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('active-color');
+            });
+            element.classList.add('active-color');
+            document.getElementById('selectedColorText').innerHTML = `رنگ انتخاب شده: ${colorName}`;
+        }
+
+        // تغییر تعداد
+        let quantity = 1;
+
+        function changeQuantity(delta) {
+            let newQty = quantity + delta;
+            if (newQty >= 1 && newQty <= 50) {
+                quantity = newQty;
+                document.getElementById('quantityInput').value = quantity;
+            }
+        }
+
+        // افزودن به سبد خرید
+        function addToCartDetail() {
+            let selectedSize = "M";
+            const activeSize = document.querySelector('.size-btn.active-size');
+            if (activeSize) selectedSize = activeSize.getAttribute('data-size');
+
+            let selectedColor = "گلبهی";
+            const activeColor = document.querySelector('.color-btn.active-color');
+            if (activeColor) selectedColor = activeColor.getAttribute('data-color') || "گلبهی";
+
+            const priceText = document.querySelector('.current-price').innerText;
+            const productName = document.querySelector('.product-title').innerText;
+
+            const message = `✅ ${productName}\n📏 سایز: ${selectedSize} | 🎨 رنگ: ${selectedColor} | 🔢 تعداد: ${quantity}\n💰 ${priceText}\nبه سبد خرید اضافه شد.`;
+            const msgDiv = document.getElementById('cartMessage');
+            msgDiv.innerHTML = message;
+            msgDiv.style.background = "#d4edda";
+            msgDiv.style.color = "#155724";
+            msgDiv.style.border = "2px solid #c3e6cb";
+            msgDiv.style.borderRadius = "12px";
+            msgDiv.style.padding = "15px";
+            msgDiv.style.marginTop = "15px";
+            msgDiv.style.fontSize = "16px";
+            msgDiv.style.lineHeight = "2";
+
+            setTimeout(() => {
+                msgDiv.innerHTML = "";
+                msgDiv.style.background = "";
+                msgDiv.style.border = "";
+                msgDiv.style.padding = "";
+            }, 5000);
+        }
+
+        // تب‌ها
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.tab-pane');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const tabId = this.getAttribute('data-tab');
+                tabBtns.forEach(b => b.classList.remove('active-tab'));
+                this.classList.add('active-tab');
+
+                panes.forEach(pane => pane.classList.remove('active-pane'));
+                document.getElementById(tabId).classList.add('active-pane');
+            });
+        });
+
+        // جدول ها
+        const productCategory = 'women';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const kidsTable = document.getElementById('kidsTable');
+            const menTable = document.getElementById('menTable');
+            const womenTable = document.getElementById('womenTable');
+
+            if (kidsTable) kidsTable.style.display = 'none';
+            if (menTable) menTable.style.display = 'none';
+            if (womenTable) womenTable.style.display = 'none';
+
+            if (productCategory === 'kids') {
+                if (kidsTable) kidsTable.style.display = 'block';
+            } else if (productCategory === 'men') {
+                if (menTable) menTable.style.display = 'block';
+            } else {
+                if (womenTable) womenTable.style.display = 'block';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
