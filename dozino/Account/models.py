@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
- #delete role
+
   full_name=models.CharField(max_length=100)
 
   phone_number=models.CharField(max_length=11 , unique=True,
