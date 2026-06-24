@@ -1,0 +1,316 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>سفارش‌های من | Dozino</title>
+    <link
+      rel="shortcut icon"
+      href="{% static 'imag/Dozino_Logo_Transparent.png' %}"
+      type="image/x-icon"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}" />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <nav>
+        <ul>
+          <li><a href="{% url 'index' %}">خانه</a></li>
+          <li><a href="product listing.html">محصولات آماده</a></li>
+          <li><a href="New hero.html#custom-section">دوخت سفارشی</a></li>
+          <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+        </ul>
+      </nav>
+
+      <div class="logo">Dozino</div>
+
+      <div class="header-icons">
+        <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+        <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- ===== پنل سمت راست ===== -->
+      <div class="right-panel">
+        <!-- پروفایل -->
+        <div class="profile-card">
+          <div class="profile-image">
+            <img
+              src="{% static 'imag/home/a0522499-8d30-4690-a254-700a1cb6fa4b.png' %}"
+              alt="تصویر پروفایل کاربر"
+            />
+            <button class="change-image" aria-label="تغییر تصویر پروفایل">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+
+          <h2>نگین محمدی</h2>
+          <p>عضو خانواده Dozino</p>
+        </div>
+
+        <!-- دسترسی سریع -->
+        <div class="quick-access">
+          <h3>دسترسی سریع</h3>
+
+          <a href="{% static 'profile.html' %}" class="item">
+            <span>اطلاعات پروفایل</span>
+            <i class="fa-regular fa-user"></i>
+          </a>
+
+          <a href="{% url 'orders' %}" class="item active">
+            <span>سفارش‌های من</span>
+            <i class="fa-solid fa-bag-shopping"></i>
+          </a>
+
+          <a href="{% url 'cart' %}" class="item">
+            <span>سبد خرید</span>
+            <i class="fa-solid fa-cart-shopping"></i>
+          </a>
+          {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="POST">
+                   {% csrf_token %}
+                  <button type="submit" class="item logout">
+                   خروج
+                  </button>
+                </form>
+          {% endif %}
+          
+        </div>
+      </div>
+
+      <!-- ===== قسمت سفارش ها ===== -->
+      <div class="orders-box">
+        <div class="title">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <h1>سفارش‌های من</h1>
+        </div>
+
+        <p class="subtitle">
+          در این بخش می‌توانید لیست تمام سفارش‌های خود را مشاهده کنید.
+        </p>
+
+        <!-- سفارش اول -->
+        <div class="order-card">
+          <div class="order-labels">
+            <div>تاریخ سفارش:</div>
+            <div>مبلغ سفارش:</div>
+            <div>تعداد محصولات:</div>
+            <div>وضعیت سفارش:</div>
+          </div>
+
+          <div class="order-values">
+            <div class="value-box">
+              <i class="fa-regular fa-calendar"></i>
+              ۱۴۰۵/۰۳/۰۵
+            </div>
+
+            <div class="value-box">
+              <i class="fa-solid fa-tag"></i>
+              ۳۵۰,۰۰۰ تومان
+            </div>
+
+            <div class="value-box">
+              <i class="fa-solid fa-cube"></i>
+              ۳ عدد
+            </div>
+
+            <div class="value-box preparing">
+              <span class="dot yellow"></span>
+              درحال آماده‌سازی
+            </div>
+          </div>
+        </div>
+
+        <!-- سفارش دوم -->
+        <div class="order-card">
+          <div class="order-labels">
+            <div>تاریخ سفارش:</div>
+            <div>مبلغ سفارش:</div>
+            <div>تعداد محصولات:</div>
+            <div>وضعیت سفارش:</div>
+          </div>
+
+          <div class="order-values">
+            <div class="value-box">
+              <i class="fa-regular fa-calendar"></i>
+              ۱۴۰۵/۰۲/۲۲
+            </div>
+
+            <div class="value-box">
+              <i class="fa-solid fa-tag"></i>
+              ۴۰۰,۰۰۰ تومان
+            </div>
+
+            <div class="value-box">
+              <i class="fa-solid fa-cube"></i>
+              ۱ عدد
+            </div>
+
+            <div class="value-box delivered">
+              <span class="dot green"></span>
+              تحویل داده شده
+            </div>
+          </div>
+        </div>
+
+        <!-- سفارش سوم -->
+        <div class="order-card">
+          <div class="order-labels">
+            <div>تاریخ سفارش:</div>
+            <div>مبلغ سفارش:</div>
+            <div>تعداد محصولات:</div>
+            <div>وضعیت سفارش:</div>
+          </div>
+
+          <div class="order-values">
+            <div class="value-box">
+              <i class="fa-regular fa-calendar"></i>
+              ۱۴۰۵/۰۱/۱۵
+            </div>
+
+            <div class="value-box">
+              <i class="fa-solid fa-tag"></i>
+              ۳۵۰,۰۰۰ تومان
+            </div>
+
+            <div class="value-box">
+              <i class="fa-solid fa-cube"></i>
+              ۲ عدد
+            </div>
+
+            <div class="value-box canceled">
+              <span class="dot red"></span>
+              لغو شده
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-col">
+        <h2>DOZINO</h2>
+
+        <p>همراه شما در طراحی و دوخت لباس</p>
+
+        <div class="social">
+          <a
+            href="https://instagram.com/YOURPAGE"
+            target="_blank"
+            aria-label="اینستاگرام"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+
+          <a
+            href="https://t.me/YOURCHANNEL"
+            target="_blank"
+            aria-label="تلگرام"
+          >
+            <i class="fa-brands fa-telegram"></i>
+          </a>
+
+          <a
+            href="https://wa.me/989123456789"
+            target="_blank"
+            aria-label="واتساپ"
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>دسترسی سریع</h3>
+
+        <ul>
+          <li><a href="{% url 'index' %}">خانه</a></li>
+          <li><a href="product listing.html">محصولات آماده</a></li>
+          <li><a href="New hero.html#custom-section">دوخت سفارشی</a></li>
+          <li><a href="#">تماس با ما</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>خدمات مشتریان</h3>
+
+        <ul>
+          <li><a href="#">راهنمای خرید</a></li>
+          <li><a href="#">پشتیبانی</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>خبرنامه</h3>
+
+        <input type="email" placeholder="ایمیل شما" />
+
+        <button class="btn-subscribe">
+          <i class="fa-regular fa-envelope"></i> عضویت
+        </button>
+      </div>
+
+      <div class="footer-col">
+        <h3>تماس با ما</h3>
+
+        <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+        <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+      </div>
+    </footer>
+
+    <script>
+      // orders.js
+      document.addEventListener("DOMContentLoaded", () => {
+        const changeImageBtn = document.querySelector(".change-image");
+        const profileImg = document.querySelector(".profile-image img");
+
+        // ۱. ایجاد یک تگ input مخفی برای آپلود فایل
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.style.display = "none";
+        document.body.appendChild(fileInput);
+
+        // ۲. همگام‌سازی و لود عکس پروفایل از حافظه مشترک
+        const savedImage = localStorage.getItem("user_profile_avatar");
+        if (savedImage && profileImg) {
+          profileImg.src = savedImage;
+        }
+
+        // ۳. باز شدن گالری با کلیک روی دوربین در صفحه سفارشات
+        if (changeImageBtn) {
+          changeImageBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            fileInput.click();
+          });
+        }
+
+        // ۴. ذخیره تغییرات جدید در صورت تعویض عکس از همین صفحه
+        fileInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              const base64Image = event.target.result;
+              if (profileImg) {
+                profileImg.src = base64Image;
+              }
+              localStorage.setItem("user_profile_avatar", base64Image);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
