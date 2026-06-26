@@ -1,0 +1,300 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dozino | سبد خرید</title>
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
+</head>
+
+<body>
+
+    <header class="topbar">
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+            </ul>
+        </nav>
+
+        <div class="logo">Dozino</div>
+
+        <div class="header-icons">
+            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+
+    </header>
+
+    <div class="wrapper">
+        <main class="cart-container">
+            <!-- لیست محصولات -->
+            <section class="items-column">
+                <div class="cart-header">
+                    <div class="title">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <h1>سبد خرید شما</h1>
+                    </div>
+                    <p class="subtitle">محصولات انتخاب شده خود را مشاهده و ویرایش کنید</p>
+                </div>
+
+                <div class="cart-table">
+                    <div class="table-header">
+                        <span>محصول</span>
+                        <span>توضیحات</span>
+                        <span>تعداد</span>
+                        <span>قیمت</span>
+                        <span>عملیات</span>
+                    </div>
+
+                    <div id="cart-items-list">
+                        <!-- item 1 -->
+                        <div class="cart-item" data-price="750000" data-weeks="1">
+                            <div class="product-img">
+                                <img src="{% static 'imag/listing/ChatGPT Image Jun 1, 2026, 12_12_04 PM.png' %}" alt="تیشرت پروانه">
+                            </div>
+                            <div class="product-name">تیشرت پروانه</div>
+                            <div class="counter">
+                                <button class="plus" aria-label="افزایش تعداد">+</button>
+                                <span class="qty-val">1</span>
+                                <button class="minus" aria-label="کاهش تعداد">-</button>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-text">۷۵۰,۰۰۰</span>
+                                تومان
+                            </div>
+                            <button class="delete-btn" aria-label="حذف محصول">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+
+                        <!-- item 2 -->
+                        <div class="cart-item" data-price="1000000" data-weeks="1">
+                            <div class="product-img">
+                                <img src="{% static 'imag/listing/ChatGPT Image Jun 1, 2026, 12_180_10 PM.png' %}" alt="دورس طرح پریا">
+                            </div>
+                            <div class="product-name">دورس طرح پریا</div>
+                            <div class="counter">
+                                <button class="plus" aria-label="افزایش تعداد">+</button>
+                                <span class="qty-val">1</span>
+                                <button class="minus" aria-label="کاهش تعداد">-</button>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-text">۱,۰۰۰,۰۰۰</span>
+                                تومان
+                            </div>
+                            <button class="delete-btn" aria-label="حذف محصول">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+
+                        <!-- item 3 -->
+                        <div class="cart-item" data-price="750000" data-weeks="1">
+                            <div class="product-img">
+                                <img src="{% static 'imag/listing/gpt-image-1.5-high-fidelity_a_Scene_&_Surface__P (15).png' %}"
+                                    alt="تیشرت خرگوشی">
+                            </div>
+                            <div class="product-name">تیشرت خرگوشی</div>
+                            <div class="counter">
+                                <button class="plus" aria-label="افزایش تعداد">+</button>
+                                <span class="qty-val">1</span>
+                                <button class="minus" aria-label="کاهش تعداد">-</button>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-text">۷۵۰,۰۰۰</span>
+                                تومان
+                            </div>
+                            <button class="delete-btn" aria-label="حذف محصول">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- فاکتور -->
+            <aside class="summary-column">
+                <div class="summary-card">
+                    <h3>خلاصه سبد خرید</h3>
+
+                    <div class="summary-row">
+                        <span>تعداد محصولات</span>
+                        <span id="total-qty">۰</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="total-price-box">
+                        <span>مبلغ کل</span>
+                        <span id="final-price">۰ تومان</span>
+                    </div>
+
+                    <p class="checkout-note">در صورت صحت اطلاعات کلیک کنید</p>
+
+                    <button class="btn-primary checkout-btn">
+                        <i class="fa-solid fa-check"></i>
+                        نهایی سازی سفارش
+                    </button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <footer>
+
+        <div class="footer-col">
+
+            <h2>DOZINO</h2>
+
+            <p>
+                همراه شما در طراحی و دوخت لباس
+            </p>
+
+            <div class="social">
+
+                <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام">
+                    <i class="fa-brands fa-telegram"></i>
+                </a>
+
+                <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>دسترسی سریع</h3>
+
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خدمات مشتریان</h3>
+
+            <ul>
+                <li><a href="#">راهنمای خرید</a></li>
+                <li><a href="#">پشتیبانی</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خبرنامه</h3>
+
+            <input type="email" placeholder="ایمیل شما">
+
+            <button class="btn-subscribe">
+                <i class="fa-regular fa-envelope"></i> عضویت
+            </button>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>تماس با ما</h3>
+
+            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+
+        </div>
+
+    </footer>
+
+    <script>
+        const totalQty = document.getElementById("total-qty");
+        const finalPrice = document.getElementById("final-price");
+
+        function updateCart() {
+            let totalCount = 0;
+            let totalPrice = 0;
+
+            document.querySelectorAll(".cart-item").forEach(item => {
+                const qty = parseInt(item.querySelector(".qty-val").textContent);
+                const price = parseInt(item.dataset.price);
+
+                totalCount += qty;
+                totalPrice += qty * price;
+            });
+
+            totalQty.textContent = totalCount;
+            finalPrice.textContent = totalPrice.toLocaleString('fa-IR') + " تومان";
+        }
+
+        // دکمه های + و -
+        document.querySelectorAll(".plus").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const item = this.closest(".cart-item");
+                const qtyVal = item.querySelector(".qty-val");
+                qtyVal.textContent = parseInt(qtyVal.textContent) + 1;
+                updateCart();
+            });
+        });
+
+        document.querySelectorAll(".minus").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const item = this.closest(".cart-item");
+                const qtyVal = item.querySelector(".qty-val");
+                let qty = parseInt(qtyVal.textContent);
+                if (qty > 1) {
+                    qtyVal.textContent = qty - 1;
+                }
+                updateCart();
+            });
+        });
+
+        // حذف محصول با انیمیشن
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const item = this.closest(".cart-item");
+                item.style.transition = "all 0.3s ease";
+                item.style.transform = "translateX(-20px)";
+                item.style.opacity = "0";
+                setTimeout(() => {
+                    item.remove();
+                    updateCart();
+                }, 300);
+            });
+        });
+
+        // دکمه نهایی سازی
+        document.querySelector(".checkout-btn").addEventListener("click", function () {
+            const totalItems = document.querySelectorAll(".cart-item").length;
+            if (totalItems === 0) {
+                alert("سبد خرید شما خالی است!");
+                return;
+            }
+            alert("سفارش شما با موفقیت ثبت شد!");
+        });
+
+        // محاسبه اولیه
+        updateCart();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,611 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOZINO | سفارشی‌سازی تیشرت</title>
+  <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+  <link rel="stylesheet" href="{% static 'css/t-shirt.css' %}">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="topbar">
+
+    <nav>
+      <ul>
+        <li><a href="{% url 'index' %}">خانه</a></li>
+        <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+        <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+        <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+      </ul>
+    </nav>
+
+    <div class="logo">Dozino</div>
+
+    <div class="header-icons">
+      <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+      <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+      <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+    </div>
+
+  </header>
+
+  <main class="layout">
+
+    <!-- ستون چپ: تنظیمات -->
+    <section class="configurator">
+
+      <!-- مرحله ۱: اندازه‌ها -->
+      <div class="step">
+        <h2><span class="step-no">۱</span> اندازه‌ها <small
+            style="font-size:11px;font-weight:400;color:var(--ink-soft)">(سانتی‌متر)</small></h2>
+        <div class="field-row">
+          <div class="field">
+            <label for="lenInput">قد لباس</label>
+            <input type="number" id="lenInput" value="70" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="widInput">عرض لباس</label>
+            <input type="number" id="widInput" value="50" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="sleeveInput">قد آستین</label>
+            <input type="number" id="sleeveInput" value="20" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <hr class="seam">
+
+      <!-- مرحله ۲: رنگ -->
+      <div class="step">
+        <h2><span class="step-no">۲</span> رنگ پارچه</h2>
+
+        <div class="swatches">
+          <span class="swatch"><input type="radio" name="color" id="c1" value="#FFFFFF" data-name="سفید"
+              data-color="white" checked><label for="c1" style="background:#FFFFFF"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c2" value="#111111" data-name="سیاه"
+              data-color="black"><label for="c2" style="background:#111111"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c4" value="#6B6B6B" data-name="طوسی"
+              data-color="gray"><label for="c4" style="background:#6B6B6B"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c8" value="#D4C5A9" data-name="کرمی"
+              data-color="cream"><label for="c8" style="background:#D4C5A9"></label></span>
+        </div>
+      </div>
+
+      <hr class="seam">
+
+      <!-- مرحله ۳: ضخامت پارچه -->
+      <div class="step">
+        <h2><span class="step-no">۳</span> ضخامت پارچه</h2>
+        <p class="step-hint">پارچه ضخیم‌تر هزینه بیشتری داره.</p>
+        <div class="pill-group">
+          <span class="pill"><input type="radio" name="thickness" id="t1" value="thin" data-price="0"
+              data-name="نازک (تابستانی)" checked><label for="t1">نازک — تابستانی</label></span>
+          <span class="pill"><input type="radio" name="thickness" id="t2" value="medium" data-price="30000"
+              data-name="متوسط"><label for="t2">متوسط — سه‌فصل</label></span>
+          <span class="pill"><input type="radio" name="thickness" id="t3" value="thick" data-price="60000"
+              data-name="ضخیم (زمستانی)"><label for="t3">ضخیم — زمستانی</label></span>
+        </div>
+      </div>
+
+      <hr class="seam">
+
+      <!-- مرحله ۴: یقه -->
+      <div class="step">
+        <h2><span class="step-no">۴</span> مدل یقه</h2>
+        <p class="step-hint">قیمت یقه‌ها متفاوت است.</p>
+        <div class="collar-group">
+          <span class="collar-option">
+            <input type="radio" name="collar" id="k1" value="round" data-price="0" data-name="یقه گرد" checked>
+            <label for="k1">
+              <svg viewBox="0 0 80 50" width="56" height="36" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round">
+                <path d="M8 46 C8 18 20 6 40 6 C60 6 72 18 72 46" />
+                <path d="M28 8 Q40 24 52 8" />
+              </svg>
+              <span>یقه گرد</span>
+            </label>
+          </span>
+          <span class="collar-option">
+            <input type="radio" name="collar" id="k2" value="v" data-price="10000" data-name="یقه هفت">
+            <label for="k2">
+              <svg viewBox="0 0 80 50" width="56" height="36" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round">
+                <path d="M8 46 C8 18 20 6 40 6 C60 6 72 18 72 46" />
+                <path d="M28 8 L40 30 L52 8" />
+              </svg>
+              <span>یقه هفت</span>
+            </label>
+          </span>
+          <span class="collar-option">
+            <input type="radio" name="collar" id="k3" value="scoop" data-price="15000" data-name="یقه دلبری">
+            <label for="k3">
+              <svg viewBox="0 0 80 50" width="56" height="36" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round">
+                <path d="M8 46 C8 18 20 6 40 6 C60 6 72 18 72 46" />
+                <path d="M26 8 Q30 18 30 22 Q40 30 50 22 Q50 18 54 8" />
+              </svg>
+              <span>یقه دلبری</span>
+            </label>
+          </span>
+        </div>
+      </div>
+
+      <hr class="seam">
+
+      <!-- مرحله ۵: استیکر -->
+      <div class="step">
+        <h2><span class="step-no">۵</span> استیکر</h2>
+        <p class="step-hint">استیکر انتخابی روی پیش‌نمایش تیشرت نمایش داده می‌شه.</p>
+        <div class="sticker-grid">
+          <span class="sticker-option none-option">
+            <input type="radio" name="sticker" id="s0" value="none" checked>
+            <label for="s0">بدون<br>استیکر</label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s1" value="cat1">
+            <label for="s1">
+              <img src="{% static 'stickers/cat1.svg' %}" alt="استیکر گربه">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s2" value="heart">
+            <label for="s2">
+              <img src="{% static 'stickers/heart.svg' %}" alt="قلب">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s3" value="black-and-white-car">
+            <label for="s3">
+              <img src="{% static 'stickers/black-and-white-car.svg' %}" alt="استیکر ماشین سیاه و سفید">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s4" value="car">
+            <label for="s4">
+              <img src="{% static 'stickers/car.svg' %}" alt="استیکر ماشین">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s5" value="carnation-wedding">
+            <label for="s5">
+              <img src="{% static 'stickers/carnation-wedding.svg' %}" alt="استیکر گل میخک عروسی">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s6" value="cat">
+            <label for="s6">
+              <img src="{% static 'stickers/cat.svg' %}" alt="استیکر گربه">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s7" value="flower1">
+            <label for="s7">
+              <img src="{% static 'stickers/flower1.svg' %}" alt="استیکر گل">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s8" value="flower2">
+            <label for="s8">
+              <img src="{% static 'stickers/flower2.svg' %}" alt="استیکر گل">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s9" value="flower3">
+            <label for="s9">
+              <img src="{% static 'stickers/flower3.svg' %}" alt="استیکر گل">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s10" value="cat2">
+            <label for="s10">
+              <img src="{% static 'stickers/cat2.svg' %}" alt="گربه">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s11" value="cat3">
+            <label for="s11">
+              <img src="{% static 'stickers/cat3.svg' %}" alt="استیکر جادو و کهکشان">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s12" value="landscape">
+            <label for="s12">
+              <img src="{% static 'stickers/landscape.svg' %}" alt="منظره">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s13" value="heart-and-brain">
+            <label for="s13">
+              <img src="{% static 'stickers/heart-and-brain.svg' %}" alt="قلب و مغز">
+            </label>
+          </span>
+          <span class="sticker-option">
+            <input type="radio" name="sticker" id="s16" value="tribal-art-design-dragonfly">
+            <label for="s16">
+              <img src="{% static 'stickers/tribal-art-design-dragonfly.svg' %}" alt="استیکر سنجاقک">
+            </label>
+          </span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ستون راست: پیش‌نمایش + سفارش -->
+    <aside class="preview-panel">
+
+      <div class="preview-box" id="previewBox">
+        <!-- تصویر تیشرت -->
+        <img class="shirt-img" id="shirtImg" src="{% static 'images/white-round.png' %}" alt="تیشرت">
+
+        <!-- استیکر روی عکس -->
+        <img class="sticker-overlay" id="stickerOverlay" src="" alt="استیکر">
+      </div>
+
+      <div class="summary-card">
+        <ul class="summary-list" id="summaryList"></ul>
+
+        <div class="qty-row">
+          <label for="qtyInput">تعداد</label>
+          <div class="stepper">
+            <button type="button" id="qtyMinus" aria-label="کم کردن">−</button>
+            <input type="number" id="qtyInput" value="1" min="1" inputmode="numeric">
+            <button type="button" id="qtyPlus" aria-label="زیاد کردن">+</button>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary" id="calcBtn">
+          <i class="fa-solid fa-calculator"></i> محاسبه قیمت
+        </button>
+
+        <div class="price-box">
+          <div class="price-label">قیمت نهایی</div>
+          <div class="price-value"><span id="priceValue">۰</span><span class="toman">تومان</span></div>
+        </div>
+
+        <button type="button" class="btn-order" id="orderBtn" disabled>
+          <i class="fa-solid fa-bag-shopping"></i> ثبت سفارش
+        </button>
+        <p class="order-hint">برای فعال شدن دکمه، اول قیمت رو محاسبه کن.</p>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- مودال تایید سفارش -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal">
+      <div class="check-circle"><i class="fa-solid fa-check"></i></div>
+      <h3>سفارش ثبت شد!</h3>
+      <p class="order-id" id="orderIdText"></p>
+      <div class="modal-summary" id="modalSummary"></div>
+      <button type="button" class="btn-primary" id="closeModalBtn">متوجه شدم</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+
+    <div class="footer-col">
+
+      <h2>DOZINO</h2>
+
+      <p>
+        همراه شما در طراحی و دوخت لباس
+      </p>
+
+      <div class="social">
+
+        <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام">
+          <i class="fa-brands fa-telegram"></i>
+        </a>
+
+        <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="footer-col">
+
+      <h3>دسترسی سریع</h3>
+
+      <ul>
+        <li><a href="{% url 'index' %}">خانه</a></li>
+        <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+        <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+        <li><a href="#">تماس با ما</a></li>
+      </ul>
+
+    </div>
+
+    <div class="footer-col">
+
+      <h3>خدمات مشتریان</h3>
+
+      <ul>
+        <li><a href="#">راهنمای خرید</a></li>
+        <li><a href="#">پشتیبانی</a></li>
+      </ul>
+
+    </div>
+
+    <div class="footer-col">
+
+      <h3>خبرنامه</h3>
+
+      <input type="email" placeholder="ایمیل شما">
+
+      <button class="btn-subscribe">
+        <i class="fa-regular fa-envelope"></i> عضویت
+      </button>
+
+    </div>
+
+    <div class="footer-col">
+
+      <h3>تماس با ما</h3>
+
+      <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+      <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+
+    </div>
+
+  </footer>
+
+  <script>
+    // ===================================================================
+    // DOZINO | منطق صفحه سفارشی‌سازی
+    // ===================================================================
+
+
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => [...document.querySelectorAll(sel)];
+    const getChecked = (name) => document.querySelector(`input[name="${name}"]:checked`);
+
+    // المان‌ها
+    const lenInput = $('#lenInput');
+    const widInput = $('#widInput');
+    const sleeveInput = $('#sleeveInput');
+    const shirtImg = $('#shirtImg');
+    const stickerOverlay = $('#stickerOverlay');
+    const summaryList = $('#summaryList');
+    const qtyInput = $('#qtyInput');
+    const qtyMinus = $('#qtyMinus');
+    const qtyPlus = $('#qtyPlus');
+    const calcBtn = $('#calcBtn');
+    const priceValue = $('#priceValue');
+    const orderBtn = $('#orderBtn');
+    const orderModal = $('#orderModal');
+    const modalSummary = $('#modalSummary');
+    const orderIdText = $('#orderIdText');
+    const closeModalBtn = $('#closeModalBtn');
+    const toastEl = $('#toast');
+
+    let lastTotal = 0;
+    let priceIsFresh = false;
+
+    // ---------- قیمت پایه (این عدد رو متناسب با قیمت‌گذاری واقعی خودتون تغییر بدید) ----------
+    const BASE_PRICE = 180000;
+
+    // ---------- محاسبه قیمت واحد ----------
+    function calcUnitPrice() {
+      const thicknessEl = getChecked('thickness');
+      const collarEl = getChecked('collar');
+
+      let total = BASE_PRICE;
+      if (thicknessEl) total += parseInt(thicknessEl.dataset.price || '0', 10);
+      if (collarEl) total += parseInt(collarEl.dataset.price || '0', 10);
+
+      return total;
+    }
+
+    // ---------- انیمیشن تغییر عدد قیمت ----------
+    function animatePrice(from, to) {
+      const duration = 450;
+      const start = performance.now();
+
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const current = Math.round(from + (to - from) * progress);
+        priceValue.textContent = current.toLocaleString('fa-IR');
+        if (progress < 1) requestAnimationFrame(step);
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    // ---------- باطل کردن قیمت محاسبه‌شده با تغییر تنظیمات ----------
+    function invalidatePrice() {
+      priceIsFresh = false;
+      orderBtn.disabled = true;
+    }
+
+    // ---------- توست ----------
+    let toastTimer = null;
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+    }
+
+    // ---------- آپدیت پیش‌نمایش ----------
+    function updatePreview() {
+      const colorEl = getChecked("color");
+      const collarEl = getChecked("collar");
+
+      if (!colorEl || !collarEl) return;
+
+      const color = colorEl.dataset.color;
+      const collar = collarEl.value;
+
+      // ساخت مسیر تصویر: images/{color}-{collar}.png
+      const imagePath = `/static/images/${color}-${collar}.png`;
+
+      // تغییر تصویر
+      shirtImg.src = imagePath;
+
+      // آپدیت استیکر
+      const stickerEl = getChecked("sticker");
+      if (!stickerEl) return;
+
+      const sticker = stickerEl.value;
+      if (sticker === "none") {
+        stickerOverlay.classList.remove('show');
+        stickerOverlay.src = '';
+      } else {
+        stickerOverlay.classList.add('show');
+        stickerOverlay.src = `/static/stickers/${sticker}.svg`;
+
+        // هندل کردن خطای لود استیکر
+        stickerOverlay.onerror = function () {
+          console.warn(`استیکر ${sticker}.svg یافت نشد`);
+          stickerOverlay.classList.remove('show');
+        };
+      }
+    }
+
+    // ---------- خلاصه انتخاب‌ها ----------
+    function updateSummary() {
+      const colorEl = getChecked('color');
+      const thicknessEl = getChecked('thickness');
+      const collarEl = getChecked('collar');
+      const stickerEl = getChecked('sticker');
+      const colorName = colorEl ? colorEl.dataset.name : 'رنگ دلخواه';
+      const colorValue = colorEl ? colorEl.value : '#FFFFFF';
+
+      summaryList.innerHTML = `
+        <li><span>اندازه</span><span>${lenInput.value}×${widInput.value} سانتی‌متر | آستین ${sleeveInput.value}</span></li>
+        <li><span>رنگ</span><span><span class="color-dot" style="background:${colorValue}"></span>${colorName}</span></li>
+        <li><span>ضخامت پارچه</span><span>${thicknessEl ? thicknessEl.dataset.name : '-'}</span></li>
+        <li><span>یقه</span><span>${collarEl ? collarEl.dataset.name : '-'}</span></li>
+        <li><span>استیکر</span><span>${stickerEl && stickerEl.value !== 'none' ? 'انتخاب شده' : 'ندارد'}</span></li>
+      `;
+    }
+
+    // ---------- رویداد دکمه محاسبه ----------
+    function handleCalc() {
+      let qty = parseInt(qtyInput.value, 10);
+      if (!qty || qty < 1) {
+        qty = 1;
+        qtyInput.value = 1;
+      }
+
+      const unit = calcUnitPrice();
+      const total = unit * qty;
+
+      animatePrice(lastTotal, total);
+      lastTotal = total;
+      priceIsFresh = true;
+      orderBtn.disabled = false;
+      showToast('قیمت محاسبه شد ✓');
+    }
+
+    // ---------- رویداد ثبت سفارش ----------
+    function handleOrder() {
+      if (!priceIsFresh) return;
+
+      const colorEl = getChecked('color');
+      const thicknessEl = getChecked('thickness');
+      const collarEl = getChecked('collar');
+      const stickerEl = getChecked('sticker');
+
+      const orderId = 'DZ-' + Math.floor(10000 + Math.random() * 90000);
+      orderIdText.textContent = `شماره سفارش: ${orderId}`;
+
+      modalSummary.innerHTML = `
+        <div><span>اندازه</span><span>${lenInput.value}×${widInput.value} | آستین ${sleeveInput.value}</span></div>
+        <div><span>رنگ</span><span>${colorEl ? colorEl.dataset.name : 'دلخواه'}</span></div>
+        <div><span>ضخامت پارچه</span><span>${thicknessEl ? thicknessEl.dataset.name : '-'}</span></div>
+        <div><span>یقه</span><span>${collarEl ? collarEl.dataset.name : '-'}</span></div>
+        <div><span>استیکر</span><span>${stickerEl && stickerEl.value !== 'none' ? 'انتخاب شده' : 'ندارد'}</span></div>
+        <div><span>تعداد</span><span>${qtyInput.value} عدد</span></div>
+        <div><span>مبلغ کل</span><span>${lastTotal.toLocaleString('fa-IR')} تومان</span></div>
+      `;
+
+      orderModal.classList.add('open');
+    }
+
+    // ---------- اتصال رویدادها ----------
+    [lenInput, widInput, sleeveInput].forEach(el =>
+      el.addEventListener('input', () => {
+        updateSummary();
+        invalidatePrice();
+      })
+    );
+
+    $$('input[name="color"]').forEach(r =>
+      r.addEventListener('change', () => {
+        updateSummary();
+        updatePreview();
+        invalidatePrice();
+      })
+    );
+
+    $$('input[name="thickness"]').forEach(r =>
+      r.addEventListener('change', () => {
+        updateSummary();
+        invalidatePrice();
+      })
+    );
+
+    $$('input[name="collar"]').forEach(r =>
+      r.addEventListener('change', () => {
+        updateSummary();
+        updatePreview();
+        invalidatePrice();
+      })
+    );
+
+    $$('input[name="sticker"]').forEach(r =>
+      r.addEventListener('change', () => {
+        updateSummary();
+        updatePreview();
+        invalidatePrice();
+      })
+    );
+
+    qtyMinus.addEventListener('click', () => {
+      qtyInput.value = Math.max(1, (parseInt(qtyInput.value) || 1) - 1);
+      invalidatePrice();
+    });
+    qtyPlus.addEventListener('click', () => {
+      qtyInput.value = (parseInt(qtyInput.value) || 1) + 1;
+      invalidatePrice();
+    });
+    qtyInput.addEventListener('input', invalidatePrice);
+
+    calcBtn.addEventListener('click', handleCalc);
+    orderBtn.addEventListener('click', handleOrder);
+    closeModalBtn.addEventListener('click', () => orderModal.classList.remove('open'));
+    orderModal.addEventListener('click', e => { if (e.target === orderModal) orderModal.classList.remove('open'); });
+
+    $$('[data-soon]').forEach(btn =>
+      btn.addEventListener('click', () => showToast('این بخش به‌زودی اضافه می‌شه'))
+    );
+
+    // اجرای اولیه
+    updatePreview();
+    updateSummary();
+  </script>
+</body>
+
+</html>

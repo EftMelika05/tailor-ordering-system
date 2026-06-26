@@ -1,0 +1,969 @@
+:root {
+    --bg: #F5EFE6;
+    --surface: #FFFFFF;
+    --ink: #111111;
+    --ink-soft: #7A6F65;
+    --line: #E0D8CE;
+    --accent: #111111;
+    --accent-hover: #333333;
+    --gold: #B8924A;
+    --gold-lt: #F0E6D0;
+    --success: #3A6B4A;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --shadow-card: 0 1px 3px rgba(17, 17, 17, 0.05), 0 6px 20px rgba(17, 17, 17, 0.07);
+}
+
+@font-face {
+    font-family: 'Gandom';
+    src: url('../font');
+    src: url('../font?#iefix') format('embedded-opentype'),
+        url('../font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
+        url('../font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: gandom;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+img,
+svg {
+    display: block;
+}
+
+button {
+    font-family: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+input {
+    font-family: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+::selection {
+    background: var(--ink);
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+
+/* ===== HEADER ===== */
+header.topbar {
+    height: 90px;
+    background: #000000;
+    color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 80px;
+    border-radius: 0 0 10px 10px;
+    position: relative;
+}
+
+header.topbar nav {
+    position: absolute;
+    right: 80px;
+}
+
+header.topbar nav ul {
+    display: flex;
+    gap: 35px;
+}
+
+header.topbar nav a {
+    color: rgb(255, 255, 255);
+    transition: .3s;
+}
+
+header.topbar nav a:hover {
+    color: #c9a86a;
+}
+
+header.topbar .logo {
+    font-size: 38px;
+    color: #c9a86a;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+header.topbar .header-icons {
+    position: absolute;
+    left: 80px;
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+}
+
+header.topbar .header-icons a {
+    color: white;
+    transition: .3s;
+}
+
+header.topbar .header-icons a:hover {
+    color: #c9a86a;
+}
+
+
+/* ===================== لایه اصلی ===================== */
+.layout {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 32px 100px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 920px) {
+    .layout {
+        grid-template-columns: 1fr;
+        padding: 24px 20px 80px;
+    }
+}
+
+/* ===================== کارت تنظیمات ===================== */
+.configurator {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 36px;
+    border: 1px solid var(--line);
+    min-width: 0;
+}
+
+.step h2 {
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 5px;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+}
+
+.step .step-hint {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+    padding-inline-start: 36px;
+}
+
+.step-no {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.seam {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 28px 0;
+    position: relative;
+}
+
+.seam::after {
+    content: "\f0c4";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: -10px;
+    inset-inline-start: 50%;
+    transform: translateX(-50%) rotate(-90deg);
+    background: var(--surface);
+    color: var(--line);
+    padding: 0 10px;
+    font-size: 13px;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 860px) {
+    .field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .configurator {
+        padding: 22px;
+    }
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    letter-spacing: .5px;
+}
+
+.field input[type="number"] {
+    width: 100%;
+    padding: 11px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg);
+    transition: border-color .15s;
+}
+
+.field input[type="number"]:focus-visible {
+    outline: none;
+    border-color: var(--ink);
+}
+
+.swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.swatch input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.swatch label {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    display: block;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow .15s, transform .12s;
+}
+
+.swatch label:hover {
+    transform: scale(1.1);
+}
+
+.swatch input:checked+label {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink);
+}
+
+.swatch input:checked+label::after {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #1B1D22;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, .9));
+}
+
+.pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pill input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.pill label {
+    display: inline-block;
+    padding: 9px 18px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.pill input:checked+label {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: #fff;
+}
+
+/* ===== بخش کلاهدار / بدون کلاه ===== */
+.hood-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.hood-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.hood-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 16px 8px 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+    color: var(--ink-soft);
+}
+
+.hood-option label span {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.hood-option input:checked+label {
+    border-color: var(--ink);
+    background: var(--gold-lt);
+    color: var(--ink);
+}
+
+/* ===== بخش زیپ‌دار / بدون زیپ ===== */
+.zip-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.zip-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.zip-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 16px 8px 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+    color: var(--ink-soft);
+}
+
+.zip-option label span {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.zip-option input:checked+label {
+    border-color: var(--ink);
+    background: var(--gold-lt);
+    color: var(--ink);
+}
+
+.sticker-grid {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 10px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+}
+
+.sticker-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.sticker-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sticker-grid::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 999px;
+}
+
+.sticker-option {
+    flex: 0 0 auto;
+    width: 80px;
+    scroll-snap-align: start;
+}
+
+.sticker-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.sticker-option label {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--ink-soft);
+    transition: all .15s;
+    padding: 8px;
+}
+
+.sticker-option.none-option label {
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.sticker-option input:checked+label {
+    border-color: var(--gold);
+    background: var(--gold-lt);
+}
+
+.sticker-option img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 55px;
+    max-height: 55px;
+}
+
+.sticker-option input:checked+label img {
+    filter: brightness(0) invert(1);
+}
+
+/* ===================== پنل پیش‌نمایش ===================== */
+.preview-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media (min-width: 921px) {
+    .preview-panel {
+        position: sticky;
+        top: 90px;
+    }
+}
+
+.preview-box {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background: #fbfbfb92;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-card);
+}
+
+.hoodie-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.sticker-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32%;
+    height: 32%;
+    display: none;
+    pointer-events: none;
+    z-index: 10;
+    object-fit: contain;
+}
+
+.sticker-overlay.show {
+    display: block;
+}
+
+/* ===================== کارت خلاصه ===================== */
+.summary-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--line);
+    padding: 26px;
+}
+
+.summary-list {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.summary-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+}
+
+.summary-list li span:first-child {
+    color: var(--ink-soft);
+}
+
+.summary-list li span:last-child {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.color-dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1.5px solid var(--line);
+}
+
+.qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.qty-row>label {
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.stepper button {
+    width: 34px;
+    height: 34px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink-soft);
+}
+
+.stepper button:hover {
+    color: var(--ink);
+}
+
+.stepper input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    background: var(--ink);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background .15s, transform .1s;
+    letter-spacing: .3px;
+}
+
+.btn-primary:hover {
+    background: #333;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.price-box {
+    margin: 16px 0;
+    text-align: center;
+    background: var(--gold-lt);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    border: 1px solid #E8D5B0;
+}
+
+.price-box .price-label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+.price-box .price-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--ink);
+}
+
+.price-box .price-value .toman {
+    font-size: 13px;
+    font-weight: 600;
+    margin-inline-start: 5px;
+    color: var(--ink-soft);
+}
+
+.btn-order {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    background: var(--gold);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background .15s, opacity .15s, transform .1s;
+    letter-spacing: .3px;
+}
+
+.btn-order:hover {
+    background: #9A7A3A;
+}
+
+.btn-order:active {
+    transform: scale(0.98);
+}
+
+.btn-order[disabled] {
+    background: var(--line);
+    color: var(--ink-soft);
+    cursor: not-allowed;
+}
+
+.order-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+}
+
+/* ===================== مودال ===================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, .22);
+}
+
+.modal .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gold-lt);
+    color: var(--gold);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.modal h3 {
+    margin: 0 0 6px;
+    font-size: 17px;
+}
+
+.modal p.order-id {
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin: 0 0 18px;
+}
+
+.modal-summary {
+    text-align: start;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.modal-summary div {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.modal-summary div span:first-child {
+    color: var(--ink-soft);
+}
+
+.modal-summary div span:last-child {
+    font-weight: 600;
+}
+
+/* ===================== توست ===================== */
+.toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: #fff;
+    padding: 11px 24px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .2);
+    opacity: 0;
+    transition: opacity .25s, transform .25s;
+    z-index: 60;
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ===== لودینگ برای تصاویر ===== */
+.hoodie-img.loading {
+    opacity: 0.5;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: #0f1117;
+    color: white;
+    padding: 70px 8%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 50px;
+    margin-top: 50px;
+}
+
+footer h2 {
+    color: #c9a86a;
+    margin-bottom: 20px;
+}
+
+footer h3 {
+    margin-bottom: 20px;
+}
+
+footer p {
+    color: #bbb;
+    line-height: 28px;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+footer li {
+    margin-bottom: 12px;
+    color: #bbb;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+footer li:hover {
+    color: #c9a86a;
+    transform: translateX(-5px);
+}
+
+footer ul a {
+    color: #bbb;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+footer ul a:hover {
+    color: #c9a86a;
+    transform: translateX(-5px);
+}
+
+.social {
+    margin-top: 25px;
+    display: flex;
+    gap: 20px;
+    font-size: 25px;
+}
+
+.social a {
+    color: white;
+    transition: 0.3s;
+}
+
+.social a:hover {
+    color: #c9a86a;
+    transform: scale(1.2);
+}
+
+.footer-col input {
+    width: 100%;
+    height: 45px;
+    padding-right: 15px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    margin-bottom: 15px;
+    font-family: Gandom, Tahoma, sans-serif;
+}
+
+
+/*اسکرول */
+
+::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+::-webkit-scrollbar-track {
+
+    background: #f4f4f4;
+
+}
+
+::-webkit-scrollbar-thumb {
+
+    background: #c9a25f;
+
+    border-radius: 20px;
+
+}
+
+.btn-subscribe {
+    background: #c9a86a;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-subscribe:hover {
+    background: #b38f55;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(201, 168, 106, 0.35);
+}
+
+.btn-subscribe:active {
+    transform: translateY(0px);
+}
+
+.btn-subscribe i {
+    margin-left: 8px;
+    color: inherit;
+}

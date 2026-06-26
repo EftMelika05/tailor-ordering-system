@@ -1,0 +1,350 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>product listing</title>
+
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'fonts/web/font-face.css' %}">
+    <link rel="stylesheet" href="{% static 'css/product listing.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- start nav -->
+    <header>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            DOZINO
+        </div>
+
+        <div class="header-icons">
+            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+
+    </header>
+    <!-- end nav -->
+
+    <br>
+    <section class="product-listing">
+        <div class="container">
+            <h2 class="section-title">کالکشن دوزینو</h2>
+            <span class="section-divider"></span>
+            <p class="section-subtitle">لباس منحصر به فرد، مخصوص تن تو</p>
+
+            <!-- فیلتر و جستجو  -->
+            <div class="filter-bar">
+                <input type="search" class="search-input" placeholder="جستجوی محصول ..." aria-label="جستجو">
+                <select class="sort-select" aria-label="مرتب‌سازی">
+                    <option>مرتب‌سازی: پیش‌فرض</option>
+                    <option>ارزان‌ترین</option>
+                    <option>محبوب‌ترین</option>
+                </select>
+            </div>
+
+            <!-- کتگوری زنانه، مردانه و بچگانه -->
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">همه</button>
+                <button class="category-tab" data-category="women">زنانه</button>
+                <button class="category-tab" data-category="men">مردانه</button>
+                <button class="category-tab" data-category="kids">بچگانه</button>
+            </div>
+
+            <div class="products-grid">
+                <!-- محصول 1 با تخفیف -->
+                <div class="product-card" data-category="women">
+                    <span class="product-badge"><i class="fa-solid fa-fire"></i> تخفیف ویژه</span>
+                    <img src="{% static 'imag/listing/ChatGPT Image Jun 1, 2026, 122_12_04 PM.png' %}" alt="تیشرت با طرح پروانه"
+                        class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت با طرح پروانه</a></h3>
+                        <div class="product-price">
+                            <span class="old-price">۵۰۰,۰۰۰</span>
+                            ۴۵۰,۰۰۰ تومان
+                        </div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 2 -->
+                <div class="product-card" data-category="women">
+                    <img src="{% static 'imag/listing/gpt-image-1.5-high-fidelity_a_Scene_&_Surface__P (16).png' %}" alt="لباس"
+                        class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت باطرح قلبی</a></h3>
+                        <div class="product-price">۵۰۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 3 ناموجود -->
+                <div class="product-card" data-category="kids">
+                    <img src="{% static 'imag/listing/gemini-2.5-flash-image-preview (nano-banana)_a_چین_و_چروک_های_لباس_.png' %}"
+                        alt="تیشرت جیب دار" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت مدل ترنج</a></h3>
+                        <div class="product-price">۷۰۰,۰۰۰ تومان</div>
+                        <button class="btn-cart disabled" disabled>
+                            <i class="fa-solid fa-ban"></i> اتمام موجودی
+                        </button>
+                    </div>
+                </div>
+
+                <!-- محصول 4 سفارشی -->
+                <div class="product-card" data-category="women">
+                    <img src="{% static 'imag/listing/gemini-2.5-flash-image-preview (nano-banana)_a_رنگ_لباس_رو_میخوام_ب.png' %}"
+                        alt="لباس" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت طرح دار</a></h3>
+                        <div class="product-p rice">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 5 -->
+                <div class="product-card" data-category="kids">
+                    <img src="{% static 'imag/listing/ChatGPT Image Jun 1, 2026, 12_180_10 PM.png' %}" alt="لباس"
+                        class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">دورس بچگانه</a></h3>
+                        <div class="product-price">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 6 -->
+                <div class="product-card" data-category="men">
+                    <img src="{% static 'imag/listing/ChatGPT Image Jun 1, 2026, 12_225_55 PM.png' %}" alt="لباس"
+                        class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت پسرانه</a></h3>
+                        <div class="product-price">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 7 -->
+                <div class="product-card" data-category="men">
+                    <img src="{% static 'imag/listing/PicsArt_05-31-03.25.53.jpg' %}" alt="لباس" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت اسپرت</a></h3>
+                        <div class="product-price">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 8 سفارشی -->
+                <div class="product-card" data-category="women">
+                    <img src="{% static 'imag/listing/gpt-image-1.5-high-fidelity_a_Scene_&_Surface__P (13).png' %}" alt="لباس"
+                        class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت طرح دار</a></h3>
+                        <div class="product-price">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 9 سفارشی -->
+                <div class="product-card" data-category="kids">
+                    <img src="{% static 'imag/listing/gemini-2.5-flash-image-preview (nano-banana)_a_Place_the_uploaded_c (2).png' %}"
+                        alt="لباس" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت طرح دار</a></h3>
+                        <div class="product-price">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 10 سفارشی -->
+                <div class="product-card" data-category="women">
+                    <img src="{% static 'imag/listing/PicsArt_05-31-03.28.07.jpg' %}" alt="لباس" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">دورس مدل پریا</a></h3>
+                        <div class="product-price">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 11 سفارشی -->
+                <div class="product-card" data-category="men">
+                    <img src="{% static 'imag/listing/PicsArt_05-31-03.27.27.jpg' %}" alt="لباس" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">تیشرت طرح دار مردانه</a></h3>
+                        <div class="product-price">۹۵۰,۰۰۰ تومان</div>
+                        <a href="#"><button class="btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> سفارش دهید
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- محصول 12 ناموجود -->
+                <div class="product-card" data-category="men">
+                    <img src="{% static 'imag/listing/PicsArt_05-31-03.27.44.jpg' %}" alt="لباس" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="#">دورس پسرانه خرسی</a></h3>
+                        <div class="product-price">۲,۷۰۰,۰۰۰ تومان</div>
+                        <button class="btn-cart disabled" disabled>
+                            <i class="fa-solid fa-ban"></i> اتمام موجودی
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <a href="#" class="page-link prev">قبلی</a>
+                <a href="#" class="page-link active">۱</a>
+                <a href="#" class="page-link">۲</a>
+                <a href="#" class="page-link">۳</a>
+                <a href="#" class="page-link">۴</a>
+                <a href="#" class="page-link next">بعدی</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer>
+
+        <div class="footer-col">
+
+            <h2>DOZINO</h2>
+
+            <p>
+                همراه شما در طراحی و دوخت لباس
+            </p>
+
+            <div class="social">
+
+                <a href="https://instagram.com" target="_blank" aria-label="اینستاگرام">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="https://t.me" target="_blank" aria-label="تلگرام">
+                    <i class="fa-brands fa-telegram"></i>
+                </a>
+
+                <a href="https://wa.me" target="_blank" aria-label="واتساپ">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>دسترسی سریع</h3>
+
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خدمات مشتریان</h3>
+
+            <ul>
+                <li><a href="#">راهنمای خرید</a></li>
+                <li><a href="#">پشتیبانی</a></li>
+            </ul>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>خبرنامه</h3>
+
+            <input type="email" placeholder="ایمیل شما">
+
+            <button class="btn-subscribe">
+                <i class="fa-regular fa-envelope"></i> عضویت
+            </button>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>تماس با ما</h3>
+
+            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: ۰۹۱۲۳۴۵۶۷۸۹</p>
+
+        </div>
+
+    </footer>
+    <!-- end footer -->
+
+    <script>
+        // فیلتر کردن محصولات بر اساس دسته‌بندی
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const products = document.querySelectorAll('.product-card');
+
+        // تابع فیلتر محصولات
+        function filterProducts(category) {
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category === category) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        // اضافه کردن رویداد کلیک به دکمه‌های دسته‌بندی
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // حذف کلاس active از همه
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                // اضافه کردن کلاس active به دکمه clicked شده
+                tab.classList.add('active');
+
+                const category = tab.dataset.category;
+                filterProducts(category);
+            });
+        });
+
+        // در ابتدا همه محصولات را نشان بده
+        filterProducts('all');
+    </script>
+
+</body>
+
+</html>
