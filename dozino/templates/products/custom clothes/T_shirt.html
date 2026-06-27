@@ -87,11 +87,11 @@
         <h2><span class="step-no">۳</span> ضخامت پارچه</h2>
         <p class="step-hint">پارچه ضخیم‌تر هزینه بیشتری داره.</p>
         <div class="pill-group">
-          <span class="pill"><input type="radio" name="fabric" id="t1" data-id="1"  value="1" 
-              data-name="نازک (تابستانی)" checked><label for="t1">نازک — تابستانی</label></span>
-          <span class="pill"><input type="radio" name="fabric" id="t2" data-id="2" value="2"
-              data-name="متوسط"><label for="t2">متوسط — سه‌فصل</label></span>
-          <span class="pill"><input type="radio" name="fabric" id="t3" data-id="3" value="3" 
+          <span class="pill"><input type="radio" name="fabric" id="t1" data-id="1" value="1" data-name="نازک (تابستانی)"
+              checked><label for="t1">نازک — تابستانی</label></span>
+          <span class="pill"><input type="radio" name="fabric" id="t2" data-id="2" value="2" data-name="متوسط"><label
+              for="t2">متوسط — سه‌فصل</label></span>
+          <span class="pill"><input type="radio" name="fabric" id="t3" data-id="3" value="3"
               data-name="ضخیم (زمستانی)"><label for="t3">ضخیم — زمستانی</label></span>
         </div>
       </div>
@@ -104,7 +104,7 @@
         <p class="step-hint">قیمت یقه‌ها متفاوت است.</p>
         <div class="collar-group">
           <span class="collar-option">
-            <input type="radio" name="collar" id="k1" data-id="1" value="round"  data-name="یقه گرد" checked>
+            <input type="radio" name="collar" id="k1" data-id="1" value="round" data-name="یقه گرد" checked>
             <label for="k1">
               <svg viewBox="0 0 80 50" width="56" height="36" fill="none" stroke="currentColor" stroke-width="3"
                 stroke-linecap="round">
@@ -115,7 +115,7 @@
             </label>
           </span>
           <span class="collar-option">
-            <input type="radio" name="collar" id="k2" data-id="2" value="v"  data-name="یقه هفت">
+            <input type="radio" name="collar" id="k2" data-id="2" value="v" data-name="یقه هفت">
             <label for="k2">
               <svg viewBox="0 0 80 50" width="56" height="36" fill="none" stroke="currentColor" stroke-width="3"
                 stroke-linecap="round">
@@ -146,48 +146,32 @@
         <h2><span class="step-no">۵</span> استیکر</h2>
         <p class="step-hint">استیکر انتخابی روی پیش‌نمایش تیشرت نمایش داده می‌شه.</p>
         <div class="sticker-grid">
-        <span class="sticker-option none-option">
-        <input
-         type="radio"
-         name="sticker"
-         id="sticker-none"
-         value="none"
-         data-id="0"
-         checked
-        >
+          <span class="sticker-option none-option">
+            <input type="radio" name="sticker" id="sticker-none" value="none" data-id="0" checked>
 
-        <label for="sticker-none">
-         بدون<br>استیکر
-        </label>
-        </span>
+            <label for="sticker-none">
+              بدون<br>استیکر
+            </label>
+          </span>
 
-{% for sticker in stickers %}
+          {% for sticker in stickers %}
 
-  <span class="sticker-option">
+          <span class="sticker-option">
 
-<input
-  type="radio"
-  name="sticker"
-  id="sticker{{ sticker.id }}"
-  value="{{ sticker.name }}"
-  data-id="{{ sticker.id }}"
-  data-image="{{ sticker.svg_file.url }}"
->
+            <input type="radio" name="sticker" id="sticker{{ sticker.id }}" value="{{ sticker.name }}"
+              data-id="{{ sticker.id }}" data-image="{{ sticker.svg_file.url }}">
 
-<label for="sticker{{ sticker.id }}">
+            <label for="sticker{{ sticker.id }}">
 
-  <img
-    src="{{ sticker.svg_file.url }}"
-    alt="{{ sticker.name }}"
-  >
+              <img src="{{ sticker.svg_file.url }}" alt="{{ sticker.name }}">
 
-</label>
+            </label>
 
-  </span>
+          </span>
 
-{% endfor %}
+          {% endfor %}
 
-</div>
+        </div>
 
       </div>
 
@@ -385,51 +369,51 @@
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
     }
-// ---------- آپدیت پیش‌نمایش ----------
-function updatePreview() {
+    // ---------- آپدیت پیش‌نمایش ----------
+    function updatePreview() {
 
-  const colorEl = getChecked("color");
-  const collarEl = getChecked("collar");
+      const colorEl = getChecked("color");
+      const collarEl = getChecked("collar");
 
-  if (!colorEl || !collarEl) return;
+      if (!colorEl || !collarEl) return;
 
-  const color = colorEl.dataset.color;
-  const collar = collarEl.value;
+      const color = colorEl.dataset.color;
+      const collar = collarEl.value;
 
-  // تصویر لباس
-  const imagePath =
-    `/static/images/${color}-${collar}.png`;
+      // تصویر لباس
+      const imagePath =
+        `/static/images/${color}-${collar}.png`;
 
-  shirtImg.src = imagePath;
+      shirtImg.src = imagePath;
 
-  // استیکر
-  const stickerEl = getChecked("sticker");
+      // استیکر
+      const stickerEl = getChecked("sticker");
 
-  if (!stickerEl) return;
+      if (!stickerEl) return;
 
-  if (stickerEl.dataset.id === "0") {
+      if (stickerEl.dataset.id === "0") {
 
-    stickerOverlay.classList.remove("show");
-    stickerOverlay.src = "";
+        stickerOverlay.classList.remove("show");
+        stickerOverlay.src = "";
 
-  } else {
+      } else {
 
-    stickerOverlay.classList.add("show");
+        stickerOverlay.classList.add("show");
 
-    stickerOverlay.src =
-      stickerEl.dataset.image;
+        stickerOverlay.src =
+          stickerEl.dataset.image;
 
-    stickerOverlay.onerror = function () {
+        stickerOverlay.onerror = function () {
 
-      console.warn("استیکر پیدا نشد");
+          console.warn("استیکر پیدا نشد");
 
-      stickerOverlay.classList.remove("show");
+          stickerOverlay.classList.remove("show");
 
-    };
+        };
 
-  }
+      }
 
-}
+    }
     // ---------- خلاصه انتخاب‌ها ----------
     function updateSummary() {
       const colorEl = getChecked('color');
@@ -448,33 +432,103 @@ function updatePreview() {
       `;
     }
 
-   
+
 
     // ---------- رویداد ثبت سفارش ----------
-    function handleOrder() {
+    async function handleOrder() {
+
       if (!priceIsFresh) return;
 
-      const colorEl = getChecked('color');
-      const thicknessEl = getChecked('fabric');
-      const collarEl = getChecked('collar');
-      const stickerEl = getChecked('sticker');
+      const fabric =
+        document.querySelector(
+          'input[name="fabric"]:checked'
+        ).dataset.id;
 
-      const orderId = 'DZ-' + Math.floor(10000 + Math.random() * 90000);
-      orderIdText.textContent = `شماره سفارش: ${orderId}`;
+      const collar =
+        document.querySelector(
+          'input[name="collar"]:checked'
+        ).dataset.id;
 
-      modalSummary.innerHTML = `
-        <div><span>اندازه</span><span>${lenInput.value}×${widInput.value} | آستین ${sleeveInput.value}</span></div>
-        <div><span>رنگ</span><span>${colorEl ? colorEl.dataset.name : 'دلخواه'}</span></div>
-        <div><span>ضخامت پارچه</span><span>${thicknessEl ? thicknessEl.dataset.name : '-'}</span></div>
-        <div><span>یقه</span><span>${collarEl ? collarEl.dataset.name : '-'}</span></div>
-        <div><span>استیکر</span><span>${stickerEl && stickerEl.value !== 'none' ? 'انتخاب شده' : 'ندارد'}</span></div>
-        <div><span>تعداد</span><span>${qtyInput.value} عدد</span></div>
-        <div><span>مبلغ کل</span><span>${lastTotal.toLocaleString('fa-IR')} تومان</span></div>
-      `;
+      const sticker =
+        document.querySelector(
+          'input[name="sticker"]:checked'
+        ).dataset.id;
 
-      orderModal.classList.add('open');
+      const bodyHeight = lenInput.value;
+
+      const bodyWidth = widInput.value;
+
+      const sleeveHeight = sleeveInput.value;
+
+      const quantity = qtyInput.value;
+
+      const response = await fetch(
+        "/cart/add/tshirt/",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+
+            "X-CSRFToken": getCookie("csrftoken")
+          },
+
+          body: JSON.stringify({
+
+            fabric: fabric,
+            collar: collar,
+            sticker: sticker,
+
+            body_height: bodyHeight,
+            body_width: bodyWidth,
+            sleeve_height: sleeveHeight,
+
+            quantity: quantity,
+            final_price: lastTotal
+
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+
+        showToast("به سبد خرید اضافه شد ✓");
+
+      } else {
+
+        showToast("خطا در افزودن به سبد خرید");
+
+      }
+
     }
+    function getCookie(name) {
 
+      let cookieValue = null;
+
+      if (document.cookie && document.cookie !== '') {
+
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+
+          const cookie = cookies[i].trim();
+
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+
+            cookieValue =
+              decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+
+            break;
+          }
+        }
+      }
+
+      return cookieValue;
+    }
     // ---------- اتصال رویدادها ----------
     [lenInput, widInput, sleeveInput].forEach(el =>
       el.addEventListener('input', () => {
@@ -535,55 +589,60 @@ function updatePreview() {
     // اجرای اولیه
     updatePreview();
     updateSummary();
-    
+
 
     document
-    .getElementById("calcBtn")
-    .addEventListener("click", async function () {
+      .getElementById("calcBtn")
+      .addEventListener("click", async function () {
 
-      const fabric =
-        document.querySelector(
+        const fabric =
+          document.querySelector(
             'input[name="fabric"]:checked'
-        ).dataset.id;
+          ).dataset.id;
 
-      const collar =
-        document.querySelector(
+        const collar =
+          document.querySelector(
             'input[name="collar"]:checked'
-        ).dataset.id;
+          ).dataset.id;
 
-      const sticker =
-        document.querySelector(
+        const sticker =
+          document.querySelector(
             'input[name="sticker"]:checked'
-        ).dataset.id;
+          ).dataset.id;
 
-      const bodyHeight = lenInput.value;
+        const bodyHeight = lenInput.value;
 
-      const bodyWidth = widInput.value;
+        const bodyWidth = widInput.value;
 
-      const sleeveHeight = sleeveInput.value;
+        const sleeveHeight = sleeveInput.value;
 
-      const response = await fetch(
+        const response = await fetch(
 
-        `/products/T_shirt/calculate/?fabric=${fabric}&collar=${collar}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
+          `/products/T_shirt/calculate/?fabric=${fabric}&collar=${collar}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
 
-    );
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      document.getElementById(
+        document.getElementById(
           "priceValue"
-      ).innerText = data.price;
-      lastTotal = data.price;
+        ).innerText = data.price;
+        lastTotal = data.price;
 
-priceIsFresh = true;
+        priceIsFresh = true;
 
-orderBtn.disabled = false;
+        orderBtn.disabled = false;
 
-showToast("قیمت محاسبه شد ✓");
+        showToast("قیمت محاسبه شد ✓");
 
-    });
+      });
 
-
+    document
+      .getElementById("orderBtn")
+      .addEventListener(
+        "click",
+        handleOrder
+      );
   </script>
 </body>
 

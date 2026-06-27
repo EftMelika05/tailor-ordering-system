@@ -58,66 +58,86 @@
                     </div>
 
                     <div id="cart-items-list">
-                        <!-- item 1 -->
-                        <div class="cart-item" data-price="750000" data-weeks="1">
-                            <div class="product-img">
-                                <img src="{% static 'imag/listing/ChatGPT Image Jun 1, 2026, 12_12_04 PM.png' %}" alt="تیشرت پروانه">
+                        <div id="cart-items-list">
+
+                            {% for item in tshirt_items %}
+
+                            <div class="cart-item" data-price="{{ item.final_price }}">
+
+                                <div class="product-img">
+
+                                    <img src="{% static 'imag/tshirt-preview.png' %}" alt="تیشرت سفارشی">
+
+                                </div>
+
+                                <div class="product-name">
+
+                                    تیشرت سفارشی
+
+                                    <br>
+
+                                    <small>
+
+                                        {{ item.fabric.name }}
+
+                                        |
+
+                                        {{ item.collar.name }}
+
+                                    </small>
+
+                                </div>
+
+                                <div class="counter">
+
+                                    <button class="plus" aria-label="افزایش تعداد">
+                                        +
+                                    </button>
+
+                                    <span class="qty-val">
+
+                                        {{ item.quantity }}
+
+                                    </span>
+
+                                    <button class="minus" aria-label="کاهش تعداد">
+                                        -
+                                    </button>
+
+                                </div>
+
+                                <div class="product-price">
+
+                                    <span class="price-text">
+
+                                        {{ item.final_price }}
+
+                                    </span>
+
+                                    تومان
+
+                                </div>
+
+                                <button class="delete-btn" aria-label="حذف محصول">
+
+                                    <i class="fa-solid fa-trash-can"></i>
+
+                                </button>
+
                             </div>
-                            <div class="product-name">تیشرت پروانه</div>
-                            <div class="counter">
-                                <button class="plus" aria-label="افزایش تعداد">+</button>
-                                <span class="qty-val">1</span>
-                                <button class="minus" aria-label="کاهش تعداد">-</button>
-                            </div>
-                            <div class="product-price">
-                                <span class="price-text">۷۵۰,۰۰۰</span>
-                                تومان
-                            </div>
-                            <button class="delete-btn" aria-label="حذف محصول">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+
+                            {% empty %}
+
+                            <p>
+
+                                سبد خرید شما خالی است
+
+                            </p>
+
+                            {% endfor %}
+
                         </div>
 
-                        <!-- item 2 -->
-                        <div class="cart-item" data-price="1000000" data-weeks="1">
-                            <div class="product-img">
-                                <img src="{% static 'imag/listing/ChatGPT Image Jun 1, 2026, 12_180_10 PM.png' %}" alt="دورس طرح پریا">
-                            </div>
-                            <div class="product-name">دورس طرح پریا</div>
-                            <div class="counter">
-                                <button class="plus" aria-label="افزایش تعداد">+</button>
-                                <span class="qty-val">1</span>
-                                <button class="minus" aria-label="کاهش تعداد">-</button>
-                            </div>
-                            <div class="product-price">
-                                <span class="price-text">۱,۰۰۰,۰۰۰</span>
-                                تومان
-                            </div>
-                            <button class="delete-btn" aria-label="حذف محصول">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-
-                        <!-- item 3 -->
-                        <div class="cart-item" data-price="750000" data-weeks="1">
-                            <div class="product-img">
-                                <img src="{% static 'imag/listing/gpt-image-1.5-high-fidelity_a_Scene_&_Surface__P (15).png' %}"
-                                    alt="تیشرت خرگوشی">
-                            </div>
-                            <div class="product-name">تیشرت خرگوشی</div>
-                            <div class="counter">
-                                <button class="plus" aria-label="افزایش تعداد">+</button>
-                                <span class="qty-val">1</span>
-                                <button class="minus" aria-label="کاهش تعداد">-</button>
-                            </div>
-                            <div class="product-price">
-                                <span class="price-text">۷۵۰,۰۰۰</span>
-                                تومان
-                            </div>
-                            <button class="delete-btn" aria-label="حذف محصول">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -129,14 +149,22 @@
 
                     <div class="summary-row">
                         <span>تعداد محصولات</span>
-                        <span id="total-qty">۰</span>
+                        <span id="total-qty">
+
+                            {{ tshirt_items.count }}
+
+                        </span>
                     </div>
 
                     <div class="summary-divider"></div>
 
                     <div class="total-price-box">
                         <span>مبلغ کل</span>
-                        <span id="final-price">۰ تومان</span>
+                        <span id="final-price">
+
+                            {{ total_price|floatformat:0 }} تومان
+
+                        </span>
                     </div>
 
                     <p class="checkout-note">در صورت صحت اطلاعات کلیک کنید</p>

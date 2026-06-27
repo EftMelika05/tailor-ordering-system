@@ -10,7 +10,20 @@ from products.models import (
 
 from products.services.pricing import calculate_tshirt_price
 
+def trousers(request):
 
+    return render(
+        request,
+        'products/trousers.html'
+    )
+    
+def dors(request):
+
+    return render(
+        request,
+        'products/dors.html'
+    )
+       
 def design_T_shirt(request):
 
     fabrics = Fabric.objects.filter(
