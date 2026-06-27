@@ -1,15 +1,18 @@
 from django.db import models
-
+from .option_models import  (
+    CollarType,
+    HoodOption,
+    ZipperOption,
+    LegType,
+    PocketOption
+)
+  
 from .base import CustomProductBase
 
 
 class CustomTshirt(CustomProductBase):
 
-    COLLAR_TYPES = (
-        ("round", "گرد"),
-        ("v", "هفت"),
-        ("round-v","دلبری"),
-    )
+    available_collars = models.ManyToManyField(CollarType)
 
     collar_type = models.CharField(
         max_length=20,
@@ -18,23 +21,21 @@ class CustomTshirt(CustomProductBase):
 
 
 class CustomHoodie(CustomProductBase):
-
-    has_hood = models.BooleanField(default=False)
-
-    has_zipper = models.BooleanField(default=False)
-
+    hood_options = models.ManyToManyField(
+        HoodOption
+    )
+    zipper_options = models.ManyToManyField(
+       ZipperOption
+    )
 
 class CustomPants(CustomProductBase):
 
-    LEG_TYPES = (
-        ("straight", "راسته"),
-        ("keshbaf", "کشباف"),
-        ("kloosh", "کلوش"),
+    leg_types = models.ManyToManyField(
+    LegType
     )
 
-    leg_type = models.CharField(
-        max_length=20,
-        choices=LEG_TYPES
+    pocket_options = models.ManyToManyField(
+        PocketOption
     )
 
     has_pocket = models.BooleanField(default=False)

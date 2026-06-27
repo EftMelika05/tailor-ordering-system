@@ -6,3 +6,4 @@ from .product import *
 from .ready_product import *
 from .custom_products import *
 from .fabric import *
+from .option_models import *
