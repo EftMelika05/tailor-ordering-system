@@ -12,7 +12,9 @@ class Fabric(models.Model):
         decimal_places=2
     )
 
-    fabric_width = models.FloatField()
+    fabric_width = models.FloatField(
+    default=1.1 
+    )
 
     is_active = models.BooleanField(
         default=True

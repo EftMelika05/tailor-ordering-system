@@ -19,9 +19,15 @@ class Product(TimestampMixin):
         choices=PRODUCT_TYPES
     )
 
-    category = models.ForeignKey(
-        "Category",
-        on_delete=models.CASCADE
+    GENDER_CHOICES = (
+    ("male", "مردانه"),
+    ("female", "زنانه"),
+    ("kids", "بچگانه"),
+)
+
+    gender = models.CharField(
+        max_length=20,
+        choices=GENDER_CHOICES
     )
 
     description = models.TextField(

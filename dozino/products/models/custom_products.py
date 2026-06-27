@@ -9,16 +9,21 @@ from .option_models import  (
   
 from .base import CustomProductBase
 
-
 class CustomTshirt(CustomProductBase):
 
-    available_collars = models.ManyToManyField(CollarType)
-
-    collar_type = models.CharField(
-        max_length=20,
-        choices=COLLAR_TYPES
+    available_collars = models.ManyToManyField(
+        "products.CollarType",
+        blank=True
+    )
+    
+    base_sewing_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=0,
+        default=0
     )
 
+    def __str__(self):
+        return self.name
 
 class CustomHoodie(CustomProductBase):
     hood_options = models.ManyToManyField(
@@ -27,6 +32,16 @@ class CustomHoodie(CustomProductBase):
     zipper_options = models.ManyToManyField(
        ZipperOption
     )
+       
+    base_sewing_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=0,
+        default=0
+    )
+    def __str__(self):
+        return self.name
+
+
 
 class CustomPants(CustomProductBase):
 
@@ -39,3 +54,12 @@ class CustomPants(CustomProductBase):
     )
 
     has_pocket = models.BooleanField(default=False)
+    
+       
+    base_sewing_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=0,
+        default=0
+    )
+    def __str__(self):
+        return self.name

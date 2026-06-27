@@ -5,8 +5,10 @@ class Sticker(models.Model):
 
     name = models.CharField(max_length=100)
 
-    file = models.FileField(
-        upload_to="stickers/"
+    svg_file = models.FileField(
+        upload_to="stickers/",
+        blank=True,
+        null=True,
     )
 
     price = models.DecimalField(
