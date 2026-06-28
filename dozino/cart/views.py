@@ -1,5 +1,5 @@
 import json
-
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -105,4 +105,52 @@ def add_tshirt_to_cart(request):
 
     return JsonResponse({
         "status": "success"
+    })
+    
+
+@require_POST
+def remove_cart_item(request, item_id):
+
+    item = CustomTshirtCartItem.objects.get(
+        id=item_id,
+        cart__user=request.user
+    )
+
+    item.delete()
+
+    return JsonResponse({
+        "status": "success"
+    })
+    
+from django.views.decorators.http import require_POST
+
+@require_POST
+def update_cart_quantity(request):
+
+
+    data = json.loads(request.body)
+
+    item_id = data.get("item_id")
+    action = data.get("action")
+
+    item = CustomTshirtCartItem.objects.get(
+        id=item_id,
+        cart__user=request.user
+    )
+
+    if action == "increase":
+
+        item.quantity += 1
+
+    elif action == "decrease":
+
+        if item.quantity > 1:
+
+            item.quantity -= 1
+
+    item.save()
+
+    return JsonResponse({
+        "status": "success",
+        "quantity": item.quantity
     })

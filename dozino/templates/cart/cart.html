@@ -62,12 +62,19 @@
 
                             {% for item in tshirt_items %}
 
-                            <div class="cart-item" data-price="{{ item.final_price }}">
+                            <div class="cart-item" data-id="{{ item.id }}" data-price="{{ item.final_price }}">
 
                                 <div class="product-img">
 
-                                    <img src="/static/images/{{ item.custom_color }}-{{ item.collar_style }}.png"
-                                        alt="تیشرت سفارشی" width="100">
+                                    <img class="cart-shirt"
+                                        src="/static/images/{{ item.custom_color }}-{{ item.collar_style }}.png"
+                                        alt="تیشرت سفارشی">
+
+                                    {% if item.sticker %}
+
+                                    <img class="cart-sticker" src="{{ item.sticker.svg_file.url }}" alt="استیکر">
+
+                                    {% endif %}
 
                                 </div>
 
@@ -119,7 +126,7 @@
 
                                 </div>
 
-                                <button class="delete-btn" aria-label="حذف محصول">
+                                <button class="delete-btn" data-id="{{ item.id }}" aria-label="حذف محصول">
 
                                     <i class="fa-solid fa-trash-can"></i>
 
@@ -274,40 +281,154 @@
             finalPrice.textContent = totalPrice.toLocaleString('fa-IR') + " تومان";
         }
 
-        // دکمه های + و -
+        // افزایش تعداد
         document.querySelectorAll(".plus").forEach(btn => {
-            btn.addEventListener("click", function () {
-                const item = this.closest(".cart-item");
-                const qtyVal = item.querySelector(".qty-val");
-                qtyVal.textContent = parseInt(qtyVal.textContent) + 1;
-                updateCart();
-            });
-        });
 
-        document.querySelectorAll(".minus").forEach(btn => {
-            btn.addEventListener("click", function () {
+
+            btn.addEventListener("click", async function () {
+
                 const item = this.closest(".cart-item");
-                const qtyVal = item.querySelector(".qty-val");
-                let qty = parseInt(qtyVal.textContent);
-                if (qty > 1) {
-                    qtyVal.textContent = qty - 1;
+
+                const itemId = item.dataset.id;
+
+                const response = await fetch(
+                    "/cart/update-quantity/",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken")
+                        },
+
+                        body: JSON.stringify({
+                            item_id: itemId,
+                            action: "increase"
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (data.status === "success") {
+
+                    item.querySelector(".qty-val").textContent =
+                        data.quantity;
+
+                    updateCart();
                 }
-                updateCart();
+
             });
+
+
         });
 
-        // حذف محصول با انیمیشن
-        document.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", function () {
+        // کاهش تعداد
+        document.querySelectorAll(".minus").forEach(btn => {
+
+
+            btn.addEventListener("click", async function () {
+
                 const item = this.closest(".cart-item");
+
+                const itemId = item.dataset.id;
+
+                const response = await fetch(
+                    "/cart/update-quantity/",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken")
+                        },
+
+                        body: JSON.stringify({
+                            item_id: itemId,
+                            action: "decrease"
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (data.status === "success") {
+
+                    item.querySelector(".qty-val").textContent =
+                        data.quantity;
+
+                    updateCart();
+                }
+
+            });
+
+
+        });
+
+
+        function getCookie(name) {
+
+            let cookieValue = null;
+
+            if (document.cookie && document.cookie !== '') {
+
+                const cookies = document.cookie.split(';');
+
+                for (let i = 0; i < cookies.length; i++) {
+
+                    const cookie = cookies[i].trim();
+
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+
+                        cookieValue = decodeURIComponent(
+                            cookie.substring(name.length + 1)
+                        );
+
+                        break;
+                    }
+                }
+            }
+
+            return cookieValue;
+        }
+
+
+        document.addEventListener("click", async function (e) {
+
+            const btn = e.target.closest(".delete-btn");
+
+            if (!btn) return;
+
+            const item = btn.closest(".cart-item");
+
+            const itemId = btn.dataset.id;
+
+            const response = await fetch(
+                `/cart/remove/${itemId}/`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    }
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.status === "success") {
+
                 item.style.transition = "all 0.3s ease";
                 item.style.transform = "translateX(-20px)";
                 item.style.opacity = "0";
+
                 setTimeout(() => {
                     item.remove();
                     updateCart();
                 }, 300);
-            });
+
+            }
+
         });
 
         // دکمه نهایی سازی
@@ -322,6 +443,8 @@
 
         // محاسبه اولیه
         updateCart();
+
+
     </script>
 
 </body>

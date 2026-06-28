@@ -14,5 +14,18 @@ urlpatterns = [
         views.add_tshirt_to_cart,
         name='add_tshirt_to_cart'
     ),
+    
+    path(
+    "remove/<int:item_id>/",
+    views.remove_cart_item,
+    name="remove_cart_item"
+    ),
+    
+    path(
+    "update-quantity/",
+    views.update_cart_quantity,
+    name="update_cart_quantity"
+    ),
+
 
 ]
