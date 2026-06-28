@@ -181,3 +181,69 @@ def calculate_dors_price(
     total = round(total, -3)
 
     return int(total)
+
+from decimal import Decimal
+
+def calculate_trousers_price(
+    fabric,
+    leg_model,
+    pocket,
+    pants_height,
+    hip_width,
+    sewing_price,
+    ):
+
+# --------------------------------
+# جا دوخت
+# --------------------------------
+    pants_height += 3
+    hip_width += 3
+
+# --------------------------------
+# تبدیل به متر
+# --------------------------------
+    pants_height = Decimal(str(pants_height)) / Decimal("100")
+
+    hip_width = Decimal(str(hip_width)) / Decimal("100")
+
+# --------------------------------
+# اطلاعات پارچه
+# --------------------------------
+    fabric_price = fabric.price_per_meter
+
+    fabric_width = Decimal(
+    str(fabric.fabric_width)
+)
+
+# --------------------------------
+# قیمت پارچه شلوار
+# --------------------------------
+    fabric_cost = (
+
+    pants_height *
+
+    fabric_price *
+
+    (hip_width / fabric_width)
+
+    )
+
+# --------------------------------
+# جمع کل
+# --------------------------------
+    total = (
+
+    fabric_cost +
+
+    leg_model.extra_price +
+
+    pocket.extra_price +
+
+    sewing_price
+
+    )
+
+# رند به هزار تومان
+    total = round(total, -3)
+
+    return int(total)

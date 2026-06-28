@@ -8,17 +8,12 @@ from products.models import (
     SitePrice,
     HoodType,
     ZipperType,
+    LegType,
+    PocketOption,
 )
 
-from products.services.pricing import calculate_dors_price,calculate_tshirt_price
+from products.services.pricing import calculate_dors_price,calculate_tshirt_price,calculate_trousers_price
 
-
-def trousers(request):
-
-    return render(
-        request,
-        'products/trousers.html'
-    )
 
 def design_T_shirt(request):
 
@@ -188,6 +183,90 @@ def calculate_dors(request):
         sleeve_height=sleeve_height,
 
         sewing_price=site_price.hoodie_sewing_price,
+
+    )
+
+    return JsonResponse({
+        "price": final_price
+    })
+    
+
+def design_trousers(request):
+
+    fabrics = Fabric.objects.filter(
+        is_active=True
+    )
+
+    pockets = PocketOption.objects.all()
+
+    leg_models = LegType.objects.all()
+
+    context = {
+        "fabrics": fabrics,
+        "pockets": pockets,
+        "leg_models": leg_models,
+    }
+
+    return render(
+        request,
+        "products/custom clothes/trousers.html",
+        context
+    )
+
+def calculate_trousers(request):
+
+    fabric_id = request.GET.get(
+        "fabric"
+    )
+
+    pocket_id = request.GET.get(
+        "pocket"
+    )
+
+    leg_model_id = request.GET.get(
+        "leg"
+    )
+
+    pants_height = float(
+        request.GET.get(
+            "pants_height"
+        )
+    )
+
+
+    hip_width = float(
+        request.GET.get(
+            "hip_width"
+        )
+    )
+
+    site_price = SitePrice.objects.first()
+
+    fabric = Fabric.objects.get(
+        id=fabric_id
+    )
+
+    pocket = PocketOption.objects.get(
+        id=pocket_id
+    )
+
+    leg_model = LegType.objects.get(
+        id=leg_model_id
+    )
+
+    final_price = calculate_trousers_price(
+
+        fabric=fabric,
+
+        leg_model=leg_model,
+
+        pocket=pocket,
+
+        pants_height=pants_height,
+
+        hip_width=hip_width,
+
+        sewing_price=site_price.pants_sewing_price,
 
     )
 

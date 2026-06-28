@@ -5,6 +5,7 @@ from products.models import (
     LegType,
     HoodType,
     ZipperType,
+    PocketOption,
 )
 
 
@@ -20,6 +21,15 @@ class CollarTypeAdmin(admin.ModelAdmin):
 
 @admin.register(LegType)
 class LegTypeAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "id",
+        "name",
+        "extra_price",
+        
+    )
+@admin.register(PocketOption)
+class PocketOptionAdmin(admin.ModelAdmin):
 
     list_display = (
         "id",
