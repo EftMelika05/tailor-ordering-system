@@ -9,14 +9,12 @@
   <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
   <link rel="stylesheet" href="{% static 'css/dors.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
 </head>
 
 <body>
 
   <!-- ===== HEADER ===== -->
   <header class="topbar">
-
     <nav>
       <ul>
         <li><a href="{% url 'index' %}">خانه</a></li>
@@ -25,15 +23,12 @@
         <li><a href="{% url 'index' %}#about">درباره ما</a></li>
       </ul>
     </nav>
-
     <div class="logo">Dozino</div>
-
     <div class="header-icons">
       <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
       <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
       <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
     </div>
-
   </header>
 
   <main class="layout">
@@ -41,88 +36,65 @@
     <!-- ستون چپ: تنظیمات -->
     <section class="configurator">
 
-      <!-- مرحله ۱: اندازه‌ها -->
+      <!-- مرحله ۱: اندازه‌ها  -->
       <div class="step">
-        <h2><span class="step-no">۱</span> اندازه‌ها <small
-            style="font-size:11px;font-weight:400;color:var(--ink-soft)">(سانتی‌متر)</small></h2>
+        <h2><span class="step-no">۱</span> اندازه‌ها <small style="font-size:11px;font-weight:400;color:var(--ink-soft)">(سانتی‌متر)</small></h2>
         <div class="field-row">
           <div class="field">
-            <label for="lenInput">قد دورس</label>
-            <input type="number" id="lenInput" value="75" inputmode="numeric">
+            <label for="body_height">قد دورس</label>
+            <input type="number" id="body_height" value="75" inputmode="numeric">
           </div>
           <div class="field">
-            <label for="widInput">گشادی دورس</label>
-            <input type="number" id="widInput" value="55" inputmode="numeric">
+            <label for="body_width">گشادی دورس</label>
+            <input type="number" id="body_width" value="55" inputmode="numeric">
           </div>
           <div class="field">
-            <label for="sleeveInput">قد آستین</label>
-            <input type="number" id="sleeveInput" value="60" inputmode="numeric">
+            <label for="sleeve_height">قد آستین</label>
+            <input type="number" id="sleeve_height" value="60" inputmode="numeric">
           </div>
         </div>
       </div>
 
       <hr class="seam">
 
-      <!-- مرحله ۲: رنگ -->
+      <!-- مرحله ۲: رنگ  -->
       <div class="step">
         <h2><span class="step-no">۲</span> رنگ پارچه</h2>
-
         <div class="swatches">
-          <span class="swatch"><input type="radio" name="color" id="c1" value="#FFFFFF" data-name="سفید"
-              data-color="white" checked><label for="c1" style="background:#FFFFFF"></label></span>
-          <span class="swatch"><input type="radio" name="color" id="c2" value="#111111" data-name="سیاه"
-              data-color="black"><label for="c2" style="background:#111111"></label></span>
-          <span class="swatch"><input type="radio" name="color" id="c4" value="#6B6B6B" data-name="طوسی"
-              data-color="gray"><label for="c4" style="background:#6B6B6B"></label></span>
-          <span class="swatch"><input type="radio" name="color" id="c8" value="#D4C5A9" data-name="کرمی"
-              data-color="cream"><label for="c8" style="background:#D4C5A9"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c1" value="#FFFFFF" data-name="سفید" data-color="white" checked><label for="c1" style="background:#FFFFFF"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c2" value="#111111" data-name="سیاه" data-color="black"><label for="c2" style="background:#111111"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c4" value="#6B6B6B" data-name="طوسی" data-color="gray"><label for="c4" style="background:#6B6B6B"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c8" value="#D4C5A9" data-name="کرمی" data-color="cream"><label for="c8" style="background:#D4C5A9"></label></span>
         </div>
       </div>
 
       <hr class="seam">
 
-      <!-- مرحله ۳: ضخامت پارچه -->
+      <!-- مرحله ۳: پارچه -->
       <div class="step">
         <h2><span class="step-no">۳</span> ضخامت پارچه</h2>
         <p class="step-hint">پارچه ضخیم‌تر هزینه بیشتری داره.</p>
         <div class="pill-group">
-          <span class="pill"><input type="radio" name="thickness" id="t2" value="medium" data-price="30000"
-              data-name="متوسط" checked><label for="t2">متوسط — سه‌فصل</label></span>
-          <span class="pill"><input type="radio" name="thickness" id="t3" value="thick" data-price="60000"
-              data-name="ضخیم (زمستانی)"><label for="t3">ضخیم — زمستانی</label></span>
+       
+          <span class="pill"><input type="radio" name="fabric" id="t2" data-id="2" value="2" data-name="متوسط"><label for="t2">متوسط — سه‌فصل</label></span>
+          <span class="pill"><input type="radio" name="fabric" id="t3" data-id="3" value="3" data-name="ضخیم (زمستانی)"><label for="t3">ضخیم — زمستانی</label></span>
         </div>
       </div>
 
       <hr class="seam">
 
-      <!-- مرحله ۳: ضخامت پارچه -->
-      <div class="step">
-        <h2><span class="step-no">۳</span> ضخامت پارچه</h2>
-        <p class="step-hint">پارچه ضخیم‌تر هزینه بیشتری داره.</p>
-        <div class="pill-group">
-          <span class="pill"><input type="radio" name="thickness" id="t2" value="medium" data-price="30000"
-              data-name="متوسط" checked><label for="t2">متوسط — سه‌فصل</label></span>
-          <span class="pill"><input type="radio" name="thickness" id="t3" value="thick" data-price="60000"
-              data-name="ضخیم (زمستانی)"><label for="t3">ضخیم — زمستانی</label></span>
-        </div>
-      </div>
-
-      <hr class="seam">
-
-      <!-- مرحله ۴: کلاهدار / بدون کلاه -->
       <div class="step">
         <h2><span class="step-no">۴</span> نوع کلاه</h2>
+        <p class="step-hint">قیمت کلاه‌ها متفاوت است.</p>
         <div class="hood-group">
           <span class="hood-option">
-            <input type="radio" name="hood" id="h1" value="with-hood" data-price="{{ hood_with.extra_price }}"
-              data-name="کلاهدار" checked>
+            <input type="radio" name="hood" id="h1" data-id="1" value="with-hood" data-name="کلاهدار" checked>
             <label for="h1">
               <span>کلاهدار</span>
             </label>
           </span>
           <span class="hood-option">
-            <input type="radio" name="hood" id="h2" value="without-hood" data-price="{{ hood_without.extra_price }}"
-              data-name="بدون کلاه">
+            <input type="radio" name="hood" id="h2" data-id="2" value="without-hood" data-name="بدون کلاه">
             <label for="h2">
               <span>بدون کلاه</span>
             </label>
@@ -132,20 +104,18 @@
 
       <hr class="seam">
 
-      <!-- مرحله ۵: زیپ‌دار / بدون زیپ -->
       <div class="step">
         <h2><span class="step-no">۵</span> نوع زیپ</h2>
+        <p class="step-hint">قیمت زیپ‌ها متفاوت است.</p>
         <div class="zip-group">
           <span class="zip-option">
-            <input type="radio" name="zip" id="z1" value="with-zip" data-price="{{ zip_with.extra_price }}"
-              data-name="زیپ‌دار" checked>
+            <input type="radio" name="zipper" id="z1" data-id="1" value="with-zip" data-name="زیپ‌دار" checked>
             <label for="z1">
               <span>زیپ‌دار</span>
             </label>
           </span>
           <span class="zip-option">
-            <input type="radio" name="zip" id="z2" value="without-zip" data-price="{{ zip_without.extra_price }}"
-              data-name="بدون زیپ">
+            <input type="radio" name="zipper" id="z2" data-id="2" value="without-zip" data-name="بدون زیپ">
             <label for="z2">
               <span>بدون زیپ</span>
             </label>
@@ -155,40 +125,28 @@
 
       <hr class="seam">
 
-
       <!-- مرحله ۶: استیکر -->
       <div class="step">
-        <h2><span class="step-no">۵</span> استیکر</h2>
+        <h2><span class="step-no">۶</span> استیکر</h2>
         <p class="step-hint">
-          <span style="color: #B8924A; padding-top: 8px; font-size: 15px;">در صورت وجود زیپ روی کار استیکر پشت لباس چاپ
-            میشود.</span>
+          <span style="color: #B8924A; padding-top: 8px; font-size: 15px;">در صورت وجود زیپ روی کار استیکر پشت لباس چاپ میشود.</span>
           <br>
           استیکر انتخابی روی پیش‌نمایش دورس نمایش داده می‌شه.
         </p>
         <div class="sticker-grid">
           <span class="sticker-option none-option">
             <input type="radio" name="sticker" id="sticker-none" value="none" data-id="0" checked>
-
-            <label for="sticker-none">
-              بدون<br>استیکر
-            </label>
+            <label for="sticker-none">بدون<br>استیکر</label>
           </span>
 
           {% for sticker in stickers %}
-
           <span class="sticker-option">
-
             <input type="radio" name="sticker" id="sticker{{ sticker.id }}" value="{{ sticker.name }}"
               data-id="{{ sticker.id }}" data-image="{{ sticker.svg_file.url }}">
-
             <label for="sticker{{ sticker.id }}">
-
               <img src="{{ sticker.svg_file.url }}" alt="{{ sticker.name }}">
-
             </label>
-
           </span>
-
           {% endfor %}
 
         </div>
@@ -196,13 +154,12 @@
 
     </section>
 
-    <!-- ستون راست: پیش‌نمایش + سفارش -->
+    <!-- ستون راست: پیش‌نمایش + سفارش      -->
     <aside class="preview-panel">
 
       <div class="preview-box" id="previewBox">
         <!-- تصویر دورس -->
         <img class="hoodie-img" id="hoodieImg" src="{% static 'images/white-with-hood-with-zip.png' %}" alt="دورس">
-
         <!-- استیکر روی عکس -->
         <img class="sticker-overlay" id="stickerOverlay" src="" alt="استیکر">
       </div>
@@ -219,39 +176,13 @@
           </div>
         </div>
 
-        <!-- دکمه محاسبه + قیمت -->
         <button type="button" class="btn-primary" id="calcBtn">
-
-          <i class="fa-solid fa-calculator"></i>
-
-          محاسبه قیمت
-
+          <i class="fa-solid fa-calculator"></i> محاسبه قیمت
         </button>
 
         <div class="price-box">
-
-          <div class="price-label">
-
-            قیمت نهایی
-
-          </div>
-
-          <div class="price-value">
-
-            <span id="priceValue">
-
-              ۰
-
-            </span>
-
-            <span class="toman">
-
-              تومان
-
-            </span>
-
-          </div>
-
+          <div class="price-label">قیمت نهایی</div>
+          <div class="price-value"><span id="priceValue">۰</span><span class="toman">تومان</span></div>
         </div>
 
         <button type="button" class="btn-order" id="orderBtn" disabled>
@@ -263,7 +194,7 @@
     </aside>
   </main>
 
-  <!-- مودال تایید سفارش -->
+  <!-- مودال تایید سفارش    -->
   <div class="modal-overlay" id="orderModal">
     <div class="modal">
       <div class="check-circle"><i class="fa-solid fa-check"></i></div>
@@ -278,94 +209,54 @@
 
   <!-- ===== FOOTER ===== -->
   <footer>
-
     <div class="footer-col">
-
       <h2>DOZINO</h2>
-
-      <p>
-        همراه شما در طراحی و دوخت لباس
-      </p>
-
+      <p>همراه شما در طراحی و دوخت لباس</p>
       <div class="social">
-
-        <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام">
-          <i class="fa-brands fa-instagram"></i>
-        </a>
-
-        <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام">
-          <i class="fa-brands fa-telegram"></i>
-        </a>
-
-        <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ">
-          <i class="fa-brands fa-whatsapp"></i>
-        </a>
-
+        <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ"><i class="fa-brands fa-whatsapp"></i></a>
       </div>
-
     </div>
-
     <div class="footer-col">
-
       <h3>دسترسی سریع</h3>
-
       <ul>
         <li><a href="{% url 'index' %}">خانه</a></li>
         <li><a href="{% url 'list' %}">محصولات آماده</a></li>
         <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
         <li><a href="#">تماس با ما</a></li>
       </ul>
-
     </div>
-
     <div class="footer-col">
-
       <h3>خدمات مشتریان</h3>
-
       <ul>
         <li><a href="#">راهنمای خرید</a></li>
         <li><a href="#">پشتیبانی</a></li>
       </ul>
-
     </div>
-
     <div class="footer-col">
-
       <h3>خبرنامه</h3>
-
       <input type="email" placeholder="ایمیل شما">
-
-      <button class="btn-subscribe">
-        <i class="fa-regular fa-envelope"></i> عضویت
-      </button>
-
+      <button class="btn-subscribe"><i class="fa-regular fa-envelope"></i> عضویت</button>
     </div>
-
     <div class="footer-col">
-
       <h3>تماس با ما</h3>
-
       <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
       <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
-
     </div>
-
   </footer>
 
   <script>
-
-    // ===================================================================
-    // DOZINO | منطق صفحه سفارشی‌سازی دورس
-    // ===================================================================
-
+   
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => [...document.querySelectorAll(sel)];
     const getChecked = (name) => document.querySelector(`input[name="${name}"]:checked`);
 
-    // المان‌ها
-    const lenInput = $('#lenInput');
-    const widInput = $('#widInput');
-    const sleeveInput = $('#sleeveInput');
+    // المان‌ها  
+
+    const lenInput = $('#body_height');
+    const widInput = $('#body_width');
+    const sleeveInput = $('#sleeve_height');
     const hoodieImg = $('#hoodieImg');
     const stickerOverlay = $('#stickerOverlay');
     const summaryList = $('#summaryList');
@@ -384,8 +275,7 @@
     let lastTotal = 0;
     let priceIsFresh = false;
 
-
-    // ---------- انیمیشن تغییر عدد قیمت ----------
+    // ---------- انیمیشن تغییر عدد قیمت ) ----------
     function animatePrice(from, to) {
       const duration = 450;
       const start = performance.now();
@@ -396,17 +286,16 @@
         priceValue.textContent = current.toLocaleString('fa-IR');
         if (progress < 1) requestAnimationFrame(step);
       }
-
       requestAnimationFrame(step);
     }
 
-    // ---------- باطل کردن قیمت محاسبه‌شده با تغییر تنظیمات ----------
+    // ---------- باطل کردن قیمت محاسبه‌شده با تغییر تنظیمات ) ----------
     function invalidatePrice() {
       priceIsFresh = false;
       orderBtn.disabled = true;
     }
 
-    // ---------- توست ----------
+    // ---------- توست ) ----------
     let toastTimer = null;
 
     function showToast(msg) {
@@ -416,57 +305,45 @@
       toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
     }
 
-    // ---------- آپدیت پیش‌نمایش ----------
+    // ================================================================
+    // آپدیت پیش‌نمایش ()
+    // ================================================================
     function updatePreview() {
       const colorEl = getChecked("color");
-      const hoodEl = getChecked("hood");
-      const zipEl = getChecked("zip");
-      const stickerEl = getChecked("sticker");
+      const hoodEl = getChecked("hood");        // ← مثل collar در تیشرت
+      const zipperEl = getChecked("zipper");    // ← مثل collar در تیشرت
 
-      if (!colorEl || !hoodEl || !zipEl) return;
+      if (!colorEl || !hoodEl || !zipperEl) return;
 
       const color = colorEl.dataset.color;
-      const hood = hoodEl.value;
-      const zip = zipEl.value;
+      const hood = hoodEl.value;      // with-hood یا without-hood
+      const zipper = zipperEl.value;  // with-zip یا without-zip
 
-
-      // ساخت مسیر تصویر: images/{color}-{hood}-{zip}.png
-      const imagePath = `/static/images/${color}-${hood}-${zip}.png`;
-
-      // تغییر تصویر
+     
+      const imagePath = `/static/images/${color}-${hood}-${zipper}.png`;
       hoodieImg.src = imagePath;
 
-      // آپدیت استیکر
-      if (stickerEl.dataset.id === "0") {
+      const stickerEl = getChecked("sticker");
+      if (!stickerEl) return;
 
+      if (stickerEl.dataset.id === "0") {
         stickerOverlay.classList.remove("show");
         stickerOverlay.src = "";
-
       } else {
-
         stickerOverlay.classList.add("show");
-
-        stickerOverlay.src =
-          stickerEl.dataset.image;
-
+        stickerOverlay.src = stickerEl.dataset.image;
         stickerOverlay.onerror = function () {
-
           console.warn("استیکر پیدا نشد");
-
           stickerOverlay.classList.remove("show");
-
         };
-
       }
-
     }
 
-    // ---------- خلاصه انتخاب‌ها ----------
     function updateSummary() {
       const colorEl = getChecked('color');
-      const thicknessEl = getChecked('thickness');
+      const fabricEl = getChecked('fabric');    // ← مثل تیشرت
       const hoodEl = getChecked('hood');
-      const zipEl = getChecked('zip');
+      const zipperEl = getChecked('zipper');
       const stickerEl = getChecked('sticker');
       const colorName = colorEl ? colorEl.dataset.name : 'رنگ دلخواه';
       const colorValue = colorEl ? colorEl.value : '#FFFFFF';
@@ -474,43 +351,71 @@
       summaryList.innerHTML = `
         <li><span>اندازه</span><span>${lenInput.value}×${widInput.value} سانتی‌متر | آستین ${sleeveInput.value}</span></li>
         <li><span>رنگ</span><span><span class="color-dot" style="background:${colorValue}"></span>${colorName}</span></li>
-        <li><span>ضخامت پارچه</span><span>${thicknessEl ? thicknessEl.dataset.name : '-'}</span></li>
+        <li><span>ضخامت پارچه</span><span>${fabricEl ? fabricEl.dataset.name : '-'}</span></li>
         <li><span>کلاه</span><span>${hoodEl ? hoodEl.dataset.name : '-'}</span></li>
-        <li><span>زیپ</span><span>${zipEl ? zipEl.dataset.name : '-'}</span></li>
+        <li><span>زیپ</span><span>${zipperEl ? zipperEl.dataset.name : '-'}</span></li>
         <li><span>استیکر</span><span>${stickerEl && stickerEl.value !== 'none' ? 'انتخاب شده' : 'ندارد'}</span></li>
       `;
     }
 
-
-
-    // ---------- رویداد ثبت سفارش ----------
-    function handleOrder() {
+    
+    async function handleOrder() {
       if (!priceIsFresh) return;
 
-      const colorEl = getChecked('color');
-      const thicknessEl = getChecked('thickness');
-      const hoodEl = getChecked('hood');
-      const zipEl = getChecked('zip');
-      const stickerEl = getChecked('sticker');
+      const fabric = document.querySelector('input[name="fabric"]:checked').dataset.id;
+      const hood = document.querySelector('input[name="hood"]:checked').dataset.id;
+      const zipper = document.querySelector('input[name="zipper"]:checked').dataset.id;
+      const sticker = document.querySelector('input[name="sticker"]:checked').dataset.id;
+      const color = document.querySelector('input[name="color"]:checked').dataset.color;
 
-      const orderId = 'DZ-' + Math.floor(10000 + Math.random() * 90000);
-      orderIdText.textContent = `شماره سفارش: ${orderId}`;
+      const bodyHeight = lenInput.value;
+      const bodyWidth = widInput.value;
+      const sleeveHeight = sleeveInput.value;
+      const quantity = qtyInput.value;
 
-      modalSummary.innerHTML = `
-        <div><span>اندازه</span><span>${lenInput.value}×${widInput.value} | آستین ${sleeveInput.value}</span></div>
-        <div><span>رنگ</span><span>${colorEl ? colorEl.dataset.name : 'دلخواه'}</span></div>
-        <div><span>ضخامت پارچه</span><span>${thicknessEl ? thicknessEl.dataset.name : '-'}</span></div>
-        <div><span>کلاه</span><span>${hoodEl ? hoodEl.dataset.name : '-'}</span></div>
-        <div><span>زیپ</span><span>${zipEl ? zipEl.dataset.name : '-'}</span></div>
-        <div><span>استیکر</span><span>${stickerEl && stickerEl.value !== 'none' ? 'انتخاب شده' : 'ندارد'}</span></div>
-        <div><span>تعداد</span><span>${qtyInput.value} عدد</span></div>
-        <div><span>مبلغ کل</span><span>${lastTotal.toLocaleString('fa-IR')} تومان</span></div>
-      `;
+      const response = await fetch("/cart/add/dors/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify({
+          fabric: fabric,
+          hood: hood,
+          zipper: zipper,
+          sticker: sticker,
+          color: color,
+          body_height: bodyHeight,
+          body_width: bodyWidth,
+          sleeve_height: sleeveHeight,
+          quantity: quantity,
+          final_price: lastTotal
+        })
+      });
 
-      orderModal.classList.add('open');
+      const data = await response.json();
+      if (data.status === "success") {
+        showToast("به سبد خرید اضافه شد ✓");
+      } else {
+        showToast("خطا در افزودن به سبد خرید");
+      }
     }
 
-    // ---------- اتصال رویدادها ----------
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
     [lenInput, widInput, sleeveInput].forEach(el =>
       el.addEventListener('input', () => {
         updateSummary();
@@ -541,7 +446,7 @@
       })
     );
 
-    $$('input[name="zip"]').forEach(r =>
+    $$('input[name="zipper"]').forEach(r =>
       r.addEventListener('change', () => {
         updateSummary();
         updatePreview();
@@ -569,51 +474,44 @@
 
     orderBtn.addEventListener('click', handleOrder);
     closeModalBtn.addEventListener('click', () => orderModal.classList.remove('open'));
-    orderModal.addEventListener('click', e => { if (e.target === orderModal) orderModal.classList.remove('open'); });
+    orderModal.addEventListener('click', e => {
+      if (e.target === orderModal) orderModal.classList.remove('open');
+    });
 
     $$('[data-soon]').forEach(btn =>
       btn.addEventListener('click', () => showToast('این بخش به‌زودی اضافه می‌شه'))
     );
 
-    // اجرای اولیه
+   
     updatePreview();
     updateSummary();
 
-    document
-      .getElementById("calcBtn")
-      .addEventListener("click", async function () {
-        const fabric = document.querySelector('input[name="fabric"]:checked').dataset.id; 
-        const hood = document.querySelector('input[name="hood"]:checked').dataset.id; 
-        const zip = document.querySelector('input[name="zip"]:checked').dataset.id; 
-        const sticker = document.querySelector('input[name="sticker"]:checked').dataset.id; 
-        const bodyHeight = lenInput.value; 
-        const bodyWidth = widInput.value; 
-        const sleeveHeight = sleeveInput.value;
+   
+    document.getElementById("calcBtn").addEventListener("click", async function () {
+      const fabric = document.querySelector('input[name="fabric"]:checked').dataset.id;
+      const hood = document.querySelector('input[name="hood"]:checked').dataset.id;
+      const zipper = document.querySelector('input[name="zipper"]:checked').dataset.id;
+      const sticker = document.querySelector('input[name="sticker"]:checked').dataset.id;
 
-        const response = await fetch(
+      const bodyHeight = lenInput.value;
+      const bodyWidth = widInput.value;
+      const sleeveHeight = sleeveInput.value;
 
-          `/products/dors/calculate/?fabric=${fabric}&hood=${hood}&zip=${zip}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
+     
+      const response = await fetch(
+        `/products/dors/calculate/?fabric=${fabric}&hood=${hood}&zipper=${zipper}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
+      );
 
-        );
+      const data = await response.json();
+      document.getElementById("priceValue").innerText = data.price;
+      lastTotal = data.price;
+      priceIsFresh = true;
+      orderBtn.disabled = false;
+      showToast("قیمت محاسبه شد ✓");
+    });
 
-        const data = await response.json();
-
-        document.getElementById(
-          "priceValue"
-        ).innerText = data.price;
-
-        lastTotal = data.price;
-
-        priceIsFresh = true;
-
-        orderBtn.disabled = false;
-
-        showToast("قیمت محاسبه شد ✓");
-
-      });
-
-
+   
+    document.getElementById("orderBtn").addEventListener("click", handleOrder);
   </script>
 </body>
-
 </html>
