@@ -17,11 +17,11 @@ class Color(models.Model):
 
 class CustomProductColor(models.Model):
 
-    product = models.ForeignKey(
-        "Product",
-        on_delete=models.CASCADE,
-        related_name="custom_colors"
-    )
+    # product = models.ForeignKey(
+    #     "Product",
+    #     on_delete=models.CASCADE,
+    #     related_name="custom_colors"
+    # )
 
     color = models.ForeignKey(
         Color,

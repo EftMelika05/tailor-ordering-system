@@ -4,10 +4,10 @@ from .cart_item import CartItem
 
 class ReadyClothCartItem(CartItem):
 
-    product = models.ForeignKey(
-        "products.Product",
-        on_delete=models.CASCADE
-    )
+    # product = models.ForeignKey(
+    #     "products.Product",
+    #     on_delete=models.CASCADE
+    # )
 
     size = models.CharField(
         max_length=20

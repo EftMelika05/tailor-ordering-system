@@ -60,3 +60,124 @@ def calculate_tshirt_price(
     )
     total = round(total, -3)
     return int(total)
+
+from decimal import Decimal
+
+
+def calculate_dors_price(
+
+    fabric,
+    hood,
+    zipper,
+    sticker_price,
+
+    body_height,
+    body_width,
+    sleeve_height,
+
+    sewing_price,
+
+):
+    # جای دوخت
+    body_height += 3
+    body_width += 3
+    sleeve_height += 3
+
+    # کم شدن کشباف
+    body_height -= 5
+    sleeve_height -= 5
+
+    # تبدیل به متر
+    body_height = Decimal(str(body_height)) / Decimal("100")
+    body_width = Decimal(str(body_width)) / Decimal("100")
+    sleeve_height = Decimal(str(sleeve_height)) / Decimal("100")
+
+    fabric_price = fabric.price_per_meter
+
+    fabric_width = Decimal(str(fabric.fabric_width))
+
+    # قیمت تنه
+    body_price = (
+
+        body_height *
+        fabric_price *
+        (body_width / fabric_width)
+
+    )
+
+    # ضریب آستین
+    if body_height < Decimal("0.55"):
+        sleeve_factor = Decimal("0.35")
+        rib_factor = Decimal("0.40")
+
+    elif body_height < Decimal("0.60"):
+        sleeve_factor = Decimal("0.50")
+        rib_factor = Decimal("0.30")
+
+    elif body_height < Decimal("0.70"):
+        sleeve_factor = Decimal("0.55")
+        rib_factor = Decimal("0.25")
+
+    else:
+        sleeve_factor = Decimal("0.65")
+        rib_factor = Decimal("0.20")
+
+    # قیمت آستین
+    sleeve_price = (
+
+        sleeve_height *
+        fabric_price *
+        (sleeve_factor / fabric_width)
+
+    )
+
+    # قیمت پارچه مصرفی
+    fabric_total_price = (
+        body_price +
+        sleeve_price
+    )
+
+    # قیمت کشباف
+    rib_price = (
+        fabric_total_price *
+        rib_factor
+    )
+
+    # قیمت کلاه
+    hood_price = Decimal("0")
+
+    if hood.name != "بدون کلاه":
+
+        hood_fabric_price = sleeve_price
+
+        hood_price = (
+
+            hood.extra_price +
+
+            hood_fabric_price
+
+        )
+        
+    # قیمت زیپ
+    zipper_price = zipper.extra_price
+    
+    # قیمت نهایی
+    total = (
+
+        fabric_total_price +
+
+        rib_price +
+
+        hood_price +
+
+        zipper_price +
+
+        sticker_price +
+
+        sewing_price
+
+    )
+
+    total = round(total, -3)
+
+    return int(total)

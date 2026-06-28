@@ -5,7 +5,8 @@ from products.views import (
     calculate_tshirt,
     ready_mades_list,
     trousers,
-    dors,
+    design_dors,
+    calculate_dors,
 )
 
 urlpatterns = [
@@ -31,10 +32,16 @@ urlpatterns = [
     ),
     
     path(
-        'dors/',
-        dors,
-        name='dors'
+    "dors/",
+    design_dors,
+    name="design_dors"
     ),
-
+    
+    
+    path(
+    "dors/calculate/",
+    calculate_dors,
+    name="calculate_dors"
+    ),
 
 ]

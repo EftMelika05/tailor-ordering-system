@@ -95,18 +95,34 @@
 
       <hr class="seam">
 
+      <!-- مرحله ۳: ضخامت پارچه -->
+      <div class="step">
+        <h2><span class="step-no">۳</span> ضخامت پارچه</h2>
+        <p class="step-hint">پارچه ضخیم‌تر هزینه بیشتری داره.</p>
+        <div class="pill-group">
+          <span class="pill"><input type="radio" name="thickness" id="t2" value="medium" data-price="30000"
+              data-name="متوسط" checked><label for="t2">متوسط — سه‌فصل</label></span>
+          <span class="pill"><input type="radio" name="thickness" id="t3" value="thick" data-price="60000"
+              data-name="ضخیم (زمستانی)"><label for="t3">ضخیم — زمستانی</label></span>
+        </div>
+      </div>
+
+      <hr class="seam">
+
       <!-- مرحله ۴: کلاهدار / بدون کلاه -->
       <div class="step">
         <h2><span class="step-no">۴</span> نوع کلاه</h2>
         <div class="hood-group">
           <span class="hood-option">
-            <input type="radio" name="hood" id="h1" value="with-hood" data-price="20000" data-name="کلاهدار" checked>
+            <input type="radio" name="hood" id="h1" value="with-hood" data-price="{{ hood_with.extra_price }}"
+              data-name="کلاهدار" checked>
             <label for="h1">
               <span>کلاهدار</span>
             </label>
           </span>
           <span class="hood-option">
-            <input type="radio" name="hood" id="h2" value="without-hood" data-price="0" data-name="بدون کلاه">
+            <input type="radio" name="hood" id="h2" value="without-hood" data-price="{{ hood_without.extra_price }}"
+              data-name="بدون کلاه">
             <label for="h2">
               <span>بدون کلاه</span>
             </label>
@@ -121,13 +137,15 @@
         <h2><span class="step-no">۵</span> نوع زیپ</h2>
         <div class="zip-group">
           <span class="zip-option">
-            <input type="radio" name="zip" id="z1" value="with-zip" data-price="15000" data-name="زیپ‌دار" checked>
+            <input type="radio" name="zip" id="z1" value="with-zip" data-price="{{ zip_with.extra_price }}"
+              data-name="زیپ‌دار" checked>
             <label for="z1">
               <span>زیپ‌دار</span>
             </label>
           </span>
           <span class="zip-option">
-            <input type="radio" name="zip" id="z2" value="without-zip" data-price="0" data-name="بدون زیپ">
+            <input type="radio" name="zip" id="z2" value="without-zip" data-price="{{ zip_without.extra_price }}"
+              data-name="بدون زیپ">
             <label for="z2">
               <span>بدون زیپ</span>
             </label>
@@ -137,6 +155,7 @@
 
       <hr class="seam">
 
+
       <!-- مرحله ۶: استیکر -->
       <div class="step">
         <h2><span class="step-no">۵</span> استیکر</h2>
@@ -144,97 +163,34 @@
           <span style="color: #B8924A; padding-top: 8px; font-size: 15px;">در صورت وجود زیپ روی کار استیکر پشت لباس چاپ
             میشود.</span>
           <br>
-          استیکر انتخابی روی پیش‌نمایش تیشرت نمایش داده می‌شه.
+          استیکر انتخابی روی پیش‌نمایش دورس نمایش داده می‌شه.
         </p>
         <div class="sticker-grid">
           <span class="sticker-option none-option">
-            <input type="radio" name="sticker" id="s0" value="none" checked>
-            <label for="s0">بدون<br>استیکر</label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s1" value="cat1">
-            <label for="s1">
-              <img src="{% static 'stickers/cat1.svg' %}" alt="استیکر گربه">
+            <input type="radio" name="sticker" id="sticker-none" value="none" data-id="0" checked>
+
+            <label for="sticker-none">
+              بدون<br>استیکر
             </label>
           </span>
+
+          {% for sticker in stickers %}
+
           <span class="sticker-option">
-            <input type="radio" name="sticker" id="s2" value="heart">
-            <label for="s2">
-              <img src="{% static 'stickers/heart.svg' %}" alt="قلب">
+
+            <input type="radio" name="sticker" id="sticker{{ sticker.id }}" value="{{ sticker.name }}"
+              data-id="{{ sticker.id }}" data-image="{{ sticker.svg_file.url }}">
+
+            <label for="sticker{{ sticker.id }}">
+
+              <img src="{{ sticker.svg_file.url }}" alt="{{ sticker.name }}">
+
             </label>
+
           </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s3" value="black-and-white-car">
-            <label for="s3">
-              <img src="{% static 'stickers/black-and-white-car.svg' %}" alt="استیکر ماشین سیاه و سفید">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s4" value="car">
-            <label for="s4">
-              <img src="{% static 'stickers/car.svg' %}" alt="استیکر ماشین">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s5" value="carnation-wedding">
-            <label for="s5">
-              <img src="{% static 'stickers/carnation-wedding.svg' %}" alt="استیکر گل میخک عروسی">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s6" value="cat">
-            <label for="s6">
-              <img src="{% static 'stickers/cat.svg' %}" alt="استیکر گربه">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s7" value="flower1">
-            <label for="s7">
-              <img src="{% static 'stickers/flower1.svg' %}" alt="استیکر گل">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s8" value="flower2">
-            <label for="s8">
-              <img src="{% static 'stickers/flower2.svg' %}" alt="استیکر گل">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s9" value="flower3">
-            <label for="s9">
-              <img src="{% static 'stickers/flower3.svg' %}" alt="استیکر گل">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s10" value="cat2">
-            <label for="s10">
-              <img src="{% static 'stickers/cat2.svg' %}" alt="گربه">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s11" value="cat3">
-            <label for="s11">
-              <img src="{% static 'stickers/cat3.svg' %}" alt="استیکر جادو و کهکشان">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s12" value="landscape">
-            <label for="s12">
-              <img src="{% static 'stickers/landscape.svg' %}" alt="منظره">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s13" value="heart-and-brain">
-            <label for="s13">
-              <img src="{% static 'stickers/heart-and-brain.svg' %}" alt="قلب و مغز">
-            </label>
-          </span>
-          <span class="sticker-option">
-            <input type="radio" name="sticker" id="s16" value="tribal-art-design-dragonfly">
-            <label for="s16">
-              <img src="{% static 'stickers/tribal-art-design-dragonfly.svg' %}" alt="استیکر سنجاقک">
-            </label>
-          </span>
+
+          {% endfor %}
+
         </div>
       </div>
 
@@ -245,7 +201,7 @@
 
       <div class="preview-box" id="previewBox">
         <!-- تصویر دورس -->
-        <img class="hoodie-img" id="hoodieImg" src="{$ static 'images/white-with-hood-with-zip.png' %}" alt="دورس">
+        <img class="hoodie-img" id="hoodieImg" src="{% static 'images/white-with-hood-with-zip.png' %}" alt="دورس">
 
         <!-- استیکر روی عکس -->
         <img class="sticker-overlay" id="stickerOverlay" src="" alt="استیکر">
@@ -263,13 +219,39 @@
           </div>
         </div>
 
+        <!-- دکمه محاسبه + قیمت -->
         <button type="button" class="btn-primary" id="calcBtn">
-          <i class="fa-solid fa-calculator"></i> محاسبه قیمت
+
+          <i class="fa-solid fa-calculator"></i>
+
+          محاسبه قیمت
+
         </button>
 
         <div class="price-box">
-          <div class="price-label">قیمت نهایی</div>
-          <div class="price-value"><span id="priceValue">۰</span><span class="toman">تومان</span></div>
+
+          <div class="price-label">
+
+            قیمت نهایی
+
+          </div>
+
+          <div class="price-value">
+
+            <span id="priceValue">
+
+              ۰
+
+            </span>
+
+            <span class="toman">
+
+              تومان
+
+            </span>
+
+          </div>
+
         </div>
 
         <button type="button" class="btn-order" id="orderBtn" disabled>
@@ -402,22 +384,6 @@
     let lastTotal = 0;
     let priceIsFresh = false;
 
-    // ---------- قیمت پایه (این عدد رو متناسب با قیمت‌گذاری واقعی خودتون تغییر بدید) ----------
-    const BASE_PRICE = 320000;
-
-    // ---------- محاسبه قیمت واحد ----------
-    function calcUnitPrice() {
-      const thicknessEl = getChecked('thickness');
-      const hoodEl = getChecked('hood');
-      const zipEl = getChecked('zip');
-
-      let total = BASE_PRICE;
-      if (thicknessEl) total += parseInt(thicknessEl.dataset.price || '0', 10);
-      if (hoodEl) total += parseInt(hoodEl.dataset.price || '0', 10);
-      if (zipEl) total += parseInt(zipEl.dataset.price || '0', 10);
-
-      return total;
-    }
 
     // ---------- انیمیشن تغییر عدد قیمت ----------
     function animatePrice(from, to) {
@@ -455,12 +421,14 @@
       const colorEl = getChecked("color");
       const hoodEl = getChecked("hood");
       const zipEl = getChecked("zip");
+      const stickerEl = getChecked("sticker");
 
       if (!colorEl || !hoodEl || !zipEl) return;
 
       const color = colorEl.dataset.color;
       const hood = hoodEl.value;
       const zip = zipEl.value;
+
 
       // ساخت مسیر تصویر: images/{color}-{hood}-{zip}.png
       const imagePath = `/static/images/${color}-${hood}-${zip}.png`;
@@ -469,22 +437,28 @@
       hoodieImg.src = imagePath;
 
       // آپدیت استیکر
-      const stickerEl = getChecked("sticker");
-      if (!stickerEl) return;
+      if (stickerEl.dataset.id === "0") {
 
-      const sticker = stickerEl.value;
-      if (sticker === "none") {
-        stickerOverlay.classList.remove('show');
-        stickerOverlay.src = '';
+        stickerOverlay.classList.remove("show");
+        stickerOverlay.src = "";
+
       } else {
-        stickerOverlay.classList.add('show');
-        stickerOverlay.src = `/static/stickers/${sticker}.svg`;
+
+        stickerOverlay.classList.add("show");
+
+        stickerOverlay.src =
+          stickerEl.dataset.image;
 
         stickerOverlay.onerror = function () {
-          console.warn(`استیکر ${sticker}.svg یافت نشد`);
-          stickerOverlay.classList.remove('show');
+
+          console.warn("استیکر پیدا نشد");
+
+          stickerOverlay.classList.remove("show");
+
         };
+
       }
+
     }
 
     // ---------- خلاصه انتخاب‌ها ----------
@@ -507,23 +481,7 @@
       `;
     }
 
-    // ---------- رویداد دکمه محاسبه ----------
-    function handleCalc() {
-      let qty = parseInt(qtyInput.value, 10);
-      if (!qty || qty < 1) {
-        qty = 1;
-        qtyInput.value = 1;
-      }
 
-      const unit = calcUnitPrice();
-      const total = unit * qty;
-
-      animatePrice(lastTotal, total);
-      lastTotal = total;
-      priceIsFresh = true;
-      orderBtn.disabled = false;
-      showToast('قیمت محاسبه شد ✓');
-    }
 
     // ---------- رویداد ثبت سفارش ----------
     function handleOrder() {
@@ -568,7 +526,7 @@
       })
     );
 
-    $$('input[name="thickness"]').forEach(r =>
+    $$('input[name="fabric"]').forEach(r =>
       r.addEventListener('change', () => {
         updateSummary();
         invalidatePrice();
@@ -609,7 +567,6 @@
     });
     qtyInput.addEventListener('input', invalidatePrice);
 
-    calcBtn.addEventListener('click', handleCalc);
     orderBtn.addEventListener('click', handleOrder);
     closeModalBtn.addEventListener('click', () => orderModal.classList.remove('open'));
     orderModal.addEventListener('click', e => { if (e.target === orderModal) orderModal.classList.remove('open'); });
@@ -621,6 +578,41 @@
     // اجرای اولیه
     updatePreview();
     updateSummary();
+
+    document
+      .getElementById("calcBtn")
+      .addEventListener("click", async function () {
+        const fabric = document.querySelector('input[name="fabric"]:checked').dataset.id; 
+        const hood = document.querySelector('input[name="hood"]:checked').dataset.id; 
+        const zip = document.querySelector('input[name="zip"]:checked').dataset.id; 
+        const sticker = document.querySelector('input[name="sticker"]:checked').dataset.id; 
+        const bodyHeight = lenInput.value; 
+        const bodyWidth = widInput.value; 
+        const sleeveHeight = sleeveInput.value;
+
+        const response = await fetch(
+
+          `/products/dors/calculate/?fabric=${fabric}&hood=${hood}&zip=${zip}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
+
+        );
+
+        const data = await response.json();
+
+        document.getElementById(
+          "priceValue"
+        ).innerText = data.price;
+
+        lastTotal = data.price;
+
+        priceIsFresh = true;
+
+        orderBtn.disabled = false;
+
+        showToast("قیمت محاسبه شد ✓");
+
+      });
+
+
   </script>
 </body>
 
