@@ -56,7 +56,7 @@ def add_tshirt_to_cart(request):
         })
 
     data = json.loads(request.body)
-
+    
     cart, created = Cart.objects.get_or_create(
         user=request.user
     )
@@ -86,6 +86,10 @@ def add_tshirt_to_cart(request):
         collar=collar,
 
         sticker=sticker,
+        
+        collar_style=data["collar_style"],
+        
+        custom_color=data["color"],
 
         body_height=data["body_height"],
 

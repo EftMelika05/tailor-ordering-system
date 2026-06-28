@@ -15,7 +15,11 @@ class CustomTshirtCartItem(CartItem):
         on_delete=models.SET_NULL,
         null=True
     )
-
+    
+    collar_style = models.CharField(
+    max_length=30
+    )
+    
     custom_color = models.CharField(
     max_length=30
     )

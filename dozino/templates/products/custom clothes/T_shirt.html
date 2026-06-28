@@ -449,10 +449,20 @@
           'input[name="collar"]:checked'
         ).dataset.id;
 
+      const collarStyle =
+        document.querySelector(
+          'input[name="collar"]:checked'
+        ).value;
+
       const sticker =
         document.querySelector(
           'input[name="sticker"]:checked'
         ).dataset.id;
+
+      const color =
+        document.querySelector(
+          'input[name="color"]:checked'
+        ).dataset.color;
 
       const bodyHeight = lenInput.value;
 
@@ -477,7 +487,9 @@
 
             fabric: fabric,
             collar: collar,
+            collar_style: collarStyle,
             sticker: sticker,
+            color: color,
 
             body_height: bodyHeight,
             body_width: bodyWidth,
