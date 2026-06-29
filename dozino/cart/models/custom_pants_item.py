@@ -4,22 +4,26 @@ from .cart_item import CartItem
 
 class CustomPantsCartItem(CartItem):
 
-    LEG_TYPES = (
-        ("straight", "راسته"),
-        ("keshbaf", "کشباف"),
-        ("kloosh", "کلوش"),
-    )
-
     fabric = models.ForeignKey(
         "products.Fabric",
         on_delete=models.SET_NULL,
         null=True
     )
 
-    color = models.ForeignKey(
-        "products.Color",
+    leg = models.ForeignKey(
+        "products.LegType",
         on_delete=models.SET_NULL,
         null=True
+    )
+
+    pocket = models.ForeignKey(
+        "products.PocketOption",
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    custom_color = models.CharField(
+        max_length=30
     )
 
     pants_length = models.FloatField()
@@ -29,15 +33,6 @@ class CustomPantsCartItem(CartItem):
     hip_width = models.FloatField()
 
     thigh_width = models.FloatField()
-
-    leg_type = models.CharField(
-        max_length=20,
-        choices=LEG_TYPES
-    )
-
-    has_pocket = models.BooleanField(
-        default=False
-    )
 
     def __str__(self):
         return f"Pants #{self.id}"

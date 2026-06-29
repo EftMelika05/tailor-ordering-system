@@ -1,5 +1,4 @@
 from django.db import models
-
 from .cart_item import CartItem
 
 
@@ -11,16 +10,27 @@ class CustomHoodieCartItem(CartItem):
         null=True
     )
 
-    color = models.CharField(
+    hood = models.ForeignKey(
+        "products.HoodType",
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    zipper = models.ForeignKey(
+        "products.ZipperType",
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    sticker = models.ForeignKey(
+        "products.Sticker",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    custom_color = models.CharField(
         max_length=30
-    )
-
-    has_hood = models.BooleanField(
-        default=True
-    )
-
-    has_zipper = models.BooleanField(
-        default=False
     )
 
     body_height = models.FloatField()
@@ -28,3 +38,6 @@ class CustomHoodieCartItem(CartItem):
     body_width = models.FloatField()
 
     sleeve_height = models.FloatField()
+
+    def __str__(self):
+        return f"Hoodie #{self.id}"

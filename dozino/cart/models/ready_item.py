@@ -19,5 +19,5 @@ class ReadyClothCartItem(CartItem):
         null=True
     )
 
-    def __str__(self):
-        return f"{self.product.name}"
+    # def __str__(self):
+    #     return f"{self.product.name}"

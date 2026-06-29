@@ -52,6 +52,8 @@ class LegType(models.Model):
     name = models.CharField(
         max_length=255
     )
+    
+    value = models.CharField(max_length=50, default='loose') 
 
     extra_price = models.DecimalField(
         max_digits=10,

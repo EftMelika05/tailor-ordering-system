@@ -99,7 +99,7 @@ def ready_mades_list(request):
 
 def design_dors(request):
 
-    fabrics = Fabric.objects.filter(is_active=True)
+    fabrics = Fabric.objects.filter(is_active=True, id__in=[2, 3]) 
     stickers = Sticker.objects.all()
     hoods = HoodType.objects.all()
     zippers = ZipperType.objects.all()

@@ -58,93 +58,133 @@
                     </div>
 
                     <div id="cart-items-list">
-                        <div id="cart-items-list">
 
-                            {% for item in tshirt_items %}
-
-                            <div class="cart-item" data-id="{{ item.id }}" data-price="{{ item.final_price }}">
-
-                                <div class="product-img">
-
-                                    <img class="cart-shirt"
-                                        src="/static/images/{{ item.custom_color }}-{{ item.collar_style }}.png"
-                                        alt="تیشرت سفارشی">
-
-                                    {% if item.sticker %}
-
-                                    <img class="cart-sticker" src="{{ item.sticker.svg_file.url }}" alt="استیکر">
-
-                                    {% endif %}
-
-                                </div>
-
-                                <div class="product-name">
-
-                                    تیشرت سفارشی
-
-                                    <br>
-
-                                    <small>
-
-                                        {{ item.fabric.name }}
-
-                                        |
-
-                                        {{ item.collar.name }}
-
-                                    </small>
-
-                                </div>
-
-                                <div class="counter">
-
-                                    <button class="plus" aria-label="افزایش تعداد">
-                                        +
-                                    </button>
-
-                                    <span class="qty-val">
-
-                                        {{ item.quantity }}
-
-                                    </span>
-
-                                    <button class="minus" aria-label="کاهش تعداد">
-                                        -
-                                    </button>
-
-                                </div>
-
-                                <div class="product-price">
-
-                                    <span class="price-text">
-
-                                        {{ item.final_price }}
-
-                                    </span>
-
-                                    تومان
-
-                                </div>
-
-                                <button class="delete-btn" data-id="{{ item.id }}" aria-label="حذف محصول">
-
-                                    <i class="fa-solid fa-trash-can"></i>
-
-                                </button>
-
+                        <!-- ============================================================ -->
+                        <!-- تیشرت -->
+                        <!-- ============================================================ -->
+                        {% for item in tshirt_items %}
+                        <div class="cart-item" data-id="{{ item.id }}" data-price="{{ item.final_price }}">
+                            <div class="product-img">
+                                <img class="cart-shirt"
+                                    src="/static/images/{{ item.custom_color }}-{{ item.collar_style }}.png"
+                                    alt="تیشرت سفارشی">
+                                {% if item.sticker %}
+                                <img class="cart-sticker" src="{{ item.sticker.svg_file.url }}" alt="استیکر">
+                                {% endif %}
                             </div>
-
-                            {% empty %}
-
-                            <p>
-
-                                سبد خرید شما خالی است
-
-                            </p>
-
-                            {% endfor %}
-
+                            <div class="product-name">
+                                تیشرت سفارشی
+                                <br>
+                                <small>
+                                    {{ item.fabric.name }} | {{ item.collar.name }}
+                                </small>
+                            </div>
+                            <div class="counter">
+                                <button class="plus" aria-label="افزایش تعداد">+</button>
+                                <span class="qty-val">{{ item.quantity }}</span>
+                                <button class="minus" aria-label="کاهش تعداد">-</button>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-text">{{ item.final_price }}</span>
+                                تومان
+                            </div>
+                            <button class="delete-btn" data-id="{{ item.id }}" aria-label="حذف محصول">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
+                        {% empty %}
+                        <!-- اگه تیشرت نباشه چیزی نشون نده -->
+                        {% endfor %}
+
+                        <!-- ============================================================ -->
+                        <!-- هودی -->
+                        <!-- ============================================================ -->
+                        {% for item in hoodie_items %}
+                        <div class="cart-item" data-id="{{ item.id }}" data-price="{{ item.final_price }}">
+                            <div class="product-img">
+                                <img class="cart-shirt"
+                                    src="/static/images/{{ item.custom_color }}-with-hood-{% if item.zipper %}with{% else %}without{% endif %}-zip.png"
+                                    alt="هودی سفارشی">
+                                {% if item.sticker %}
+                                <img class="cart-sticker" src="{{ item.sticker.svg_file.url }}" alt="استیکر">
+                                {% endif %}
+                            </div>
+                            <div class="product-name">
+                                هودی سفارشی
+                                <br>
+                                <small>
+                                    {{ item.fabric.name }} | {{ item.hood.name }}
+                                </small>
+                                <br>
+                                <small style="color: #888; font-size: 12px;">
+                                    زیپ: {{ item.zipper.name }}
+                                </small>
+                            </div>
+                            <div class="counter">
+                                <button class="plus" aria-label="افزایش تعداد">+</button>
+                                <span class="qty-val">{{ item.quantity }}</span>
+                                <button class="minus" aria-label="کاهش تعداد">-</button>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-text">{{ item.final_price }}</span>
+                                تومان
+                            </div>
+                            <button class="delete-btn" data-id="{{ item.id }}" aria-label="حذف محصول">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                        {% empty %}
+                        <!-- اگه هودی نباشه چیزی نشون نده -->
+                        {% endfor %}
+
+                        <!-- ============================================================ -->
+                        <!-- شلوار -->
+                        <!-- ============================================================ -->
+                        {% for item in pants_items %}
+                        <div class="cart-item" data-id="{{ item.id }}" data-price="{{ item.final_price }}">
+                            <div class="product-img">
+                                <img class="cart-shirt"
+                                    src="/static/images/{{ item.custom_color }}-{{ item.leg.value }}.png"
+                                    alt="شلوار سفارشی">
+                            </div>
+                            <div class="product-name">
+                                شلوار سفارشی
+                                <br>
+                                <small>
+                                    {{ item.fabric.name }} | {{ item.leg.name }}
+                                </small>
+                                <br>
+                                <small style="color: #888; font-size: 12px;">
+                                    جیب: {{ item.pocket.name }}
+                                </small>
+                            </div>
+                            <div class="counter">
+                                <button class="plus" aria-label="افزایش تعداد">+</button>
+                                <span class="qty-val">{{ item.quantity }}</span>
+                                <button class="minus" aria-label="کاهش تعداد">-</button>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-text">{{ item.final_price }}</span>
+                                تومان
+                            </div>
+                            <button class="delete-btn" data-id="{{ item.id }}" aria-label="حذف محصول">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                        {% empty %}
+                        <!-- اگه شلوار نباشه چیزی نشون نده -->
+                        {% endfor %}
+
+                        <!-- ============================================================ -->
+                        <!-- اگه هیچ محصولی نبود -->
+                        <!-- ============================================================ -->
+                        {% if not tshirt_items and not hoodie_items and not pants_items %}
+                        <div class="cart-item">
+                            <p style="text-align: center; width: 100%; padding: 40px 0; color: #888; font-size: 18px;">
+                                سبد خرید شما خالی است
+                            </p>
+                        </div>
+                        {% endif %}
 
                     </div>
                 </div>
@@ -157,22 +197,14 @@
 
                     <div class="summary-row">
                         <span>تعداد محصولات</span>
-                        <span id="total-qty">
-
-                            {{ tshirt_items.count }}
-
-                        </span>
+                        <span id="total-qty">0</span>
                     </div>
 
                     <div class="summary-divider"></div>
 
                     <div class="total-price-box">
                         <span>مبلغ کل</span>
-                        <span id="final-price">
-
-                            {{ total_price|floatformat:0 }} تومان
-
-                        </span>
+                        <span id="final-price">۰ تومان</span>
                     </div>
 
                     <p class="checkout-note">در صورت صحت اطلاعات کلیک کنید</p>
@@ -187,78 +219,53 @@
     </div>
 
     <footer>
-
         <div class="footer-col">
-
             <h2>DOZINO</h2>
-
-            <p>
-                همراه شما در طراحی و دوخت لباس
-            </p>
-
+            <p>همراه شما در طراحی و دوخت لباس</p>
             <div class="social">
-
                 <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام">
                     <i class="fa-brands fa-instagram"></i>
                 </a>
-
                 <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام">
                     <i class="fa-brands fa-telegram"></i>
                 </a>
-
                 <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
-
             </div>
-
         </div>
 
         <div class="footer-col">
-
             <h3>دسترسی سریع</h3>
-
             <ul>
                 <li><a href="{% url 'index' %}">خانه</a></li>
                 <li><a href="{% url 'list' %}">محصولات آماده</a></li>
                 <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
                 <li><a href="#">تماس با ما</a></li>
             </ul>
-
         </div>
 
         <div class="footer-col">
-
             <h3>خدمات مشتریان</h3>
-
             <ul>
                 <li><a href="#">راهنمای خرید</a></li>
                 <li><a href="#">پشتیبانی</a></li>
             </ul>
-
         </div>
 
         <div class="footer-col">
-
             <h3>خبرنامه</h3>
-
             <input type="email" placeholder="ایمیل شما">
-
             <button class="btn-subscribe">
                 <i class="fa-regular fa-envelope"></i> عضویت
             </button>
-
         </div>
 
         <div class="footer-col">
-
             <h3>تماس با ما</h3>
-
             <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
             <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
-
         </div>
-
     </footer>
 
     <script>
@@ -283,24 +290,18 @@
 
         // افزایش تعداد
         document.querySelectorAll(".plus").forEach(btn => {
-
-
             btn.addEventListener("click", async function () {
-
                 const item = this.closest(".cart-item");
-
                 const itemId = item.dataset.id;
 
                 const response = await fetch(
                     "/cart/update-quantity/",
                     {
                         method: "POST",
-
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRFToken": getCookie("csrftoken")
                         },
-
                         body: JSON.stringify({
                             item_id: itemId,
                             action: "increase"
@@ -311,38 +312,26 @@
                 const data = await response.json();
 
                 if (data.status === "success") {
-
-                    item.querySelector(".qty-val").textContent =
-                        data.quantity;
-
+                    item.querySelector(".qty-val").textContent = data.quantity;
                     updateCart();
                 }
-
             });
-
-
         });
 
         // کاهش تعداد
         document.querySelectorAll(".minus").forEach(btn => {
-
-
             btn.addEventListener("click", async function () {
-
                 const item = this.closest(".cart-item");
-
                 const itemId = item.dataset.id;
 
                 const response = await fetch(
                     "/cart/update-quantity/",
                     {
                         method: "POST",
-
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRFToken": getCookie("csrftoken")
                         },
-
                         body: JSON.stringify({
                             item_id: itemId,
                             action: "decrease"
@@ -353,61 +342,39 @@
                 const data = await response.json();
 
                 if (data.status === "success") {
-
-                    item.querySelector(".qty-val").textContent =
-                        data.quantity;
-
+                    item.querySelector(".qty-val").textContent = data.quantity;
                     updateCart();
                 }
-
             });
-
-
         });
 
-
         function getCookie(name) {
-
             let cookieValue = null;
-
             if (document.cookie && document.cookie !== '') {
-
                 const cookies = document.cookie.split(';');
-
                 for (let i = 0; i < cookies.length; i++) {
-
                     const cookie = cookies[i].trim();
-
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
-
-                        cookieValue = decodeURIComponent(
-                            cookie.substring(name.length + 1)
-                        );
-
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
                     }
                 }
             }
-
             return cookieValue;
         }
 
-
+        // حذف محصول
         document.addEventListener("click", async function (e) {
-
             const btn = e.target.closest(".delete-btn");
-
             if (!btn) return;
 
             const item = btn.closest(".cart-item");
-
             const itemId = btn.dataset.id;
 
             const response = await fetch(
                 `/cart/remove/${itemId}/`,
                 {
                     method: "POST",
-
                     headers: {
                         "X-CSRFToken": getCookie("csrftoken")
                     }
@@ -417,7 +384,6 @@
             const data = await response.json();
 
             if (data.status === "success") {
-
                 item.style.transition = "all 0.3s ease";
                 item.style.transform = "translateX(-20px)";
                 item.style.opacity = "0";
@@ -426,9 +392,7 @@
                     item.remove();
                     updateCart();
                 }, 300);
-
             }
-
         });
 
         // دکمه نهایی سازی
@@ -443,8 +407,6 @@
 
         // محاسبه اولیه
         updateCart();
-
-
     </script>
 
 </body>

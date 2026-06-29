@@ -243,6 +243,7 @@ def calculate_trousers_price(
 
     )
 
+
 # رند به هزار تومان
     total = round(total, -3)
 

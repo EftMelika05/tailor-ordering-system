@@ -43,7 +43,7 @@ urlpatterns = [
     path(
     "trousers/",
     design_trousers,
-    name="design_trousers"
+    name="trousers"
     ),
 
     path(

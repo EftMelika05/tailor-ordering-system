@@ -38,7 +38,8 @@
 
       <!-- مرحله ۱: اندازه‌ها  -->
       <div class="step">
-        <h2><span class="step-no">۱</span> اندازه‌ها <small style="font-size:11px;font-weight:400;color:var(--ink-soft)">(سانتی‌متر)</small></h2>
+        <h2><span class="step-no">۱</span> اندازه‌ها <small
+            style="font-size:11px;font-weight:400;color:var(--ink-soft)">(سانتی‌متر)</small></h2>
         <div class="field-row">
           <div class="field">
             <label for="body_height">قد دورس</label>
@@ -61,10 +62,14 @@
       <div class="step">
         <h2><span class="step-no">۲</span> رنگ پارچه</h2>
         <div class="swatches">
-          <span class="swatch"><input type="radio" name="color" id="c1" value="#FFFFFF" data-name="سفید" data-color="white" checked><label for="c1" style="background:#FFFFFF"></label></span>
-          <span class="swatch"><input type="radio" name="color" id="c2" value="#111111" data-name="سیاه" data-color="black"><label for="c2" style="background:#111111"></label></span>
-          <span class="swatch"><input type="radio" name="color" id="c4" value="#6B6B6B" data-name="طوسی" data-color="gray"><label for="c4" style="background:#6B6B6B"></label></span>
-          <span class="swatch"><input type="radio" name="color" id="c8" value="#D4C5A9" data-name="کرمی" data-color="cream"><label for="c8" style="background:#D4C5A9"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c1" value="#FFFFFF" data-name="سفید"
+              data-color="white" checked><label for="c1" style="background:#FFFFFF"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c2" value="#111111" data-name="سیاه"
+              data-color="black"><label for="c2" style="background:#111111"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c4" value="#6B6B6B" data-name="طوسی"
+              data-color="gray"><label for="c4" style="background:#6B6B6B"></label></span>
+          <span class="swatch"><input type="radio" name="color" id="c8" value="#D4C5A9" data-name="کرمی"
+              data-color="cream"><label for="c8" style="background:#D4C5A9"></label></span>
         </div>
       </div>
 
@@ -75,9 +80,14 @@
         <h2><span class="step-no">۳</span> ضخامت پارچه</h2>
         <p class="step-hint">پارچه ضخیم‌تر هزینه بیشتری داره.</p>
         <div class="pill-group">
-       
-          <span class="pill"><input type="radio" name="fabric" id="t2" data-id="2" value="2" data-name="متوسط"><label for="t2">متوسط — سه‌فصل</label></span>
-          <span class="pill"><input type="radio" name="fabric" id="t3" data-id="3" value="3" data-name="ضخیم (زمستانی)"><label for="t3">ضخیم — زمستانی</label></span>
+          <span class="pill">
+            <input type="radio" name="fabric" id="t2" data-id="2" value="2" data-name="متوسط" checked>
+            <label for="t2">متوسط — سه‌فصل</label>
+          </span>
+          <span class="pill">
+            <input type="radio" name="fabric" id="t3" data-id="3" value="3" data-name="ضخیم (زمستانی)">
+            <label for="t3">ضخیم — زمستانی</label>
+          </span>
         </div>
       </div>
 
@@ -129,7 +139,8 @@
       <div class="step">
         <h2><span class="step-no">۶</span> استیکر</h2>
         <p class="step-hint">
-          <span style="color: #B8924A; padding-top: 8px; font-size: 15px;">در صورت وجود زیپ روی کار استیکر پشت لباس چاپ میشود.</span>
+          <span style="color: #B8924A; padding-top: 8px; font-size: 15px;">در صورت وجود زیپ روی کار استیکر پشت لباس چاپ
+            میشود.</span>
           <br>
           استیکر انتخابی روی پیش‌نمایش دورس نمایش داده می‌شه.
         </p>
@@ -213,9 +224,11 @@
       <h2>DOZINO</h2>
       <p>همراه شما در طراحی و دوخت لباس</p>
       <div class="social">
-        <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام"><i
+            class="fa-brands fa-instagram"></i></a>
         <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام"><i class="fa-brands fa-telegram"></i></a>
-        <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ"><i
+            class="fa-brands fa-whatsapp"></i></a>
       </div>
     </div>
     <div class="footer-col">
@@ -247,7 +260,7 @@
   </footer>
 
   <script>
-   
+
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => [...document.querySelectorAll(sel)];
     const getChecked = (name) => document.querySelector(`input[name="${name}"]:checked`);
@@ -319,7 +332,7 @@
       const hood = hoodEl.value;      // with-hood یا without-hood
       const zipper = zipperEl.value;  // with-zip یا without-zip
 
-     
+
       const imagePath = `/static/images/${color}-${hood}-${zipper}.png`;
       hoodieImg.src = imagePath;
 
@@ -358,7 +371,7 @@
       `;
     }
 
-    
+
     async function handleOrder() {
       if (!priceIsFresh) return;
 
@@ -373,7 +386,7 @@
       const sleeveHeight = sleeveInput.value;
       const quantity = qtyInput.value;
 
-      const response = await fetch("/cart/add/dors/", {
+      const response = await fetch("/cart/add/hoodie/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -482,11 +495,11 @@
       btn.addEventListener('click', () => showToast('این بخش به‌زودی اضافه می‌شه'))
     );
 
-   
+
     updatePreview();
     updateSummary();
 
-   
+
     document.getElementById("calcBtn").addEventListener("click", async function () {
       const fabric = document.querySelector('input[name="fabric"]:checked').dataset.id;
       const hood = document.querySelector('input[name="hood"]:checked').dataset.id;
@@ -497,7 +510,7 @@
       const bodyWidth = widInput.value;
       const sleeveHeight = sleeveInput.value;
 
-     
+
       const response = await fetch(
         `/products/dors/calculate/?fabric=${fabric}&hood=${hood}&zipper=${zipper}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
       );
@@ -510,8 +523,9 @@
       showToast("قیمت محاسبه شد ✓");
     });
 
-   
+
     document.getElementById("orderBtn").addEventListener("click", handleOrder);
   </script>
 </body>
+
 </html>
