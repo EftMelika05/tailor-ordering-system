@@ -3,29 +3,17 @@ from django.db import models
 
 class Fabric(models.Model):
 
-    THICKNESS_CHOICES = (
-        ("thin", "نازک"),
-        ("medium", "متوسط"),
-        ("thick", "ضخیم"),
-    )
-
     name = models.CharField(
-        max_length=100
-    )
-
-    thickness = models.CharField(
-        max_length=20,
-        choices=THICKNESS_CHOICES
+        max_length=255
     )
 
     price_per_meter = models.DecimalField(
-        max_digits=12,
+        max_digits=10,
         decimal_places=2
     )
 
-    width = models.DecimalField(
-        max_digits=5,
-        decimal_places=2
+    fabric_width = models.FloatField(
+    default=1.1 
     )
 
     is_active = models.BooleanField(
@@ -33,4 +21,4 @@ class Fabric(models.Model):
     )
 
     def __str__(self):
-        return f"{self.name} - {self.get_thickness_display()}"
+        return self.name

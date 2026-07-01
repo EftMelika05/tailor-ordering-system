@@ -16,11 +16,11 @@ class OrderItem(models.Model):
         related_name="items"
     )
 
-    product = models.ForeignKey(
-        "products.Product",
-        on_delete=models.SET_NULL,
-        null=True
-    )
+    # product = models.ForeignKey(
+    #     "products.Product",
+    #     on_delete=models.SET_NULL,
+    #     null=True
+    # )
 
     product_name = models.CharField(
         max_length=255
