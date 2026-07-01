@@ -61,17 +61,17 @@
 
                 <h3>دسترسی سریع</h3>
 
-                <a href="profile.html" class="item active">
+                <a href="{% url 'profile' %}" class="item active">
                     <span>اطلاعات پروفایل</span>
                     <i class="fa-regular fa-user"></i>
                 </a>
 
-                <a href="orders.html" class="item">
+                <a href="{% url 'orders' %}" class="item">
                     <span>سفارش‌های من</span>
                     <i class="fa-solid fa-bag-shopping"></i>
                 </a>
 
-                <a href="cart.html" class="item">
+                <a href="{% url 'cart' %}" class="item">
                     <span>سبد خرید</span>
                     <i class="fa-solid fa-cart-shopping"></i>
                 </a>
@@ -123,7 +123,7 @@
                         <label for="username">
                             نام کاربری (غیرقابل تغییر)
                         </label>
-                        <input  name="username" type="text" id="username" value="negin_mohammadi" readonly>
+                        <input  name="username" type="text" id="username" value="{{user.username}}" readonly>
                     </div>
 
                 </div>
