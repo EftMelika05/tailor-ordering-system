@@ -20,18 +20,18 @@
 
         <nav>
             <ul>
-                <li><a href="New hero.html">خانه</a></li>
-                <li><a href="product listing.html">محصولات آماده</a></li>
-                <li><a href="New hero.html#custom-section">دوخت سفارشی</a></li>
-                <li><a href="New hero.html#about">درباره ما</a></li>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
             </ul>
         </nav>
 
         <div class="logo">Dozino</div>
 
         <div class="header-icons">
-            <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
-            <a href="Profile.html"><i class="fa-regular fa-user"></i></a>
+            <a href="{% url 'cart'%}"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
             <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
         </div>
 
@@ -51,7 +51,7 @@
                     </button>
                 </div>
 
-                <h2>نگین محمدی</h2>
+                <h2>{{user.full_name}}</h2>
 
                 <p>عضو خانواده Dozino</p>
 
@@ -116,7 +116,7 @@
                             نام و نام خانوادگی
                             <span class="required-star">*</span>
                         </label>
-                        <input name="full_name" type="text" id="fullName" placeholder="نام و نام خانوادگی خود را وارد کنید" required>
+                        <input name="full_name" type="text" id="fullName" value="{{user.full_name}}" placeholder="نام و نام خانوادگی خود را وارد کنید" required>
                     </div>
 
                     <div class="input-box">
@@ -138,8 +138,8 @@
                         </label>
                         <select name="gender" id="gender" required>
                             <option value="">انتخاب کنید</option>
-                            <option value="woman" selected>زن</option>
-                            <option value="man">مرد</option>
+                            <option value="woman" {% if user.gender == "woman" %} selected{% endif %} >زن</option>
+                            <option value="man" {% if user.gender == "man" %} selected{% endif %} >مرد</option>
                         </select>
                     </div>
 
@@ -160,7 +160,7 @@
                         <label for="postalCode">
                             کد پستی
                         </label>
-                        <input name="postal_code" type="text" id="postalCode" placeholder="کد پستی ۱۰ رقمی">
+                        <input name="postal_code" type="text" id="postalCode" value="{{user.postal_code}}" placeholder="کد پستی ۱۰ رقمی">
                     </div>
 
                     <div class="input-box address">
@@ -168,7 +168,7 @@
                             آدرس
                             <span class="required-star">*</span>
                         </label>
-                        <input name="address" type="text" id="address" placeholder="آدرس کامل خود را وارد کنید" required>
+                        <input name="address" type="text" id="address" value="{{user.address}}" placeholder="آدرس کامل خود را وارد کنید" required>
                     </div>
 
                 </div>
@@ -230,9 +230,9 @@
             <h3>دسترسی سریع</h3>
 
             <ul>
-                <li><a href="New hero.html">خانه</a></li>
-                <li><a href="product listing.html">محصولات آماده</a></li>
-                <li><a href="New hero.html#custom-section">دوخت سفارشی</a></li>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
                 <li><a href="#">تماس با ما</a></li>
             </ul>
 

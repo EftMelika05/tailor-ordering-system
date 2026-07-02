@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
+    'ready_products.apps.ReadyProductsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,10 +82,11 @@ WSGI_APPLICATION = 'dozino.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Dozino_DB',
+        'NAME': 'dozino',
         'USER' : 'postgres',
-        'PASSWORD' :'12345678',
-        'HOST':'localhost'
+        'PASSWORD' :'melika.2005',
+        'HOST':'localhost',
+        'PORT': '5432'
     }
 }
 
