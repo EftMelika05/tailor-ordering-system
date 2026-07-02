@@ -245,7 +245,7 @@
 
     <header class="topbar">
 
-        <a class="home-link" href="" aria-label="صفحه اصلی" title="صفحه اصلی">
+        <a class="home-link" href="{% url 'index'%}" aria-label="صفحه اصلی" title="صفحه اصلی">
             <!-- SVG Home Icon -->
             <svg class="home-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -281,10 +281,10 @@
                 <button type="submit" class="btn">ورود</button>
 
                 <p class="link">
-                    هنوز اکانت نداری؟ <a href="{% url 'register' %}">ثبت نام کن</a>
+                    حساب هنوز کاربری ندارید؟ <a href="{% url 'register' %}">ثبت نام کنید </a>
                 </p>
                 <p class="link">
-                    پسوردت رو فراموش کردی؟ <a href="{% url 'resetpassword' %}">با شمارت وارد شو</a>
+                    پسورد خود را فراموش کرده اید ؟ <a href="{% url 'resetpassword' %}">رمز خود  را بازیابی کنید</a>
                 </p>
 
             </form >

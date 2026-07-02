@@ -273,7 +273,7 @@
 <body>
     <header class="topbar">
 
-        <a class="home-link" href="" aria-label="صفحه اصلی" title="صفحه اصلی">
+        <a class="home-link" href="{% url 'index' %}" aria-label="صفحه اصلی" title="صفحه اصلی">
             <!-- SVG Home Icon -->
             <svg class="home-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -293,8 +293,8 @@
                     <div class="brand-name">Dozino</div>
                 </header>
 
-                <h1 class="title">به دوزینو خوش اومدی</h1>
-                <p class="subtitle">در یک دقیقه اکانت جدید بساز</p>
+                <h1 class="title">به دوزینو خوش اومدید</h1>
+                <p class="subtitle">در یک دقیقه اکانت خود را بسازید</p>
                 {% if messages %}
                     {% for message in messages %}
                         <p>{{ message }}</p>
@@ -334,7 +334,7 @@
                     <button class="btn" type="submit">ثبت نام</button>
 
                     <p class="login-link">
-                        قبلا ثبت نام کردی؟<a href="{% url 'login' %}"> وارد شو </a>
+                        قبلا ثبت نام کرده اید؟<a href="{% url 'login' %}"> وارد شوید</a>
                     </p>
                 </form>
             </div>

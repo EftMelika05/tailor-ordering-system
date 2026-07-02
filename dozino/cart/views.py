@@ -2,6 +2,7 @@ import json
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from .models import (
     Cart,
@@ -20,7 +21,7 @@ from products.models import (
     PocketOption,
 )
 
-
+@login_required
 def cart_page(request):
 
     if not request.user.is_authenticated:
@@ -56,6 +57,7 @@ def cart_page(request):
         context
     )
 
+@login_required
 def add_tshirt_to_cart(request):
 
     if request.method != "POST":
@@ -120,6 +122,7 @@ def add_tshirt_to_cart(request):
 # ============================================================
 # افزودن هودی به سبد خرید
 # ============================================================
+@login_required
 def add_hoodie_to_cart(request):
 
     if request.method != "POST":
@@ -188,6 +191,7 @@ def add_hoodie_to_cart(request):
 # ============================================================
 # افزودن شلوار به سبد خرید
 # ============================================================
+@login_required
 def add_pants_to_cart(request):
     if request.method != "POST":
         return JsonResponse({"status": "error"})
@@ -220,6 +224,7 @@ def add_pants_to_cart(request):
 # حذف آیتم از سبد خرید
 # ============================================================
 @require_POST
+@login_required
 def remove_cart_item(request, item_id):
 
     # تلاش برای حذف از تیشرت
@@ -265,6 +270,7 @@ def remove_cart_item(request, item_id):
 # ویرایش تعداد آیتم در سبد خرید
 # ============================================================
 @require_POST
+@login_required
 def update_cart_quantity(request):
 
     data = json.loads(request.body)

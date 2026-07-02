@@ -83,7 +83,7 @@ def user_logout(request):
     return redirect('index')
 
 
-#@login_required
+@login_required
 def profile(request):
 
     if request.method == 'POST':
@@ -130,7 +130,7 @@ def resetpassword(request):
         if step=='verify':
             code=request.POST.get('codeInput')
             if code=='123456' :
-                return redirect('new_password')
+                return redirect('new_pass')
             
             messages.error(request,'کد وارد شده صحیح نیست')
             return render(request , 'Account/reset.html', {'show_form2':True})
@@ -166,7 +166,7 @@ def new_password(request):
         if password != password2:
 
             messages.error(request,'رمزها مطابقت ندارند')
-            return redirect('new_password')
+            return redirect('new_pass')
 
         user_id = request.session.get('reset_user_id')
 
@@ -184,4 +184,4 @@ def new_password(request):
         messages.success(request,'رمز عبور با موفقیت تغییر کرد')
         return redirect('login')
 
-    return render(request,'Account/new_password.html')
+    return render(request,'Account/new_pass.html')

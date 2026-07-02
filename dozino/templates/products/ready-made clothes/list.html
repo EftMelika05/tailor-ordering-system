@@ -80,10 +80,10 @@
 
             <!-- کتگوری زنانه، مردانه و بچگانه -->
             <div class="category-tabs">
-                <button class="category-tab active" data-category="all">همه</button>
-                <button class="category-tab" data-category="women">زنانه</button>
-                <button class="category-tab" data-category="men">مردانه</button>
-                <button class="category-tab" data-category="kids">بچگانه</button>
+             <a href="{% url 'list' %}"class="category-tab">همه</a>
+             {% for category in categories %}
+             <a href="?category={{ category.slug }}" class="category-tab">{{ category.name }}</a>
+             {% endfor %}
             </div>
 
             <div class="products-grid">
@@ -91,8 +91,11 @@
                 {% for product in page_obj %}
 
                 <div class="product-card">
-
-                  <img src="{{ product.main_image.image.url }}">
+                    {% if product.main_image %}
+                    <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}" class="product-image">
+                    {% else %}
+                    <img src="{% static 'imag/no-image.png' %}" class="product-image">
+                    {% endif %}
 
                   <h3>
                    <a href="{% url 'detail' product.slug %}">
