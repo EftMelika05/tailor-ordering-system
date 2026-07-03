@@ -8,7 +8,7 @@ class Category(models.Model):
         ("female", "زنانه"),
         ("kids", "بچه‌گانه"),
     )
-    name = models.CharField(max_length=100)
+    ##name = models.CharField(max_length=100)
     gender = models.CharField(
         max_length=20,
         choices=gender_choice

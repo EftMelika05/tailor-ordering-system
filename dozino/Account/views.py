@@ -158,7 +158,7 @@ def new_password(request):
 
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
-
+        #print("USER ID:", user_id)
         if password != password2:
 
             messages.error(request,'رمزها مطابقت ندارند')
@@ -174,7 +174,7 @@ def new_password(request):
 
         user.set_password(password)
         user.save()
-
+        #print("HASH:", user.password)
         del request.session['reset_user_id']
 
         messages.success(request,'رمز عبور با موفقیت تغییر کرد')

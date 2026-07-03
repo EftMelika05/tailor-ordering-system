@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -131,7 +134,7 @@ STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'dozino/static')
 ]
 
-AUTH_USER_MODEL='Account.User'
+AUTH_USER_MODEL= 'Account.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT =os.path.join(BASE_DIR / 'media')

@@ -2,8 +2,7 @@ from django.shortcuts import render ,get_object_or_404
 from .models import Category,Product, ProductImage, ProductVariant, ProductSpecification , Color ,Size
 from django.core.paginator import Paginator
 from django.db.models import Min, Q
-from django.conf import settings
-print(settings.DATABASES)
+
 def product_list(request):
 
     products = Product.objects.prefetch_related(
@@ -18,11 +17,12 @@ def product_list(request):
             Q(name__icontains=search) |
             Q(description__icontains=search)
         )
+    categories = Category.objects.all()    
+    category= request.GET.get("category")
 
-    category_slug = request.GET.get("category")
-
-    if category_slug and category_slug != "all":
-        products = products.filter(category__slug=category_slug)
+    if category:
+      products = products.filter(
+        category__gender=category)
 
     sort = request.GET.get("sort")
 
@@ -58,7 +58,7 @@ def product_list(request):
         "categories": Category.objects.all(),
 
         "search": search or "",
-        "selected_category": category_slug or "all",
+        "categories": categories,
         "selected_sort": sort or "",
     }
 
@@ -77,6 +77,7 @@ def product_details(request,product_slug):
     colors = Color.objects.filter(productvariant__product=product).distinct()
     sizes = Size.objects.filter(
     productvariant__product=product).distinct()
+    
     context = {
         'product': product,
         'images': images,

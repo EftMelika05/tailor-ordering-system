@@ -100,24 +100,21 @@
             </option>
           </select>
 
-          {% if selected_category %}
+          <!-- {% if selected_category %}
           <input
             type="hidden"
             name="category"
             value="{{ selected_category }}"
           />
-          {% endif %}
-
+          {% endif %} -->
           <button type="submit">اعمال</button>
         </form>
 
         <!-- Category -->
 
         <div class="category-tabs">
-          <a
-            href="{% url 'list' %}"
-            class="category-tab {% if not selected_category %}active{% endif %}"
-          >
+          <a href="{% url 'list' %}" 
+          class="category-tab {% if not request.GET.category %}active{% endif %}">
             همه
           </a>
 
@@ -125,9 +122,9 @@
 
           <a
             href="?category={{ category.slug }}"
-            class="category-tab {% if selected_category == category.slug %} active {% endif %}"
+            class="category-tab {% if request.GET.category == category.gender %} active {% endif %}"
           >
-            {{ category.name }}
+            {{  category.get_gender_display }}
           </a>
 
           {% endfor %}
