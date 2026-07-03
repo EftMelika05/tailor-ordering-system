@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 import re
 User = get_user_model()
 
@@ -53,18 +54,14 @@ def user_login(request):
 
         username = request.POST.get('username')
         password = request.POST.get('password')
-
-        user = auth.authenticate(username=username, password=password )
-
+        user = authenticate(request, username=username, password=password)
         if user is not None:
-              
-             auth.login(request, user)
+          login(request, user)
              ##C>>if user is tailor
-             messages.success(request,'شما با موفقیت وارد سایت شدید' )
-             return redirect('index')
-
-              
-
+          messages.success(request,'شما با موفقیت وارد سایت شدید' )
+          return redirect('index')
+        print("USERNAME:", repr(username))
+        print("PASSWORD:", repr(password))
         messages.error( request,'نام کاربری یا رمز عبور اشتباه است' )
         return redirect('login')
 
@@ -122,7 +119,6 @@ def profile(request):
 
 
 def resetpassword(request):
-
     if request.method == 'POST':
 
         step= request.POST.get('step')

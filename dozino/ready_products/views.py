@@ -1,8 +1,9 @@
 from django.shortcuts import render ,get_object_or_404
-from .models import Category,Product, ProductImage, ProductVariant, ProductSpecification
+from .models import Category,Product, ProductImage, ProductVariant, ProductSpecification , Color ,Size
 from django.core.paginator import Paginator
 from django.db.models import Min, Q
-
+from django.conf import settings
+print(settings.DATABASES)
 def product_list(request):
 
     products = Product.objects.prefetch_related(
@@ -73,12 +74,16 @@ def product_details(request,product_slug):
     specifications = product.specifications.all()
     
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
-    
+    colors = Color.objects.filter(productvariant__product=product).distinct()
+    sizes = Size.objects.filter(
+    productvariant__product=product).distinct()
     context = {
         'product': product,
         'images': images,
         'variants': variants,
         'specifications': specifications,
         'related_products': related_products,
+        'sizes': sizes ,
+        'colors':colors ,
     }
     return render(request,'products/ready-made clothes/details.html',context)

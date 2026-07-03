@@ -1,226 +1,332 @@
 {% load static %}
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>product listing</title>
+    <title>محصولات آماده | DOZINO</title>
 
-    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'fonts/web/font-face.css' %}">
-    <link rel="stylesheet" href="{% static 'css/product listing.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link
+      rel="shortcut icon"
+      href="{% static 'imag/Dozino_Logo_Transparent.png' %}"
+      type="image/x-icon"
+    />
 
-</head>
+    <link rel="stylesheet" href="{% static 'fonts/web/font-face.css' %}" />
 
-<body>
+    <link rel="stylesheet" href="{% static 'css/product listing.css' %}" />
 
-    <!-- start nav -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
     <header>
+      <nav>
+        <ul>
+          <li><a href="{% url 'index' %}">خانه</a></li>
 
-        <nav>
-            <ul>
-                <li><a href="{% url 'index' %}">خانه</a></li>
-                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
-                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
-            </ul>
-        </nav>
+          <li><a href="{% url 'list' %}">محصولات آماده</a></li>
 
-        <div class="logo">
-            DOZINO
-        </div>
+          <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
 
-        <div class="header-icons">
-            
-            {% if user.is_authenticated %}
-            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
-            {% else %}
-            <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
-            {% endif %}
+          <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+        </ul>
+      </nav>
 
-            {% if user.is_authenticated %}
-             <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
-            {% else %}
-             <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
-            {% endif %}
-        
-            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <div class="logo">DOZINO</div>
 
-        </div>
-
+      <div class="header-icons">
+        {% if user.is_authenticated %}
+        <a href="{% url 'cart' %}">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+        {% endif %} {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">
+          <i class="fa-regular fa-user"></i>
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}">
+          <i class="fa-regular fa-user"></i>
+        </a>
+        {% endif %}
+      </div>
     </header>
-    <!-- end nav -->
 
-    <br>
     <section class="product-listing">
-        <div class="container">
-            <h2 class="section-title">کالکشن دوزینو</h2>
-            <span class="section-divider"></span>
-            <p class="section-subtitle">لباس منحصر به فرد، مخصوص تن تو</p>
+      <div class="container">
+        <h2 class="section-title">کالکشن دوزینو</h2>
 
-            <!-- فیلتر و جستجو  -->
-            <form method="get" class="filter-bar">
+        <span class="section-divider"></span>
 
-              <input type="search" name="search" value="{{ search }}" class="search-input" placeholder="جستجوی محصول...">
+        <p class="section-subtitle">لباس منحصر به فرد، مخصوص تن تو</p>
 
-              <select name="sort" class="sort-select">
+        <!-- Search + Sort -->
 
-              <option value="">پیش فرض</option>
-              <option value="cheap"{% if sort == 'cheap' %}selected{% endif %}>ارزان‌ترین</option>
-              <option value="expensive"{% if sort == 'expensive' %}selected{% endif %}>گران‌ترین</option>
-              <option value="new" {% if sort == 'new' %}selected{% endif %}>جدیدترین</option>
-              
-              </select>
+        <form method="get" class="filter-bar">
+          <input
+            type="search"
+            name="search"
+            class="search-input"
+            placeholder="جستجوی محصول..."
+            value="{{ search }}"
+          />
 
-              <button type="submit">اعمال</button>
+          <select name="sort" class="sort-select">
+            <option value="" {% if sort == "" %} selected {% endif %}>
+              مرتب سازی
+            </option>
 
-             </form>
+            <option
+              value="cheap" {% if  sort == "cheap" %} selected {%endif %}>
+              ارزان‌ترین
+            </option>
 
-            <!-- کتگوری زنانه، مردانه و بچگانه -->
-            <div class="category-tabs">
-             <a href="{% url 'list' %}"class="category-tab">همه</a>
-             {% for category in categories %}
-             <a href="?category={{ category.slug }}" class="category-tab">{{ category.name }}</a>
-             {% endfor %}
-            </div>
+            <option
+              value="expensive" {% if sort == "expensive" %} selected {% endif %}>
+              گران‌ترین
+            </option>
 
-            <div class="products-grid">
-               
-                {% for product in page_obj %}
+            <option value="new" {% if sort == "new" %} selected {% endif %}>
+              جدیدترین
+            </option>
+          </select>
 
-                <div class="product-card">
-                    {% if product.main_image %}
-                    <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}" class="product-image">
-                    {% else %}
-                    <img src="{% static 'imag/no-image.png' %}" class="product-image">
-                    {% endif %}
+          {% if selected_category %}
+          <input
+            type="hidden"
+            name="category"
+            value="{{ selected_category }}"
+          />
+          {% endif %}
 
-                  <h3>
-                   <a href="{% url 'detail' product.slug %}">
-                     {{ product.name }}
-                   </a>
-                  </h3>
+          <button type="submit">اعمال</button>
+        </form>
 
-                  <div class="product-price">
+        <!-- Category -->
 
-                    {% if product.old_price %}
-                    <span class="old-price">
-                    {{ product.old_price }}
-                    </span>
-                    {% endif %}
+        <div class="category-tabs">
+          <a
+            href="{% url 'list' %}"
+            class="category-tab {% if not selected_category %}active{% endif %}"
+          >
+            همه
+          </a>
 
-                    {{ product.price }} تومان
+          {% for category in categories %}
 
-                  </div>
-                </div>
-                {% endfor %}
-                
-            </div>
+          <a
+            href="?category={{ category.slug }}"
+            class="category-tab {% if selected_category == category.slug %} active {% endif %}"
+          >
+            {{ category.name }}
+          </a>
 
-          <div class="pagination">
+          {% endfor %}
+        </div>
 
-            {% if page_obj.has_previous %}
+        <div class="products-grid">
+          {% for product in page_obj %}
 
-            <a href="?page={{ page_obj.previous_page_number }}">قبلی    
-            </a>
-
+          <div class="product-card">
+            {% if product.old_price %}
+            <span class="product-badge">
+              <i class="fa-solid fa-fire"></i>
+              تخفیف ویژه
+            </span>
             {% endif %}
 
-            {% for num in page_obj.paginator.page_range %}
+            <a href="{% url 'detail' product.slug %}">
+              {% if product.main_image %}
 
-             <a href="?page={{ num }}">{{ num }}
+              <img
+                src="{{ product.main_image.image.url }}"
+                alt="{{ product.name }}"
+                class="product-image"
+              />
+
+              {% else %}
+
+              <img
+                src="{% static 'imag/no-image.png' %}"
+                alt="{{ product.name }}"
+                class="product-image"
+              />
+
+              {% endif %}
+            </a>
+
+            <div class="product-info">
+              <h3 class="product-name">
+                <a href="{% url 'detail' product.slug %}">
+                  {{ product.name }}
+                </a>
+              </h3>
+
+              <div class="product-price">
+                {% if product.old_price %}
+
+                <span class="old-price">
+                  {{ product.old_price|floatformat:0 }}
+                </span>
+
+                {% endif %} {{ product.price|floatformat:0 }} تومان
+               </div>
+
+             {% if product.variants.exists %} 
+              {% with variant=product.variants.first %} 
+                {% if variant.stock > 0 %}
+                 <a href="{% url 'detail' product.slug %}">
+                  <button class="btn-cart">
+                   <i class="fa-solid fa-cart-plus"></i>
+                   مشاهده محصول
+                  </button>
+                 </a>
+
+                {% else %}
+
+                  <button class="btn-cart disabled" disabled>
+                   <i class="fa-solid fa-ban"></i>
+                   اتمام موجودی  
+                  </button>
+
+                {% endif %} 
+              {% endwith %} 
+             {% else %}
+              <button class="btn-cart disabled" disabled>
+                <i class="fa-solid fa-ban"></i>
+                ناموجود
+              </button>
+             {% endif %}
+
+            </div>
+          </div>
+
+          {% empty %}
+          <div class="no-product">
+            <h2>محصولی پیدا نشد.</h2>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- Pagination -->
+
+        {% if page_obj.paginator.num_pages > 1 %}
+
+        <div class="pagination">
+          {% if page_obj.has_previous %}
+
+           <a
+             href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}"
+             class="page-link">
+             قبلی
+           </a>
+
+          {% endif %} 
+          {% for num in page_obj.paginator.page_range %} 
+            {% if page_obj.number == num %}
+             <span class="page-link active"> {{ num }} </span>
+
+            {% else %}
+              <a
+                href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}"
+                class="page-link">{{ num }}
+              </a>
+
+            {% endif %} 
+          {% endfor %} 
+           {% if page_obj.has_next %}
+             <a
+                href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}"
+                class="page-link">
+                بعدی
              </a>
-
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-
-            <a href="?page={{ page_obj.next_page_number }}">بعدی
-            </a>
             {% endif %}
-         </div>
+        </div>
+
+        {% endif %}
+      </div>
     </section>
 
-    <!-- footer -->
     <footer>
+      <div class="footer-col">
+        <h2>DOZINO</h2>
 
-        <div class="footer-col">
+        <p>همراه شما در طراحی و دوخت لباس</p>
 
-            <h2>DOZINO</h2>
+        <div class="social">
+          <a href="https://instagram.com" target="_blank">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
 
-            <p>
-                همراه شما در طراحی و دوخت لباس
-            </p>
+          <a href="https://t.me" target="_blank">
+            <i class="fa-brands fa-telegram"></i>
+          </a>
 
-            <div class="social">
-
-                <a href="https://instagram.com" target="_blank" aria-label="اینستاگرام">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-
-                <a href="https://t.me" target="_blank" aria-label="تلگرام">
-                    <i class="fa-brands fa-telegram"></i>
-                </a>
-
-                <a href="https://wa.me" target="_blank" aria-label="واتساپ">
-                    <i class="fa-brands fa-whatsapp"></i>
-                </a>
-
-            </div>
-
+          <a href="https://wa.me" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
         </div>
+      </div>
 
-        <div class="footer-col">
+      <div class="footer-col">
+        <h3>دسترسی سریع</h3>
 
-            <h3>دسترسی سریع</h3>
+        <ul>
+          <li><a href="{% url 'index' %}">خانه</a></li>
 
-            <ul>
-                <li><a href="{% url 'index' %}">خانه</a></li>
-                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
-                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-                <li><a href="#">تماس با ما</a></li>
-            </ul>
+          <li><a href="{% url 'list' %}">محصولات آماده</a></li>
 
-        </div>
+          <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
 
-        <div class="footer-col">
+          <li><a href="#">تماس با ما</a></li>
+        </ul>
+      </div>
 
-            <h3>خدمات مشتریان</h3>
+      <div class="footer-col">
+        <h3>خدمات مشتریان</h3>
 
-            <ul>
-                <li><a href="#">راهنمای خرید</a></li>
-                <li><a href="#">پشتیبانی</a></li>
-            </ul>
+        <ul>
+          <li><a href="#">راهنمای خرید</a></li>
 
-        </div>
+          <li><a href="#">پشتیبانی</a></li>
+        </ul>
+      </div>
 
-        <div class="footer-col">
+      <div class="footer-col">
+        <h3>خبرنامه</h3>
 
-            <h3>خبرنامه</h3>
+        <input type="email" placeholder="ایمیل شما" />
 
-            <input type="email" placeholder="ایمیل شما">
+        <button class="btn-subscribe">
+          <i class="fa-regular fa-envelope"></i>
 
-            <button class="btn-subscribe">
-                <i class="fa-regular fa-envelope"></i> عضویت
-            </button>
+          عضویت
+        </button>
+      </div>
 
-        </div>
+      <div class="footer-col">
+        <h3>تماس با ما</h3>
 
-        <div class="footer-col">
+        <p>
+          <i class="fa-solid fa-location-dot"></i>
 
-            <h3>تماس با ما</h3>
+          آدرس: کرمان، خیابان جهاد
+        </p>
 
-            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
-            <p><i class="fa-solid fa-phone"></i> شماره: ۰۹۱۲۳۴۵۶۷۸۹</p>
+        <p>
+          <i class="fa-solid fa-phone"></i>
 
-        </div>
-
+          شماره: ۰۹۱۲۳۴۵۶۷۸۹
+        </p>
+      </div>
     </footer>
-    <!-- end footer -->
-
-    
-</body>
-
+  </body>
 </html>

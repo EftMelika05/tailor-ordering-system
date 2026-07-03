@@ -56,41 +56,37 @@
             <div class="product-main">
                 <!-- سمت راست - گالری -->
                 <div class="product-gallery">
-                    <img src="{% static 'imag/product detail/PicsArt_05-31-03.28.46.jpg' %}" alt="تصویر اصلی تیشرت طرح پروانه"
+                    {% if images %}
+                     <img src="{{ images.first.image.url }}" alt="تصویر اصلی تیشرت طرح پروانه"
                         class="main-image" id="mainImage"
-                         onclick="changeImage(this)">
+                        onclick="changeImage(this)">
+                    {% else %}
+                     <img src="{% static 'imag/no-image.png' %}">
+                    {% endif %}
                     <div class="thumbnail-list">
-
-                        <img src="{% static 'imag/product detail/PicsArt_05-31-03.28.46.jpg' %}" alt="تصویر اصلی"
-                            data-image="{% static 'imag/product detail/PicsArt_05-31-03.28.46.jpg' %}"
-                            class="thumbnail active"
-                             onclick="changeImage(this)">
-                        
-                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 122_12_04 PM.png' %}" alt="رنگ دوم"
-                            data-image="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 122_12_04 PM.png' %}"
-                            class="thumbnail"
+                        {% for image in images %}
+                            <img src="{{ image.image.url }}" data-image="{{ image.image.url }}"class="thumbnail"  
+                            {% if forloop.first %}
+                            active
+                            {% endif %}
                             onclick="changeImage(this)">
-
-                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_043 PM.png' %}" alt="رنگ سوم"
-                            data-image="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_043 PM.png' %}"
-                            class="thumbnail"
-                             onclick="changeImage(this)">
-
-                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_204 PM.png' %}" alt="رنگ چهارم"
-                            data-image="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_204 PM.png' %}"
-                            class="thumbnail"
-                             onclick="changeImage(this)">
+                        {% endfor %}
                     </div>
                 </div>
 
                 <!-- سمت چپ - اطلاعات محصول -->
                 <div class="product-info-detail">
-                    <h1 class="product-title">تیشرت طرح پروانه</h1>
+                    <h1 class="product-title">{{ product.name }}</h1>
 
                     <div class="product-price-section">
-                        <span class="current-price">۴۵۰,۰۰۰ تومان</span>
-                        <span class="old-price">۵۰۰,۰۰۰ تومان</span>
-                        <span class="discount-badge"><i class="fa-solid fa-fire"></i> ۳۰٪ تخفیف ویژه</span>
+                        <span class="current-price">{{product.price}}تومان</span>
+                        {% if product.old_price %}
+                         <span class="old-price">{{product.old_price}}تومان</span>
+                        {% endif %}
+                        {% if product.old_price %}
+                          <span class="discount-badge"><i class="fa-solid fa-fire"></i> {{product.discount_percent }}%تخفیف ویژه</span>
+                        {% endif %}
+
                     </div>
 
                     <!-- انتخاب سایز -->
@@ -98,11 +94,15 @@
                         <div class="selector-title">
                             <i class="fas fa-ruler-combined"></i> انتخاب سایز:
                         </div>
+
                         <div class="size-buttons">
-                            <button class="size-btn active-size" data-size="M">M</button>
-                            <button class="size-btn" data-size="L">L</button>
-                            <button class="size-btn" data-size="XL">XL</button>
-                            <button class="size-btn" data-size="XXL">XXL</button>
+                          {% for size in sizes %}
+                            <button
+                             class="size-btn"
+                             data-size="{{ size.name }}">
+                             {{ size.name }}
+                            </button>
+                          {% endfor %}
                         </div>
                     </div>
 
@@ -112,16 +112,15 @@
                             <i class="fas fa-palette"></i> انتخاب رنگ:
                         </div>
                         <div class="color-buttons">
-                            <div class="color-btn" style="background-color: #1e1e2f;" data-color="مشکی"
-                                onclick="selectColor(this, 'مشکی')"></div>
-                            <div class="color-btn active-color" style="background-color: #ac8888;" data-color="گلبهی"
-                                onclick="selectColor(this, 'گلبهی')"></div>
-                            <div class="color-btn" style="background-color: #a9c4df;" data-color="آبی"
-                                onclick="selectColor(this, 'آبی')"></div>
-                            <div class="color-btn" style="background-color: #abd4bd;" data-color="سبز ملایم"
-                                onclick="selectColor(this, 'سبز ملایم')"></div>
-                        </div>
-                        <div class="selected-color-text" id="selectedColorText">رنگ انتخاب شده: گلبهی</div>
+                          {% for color in colors %}
+                           <div  class="color-btn"
+                              style="background-color: {{ color.code }};"
+                              data-color="{{ color.name }}"
+                              onclick="selectColor(this,'{{ color.name }}')">
+                           </div>
+                          {% endfor %}
+                        </div> 
+                        <div class="selected-color-text" id="selectedColorText">رنگ انتخاب شده: {{ colors.first.name }}</div>
                     </div>
 
                     <!-- انتخاب تعداد -->
@@ -151,14 +150,13 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane active-pane" id="desc">
-                        <h3>معرفی تیشرت طرح پروانه</h3>
-                        <p>این لباس با طراحی جذاب و استفاده از پارچه‌های درجه یک ایرانی، انتخابی عالی است. دوخت دقیق و
-                            ظریف، پارچه نرم و طرح زیبا از ویژگی‌های بارز این محصول می‌باشد.</p>
+                        <h3>معرفی محصول</h3>
+                        <p>{{ product.description}}</p>
                         <br>
                         <p><strong>ویژگی‌های برجسته:</strong></p>
                         <ul>
                             <li><i class="fa-solid fa-check"></i> جنس: پارچه تریکو مرغوب با کیفیت بالا</li>
-                            <li><i class="fa-solid fa-check"></i> دارای پارچه نرم و طرح پروانه در جلو</li>
+                            <li><i class="fa-solid fa-check"></i>دارای پارچه نرم و لطیف</li>
                             <li><i class="fa-solid fa-check"></i> مناسب برای: خانه، دورهمی‌های دوستانه</li>
                             <li><i class="fa-solid fa-check"></i> روش شستشو: ماشین لباسشویی</li>
                             <li><i class="fa-solid fa-check"></i> ارسال سریع</li>
@@ -166,10 +164,16 @@
                     </div>
                     <div class="tab-pane" id="specs">
                         <ul class="specs-list">
-                            <li><i class="fa-solid fa-tshirt"></i> <strong>جنس پارچه:</strong> تریکو درجه یک</li>
-                            <li><i class="fa-solid fa-circle"></i> <strong>مدل یقه:</strong> گرد</li>
-                            <li><i class="fa-solid fa-arrow-up"></i> <strong>آستین:</strong> کوتاه</li>
-                            <li><i class="fa-solid fa-weight-scale"></i> <strong>ضخامت پارچه:</strong> متوسط</li>
+
+                            {% for spec in specifications %}
+                              <li>
+                                <strong>
+                                 {{ spec.spec_name }}
+                                </strong>
+                                {{ spec.spec_value }}
+                              </li>
+                            {% endfor %}
+
                         </ul>
                     </div>
 
@@ -338,46 +342,23 @@
             <div class="related-products">
                 <h2 class="related-title"><i class="fas fa-tag"></i> محصولات مرتبط</h2>
                 <div class="products-grid">
-                    <div class="product-card">
-                        <img src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_25_355 PM.png' %}" alt="تیشرت پسرانه"
-                            class="product-image">
-                        <div class="product-info">
-                            <h3 class="product-name"><a href="#">تیشرت پسرانه</a></h3>
-                            <div class="product-price-related">۵۰۰,۰۰۰ تومان</div>
-                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
-                                    محصول</button></a>
+                    {% for item in related_products %}
+                        <div class="product-card">
+                          <a href="{% url 'detail' item.slug %}">
+                          <img src="{{ item.images.first.image.url }}">
+                          </a>
+                          <div class="product-info">
+                            <h3>
+                                <a href="{% url 'detail' item.slug %}">
+                                {{ item.name }}
+                                </a>
+                            </h3>
+                          </div>
+                          <div class="product-price">
+                            {{ item.price }}تومان
+                          </div>
                         </div>
-                    </div>
-                    <div class="product-card">
-                        <img src="{% static 'imag/product detail/gemini-2.5-flash-image-preview (nano-banana)_a_Scene_&_Surface__P (8).png' %}"
-                            alt="تیشرت طرح دار" class="product-image">
-                        <div class="product-info">
-                            <h3 class="product-name"><a href="#">تیشرت طرح دار</a></h3>
-                            <div class="product-price-related">۷۰۰,۰۰۰ تومان</div>
-                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
-                                    محصول</button></a>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <img src="{% static 'imag/product detail/PicsArt_05-31-03.26.21.jpg' %}" alt="دورس طرح پریا"
-                            class="product-image">
-                        <div class="product-info">
-                            <h3 class="product-name"><a href="#">دورس طرح پریا</a></h3>
-                            <div class="product-price-related">۸۰۰,۰۰۰ تومان</div>
-                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
-                                    محصول</button></a>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <img src="{% static 'imag/product detail/gemini-2.5-flash-image-preview (nano-banana)_a_پارچه_لباس_رو_این_قر (1).png' %}"
-                            alt="تیشرت با پارچه طرح دار" class="product-image">
-                        <div class="product-info">
-                            <h3 class="product-name"><a href="#">تیشرت با پارچه طرح دار</a></h3>
-                            <div class="product-price-related">۹۸۰,۰۰۰ تومان</div>
-                            <a href="#"><button class="btn-cart"><i class="fa-solid fa-cart-plus"></i> مشاهده
-                                    محصول</button></a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -549,7 +530,7 @@
         });
 
         // جدول ها
-        const productCategory = 'women';
+        const productCategory = "{{ product.category.name }}";
 
         document.addEventListener('DOMContentLoaded', function () {
             const kidsTable = document.getElementById('kidsTable');

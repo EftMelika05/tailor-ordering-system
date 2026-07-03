@@ -40,6 +40,15 @@ class Product(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
     
+    @property
+    def discount_percent(self):
+        if self.old_price:
+            return int(
+                (self.old_price - self.price)
+                / self.old_price * 100
+            )
+        return 0
+
     def __str__(self):
         return self.name
 
@@ -87,3 +96,4 @@ class ProductSpecification(models.Model):
     
     def __str__(self):
         return f"{self.product.name} - {self.spec_name}: {self.spec_value}"
+    
