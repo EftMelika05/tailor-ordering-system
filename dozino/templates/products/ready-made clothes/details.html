@@ -395,35 +395,52 @@
         }
 
         function addToCartDetail() {
+            // گرفتن سایز انتخاب شده
             let selectedSize = "M";
             const activeSize = document.querySelector('.size-btn.active-size');
-            if (activeSize) selectedSize = activeSize.getAttribute('data-size');
+            if (activeSize) {
+                selectedSize = activeSize.getAttribute('data-size');
+            }
 
-            let selectedColor = "گلبهی";
+            // گرفتن رنگ انتخاب شده
+            let selectedColor = null;
             const activeColor = document.querySelector('.color-btn.active-color');
-            if (activeColor) selectedColor = activeColor.getAttribute('data-color') || "گلبهی";
+            if (activeColor) {
+                selectedColor = activeColor.getAttribute('data-color');
+            }
 
-            const priceText = document.getElementById('productPrice').textContent;
-            const productName = document.querySelector('.product-title').innerText;
+            // گرفتن تعداد
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
 
-            const message = '✅ ' + productName + '\n📏 سایز: ' + selectedSize + ' | 🎨 رنگ: ' + selectedColor + ' | 🔢 تعداد: ' + quantity + '\n💰 ' + priceText + ' تومان\nبه سبد خرید اضافه شد.';
-            const msgDiv = document.getElementById('cartMessage');
-            msgDiv.innerHTML = message;
-            msgDiv.style.background = "#d4edda";
-            msgDiv.style.color = "#155724";
-            msgDiv.style.border = "2px solid #c3e6cb";
-            msgDiv.style.borderRadius = "12px";
-            msgDiv.style.padding = "15px";
-            msgDiv.style.marginTop = "15px";
-            msgDiv.style.fontSize = "16px";
-            msgDiv.style.lineHeight = "2";
+            // گرفتن ID محصول از تمپلیت
+            const productId = parseInt('{{ product.id }}');
 
-            setTimeout(() => {
-                msgDiv.innerHTML = "";
-                msgDiv.style.background = "";
-                msgDiv.style.border = "";
-                msgDiv.style.padding = "";
-            }, 5000);
+            // ارسال به سرور
+            fetch('/cart/add/ready/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    size: selectedSize,
+                    color: selectedColor,
+                    quantity: quantity
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        showToast('✅ محصول به سبد خرید اضافه شد!');
+                    } else {
+                        showToast('❌ خطا: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('❌ خطا در ارتباط با سرور');
+                });
         }
 
         const tabBtns = document.querySelectorAll('.tab-btn');
@@ -458,6 +475,40 @@
                 if (womenTable) womenTable.style.display = 'block';
             }
         });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function showToast(message) {
+            const msgDiv = document.getElementById('cartMessage');
+            msgDiv.innerHTML = message;
+            msgDiv.style.background = "#d4edda";
+            msgDiv.style.color = "#155724";
+            msgDiv.style.border = "2px solid #c3e6cb";
+            msgDiv.style.borderRadius = "12px";
+            msgDiv.style.padding = "15px";
+            msgDiv.style.marginTop = "15px";
+            msgDiv.style.fontSize = "16px";
+            msgDiv.style.lineHeight = "2";
+
+            setTimeout(() => {
+                msgDiv.innerHTML = "";
+                msgDiv.style.background = "";
+                msgDiv.style.border = "";
+                msgDiv.style.padding = "";
+            }, 3000);
+        }
     </script>
 
 </body>

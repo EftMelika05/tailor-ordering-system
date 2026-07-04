@@ -9,6 +9,7 @@ from .models import (
     CustomTshirtCartItem,
     CustomHoodieCartItem,
     CustomPantsCartItem,
+    ReadyClothCartItem,
 )
 
 from products.models import (
@@ -21,41 +22,30 @@ from products.models import (
     PocketOption,
 )
 
+from ready_products.models import Product, Color, Size, ProductVariant
+
+
+# ============================================================
+# صفحه سبد خرید
+# ============================================================
 @login_required
 def cart_page(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
 
-    if not request.user.is_authenticated:
-
-        return render(
-            request,
-            "cart/cart.html",
-            {
-                "tshirt_items": [],
-                "hoodie_items": [],
-                "pants_items": []
-            }
-        )
-
-    cart, created = Cart.objects.get_or_create(
-        user=request.user
-    )
-
-    
     tshirt_items = CustomTshirtCartItem.objects.filter(cart=cart)
     hoodie_items = CustomHoodieCartItem.objects.filter(cart=cart)
     pants_items = CustomPantsCartItem.objects.filter(cart=cart)
+    ready_items = ReadyClothCartItem.objects.filter(cart=cart)
 
     context = {
         "tshirt_items": tshirt_items,
         "hoodie_items": hoodie_items,
         "pants_items": pants_items,
+        "ready_items": ready_items,
     }
 
-    return render(
-        request,
-        "cart/cart.html",
-        context
-    )
+    return render(request, "cart/cart.html", context)
+
 
 @login_required
 def add_tshirt_to_cart(request):
@@ -220,6 +210,74 @@ def add_pants_to_cart(request):
 
     return JsonResponse({"status": "success"})
 
+
+# ============================================================
+# افزودن محصول آماده به سبد خرید
+# ============================================================
+@login_required
+def add_ready_to_cart(request):
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Method not allowed"})
+
+    try:
+        data = json.loads(request.body)
+        
+        product_id = data.get("product_id")
+        size_name = data.get("size")
+        color_name = data.get("color")
+        quantity = int(data.get("quantity", 1))
+        
+        # پیدا کردن محصول
+        product = Product.objects.get(id=product_id)
+        
+        # پیدا کردن سایز
+        size = Size.objects.get(name=size_name)
+        
+        # پیدا کردن رنگ
+        color = None
+        if color_name:
+            try:
+                color = Color.objects.get(name=color_name)
+            except Color.DoesNotExist:
+                pass
+        
+        # پیدا کردن قیمت از واریانت
+        variant = ProductVariant.objects.filter(
+            product=product,
+            size=size
+        ).first()
+        
+        if not variant:
+            return JsonResponse({
+                "status": "error",
+                "message": "قیمت این سایز موجود نیست"
+            })
+        
+        price = variant.price
+        
+        # پیدا کردن یا ایجاد سبد خرید
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        
+        # ایجاد آیتم در سبد خرید
+        item = ReadyClothCartItem.objects.create(
+            cart=cart,
+            product=product,
+            size=size_name,
+            color=color,
+            quantity=quantity,
+            final_price=price * quantity
+        )
+        
+        return JsonResponse({
+            "status": "success",
+            "message": "محصول به سبد خرید اضافه شد",
+            "item_id": item.id
+        })
+        
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)})
+
+
 # ============================================================
 # حذف آیتم از سبد خرید
 # ============================================================
@@ -258,6 +316,14 @@ def remove_cart_item(request, item_id):
         item.delete()
         return JsonResponse({"status": "success"})
     except CustomPantsCartItem.DoesNotExist:
+        pass
+    
+    # تلاش برای حذف از محصولات آماده
+    try:
+        item = ReadyClothCartItem.objects.get(id=item_id, cart__user=request.user)
+        item.delete()
+        return JsonResponse({"status": "success"})
+    except ReadyClothCartItem.DoesNotExist:
         pass
 
     return JsonResponse({
@@ -308,6 +374,15 @@ def update_cart_quantity(request):
             )
         except CustomPantsCartItem.DoesNotExist:
             pass
+
+    
+    # تلاش برای پیدا کردن در محصولات آماده
+    if not item:
+        try:
+            item = ReadyClothCartItem.objects.get(id=item_id, cart__user=request.user)
+        except ReadyClothCartItem.DoesNotExist:
+            pass
+
 
     if not item:
         return JsonResponse({

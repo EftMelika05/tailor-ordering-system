@@ -6,6 +6,7 @@ from cart.views import (
     add_pants_to_cart,
     remove_cart_item,
     update_cart_quantity,
+    add_ready_to_cart,
 )
 
 urlpatterns = [
@@ -44,5 +45,11 @@ urlpatterns = [
         'update-quantity/',
         update_cart_quantity,
         name='update_cart_quantity'
+    ),
+    
+     path(
+        'add/ready/',        
+        add_ready_to_cart,
+        name='add_ready'
     ),
 ]
