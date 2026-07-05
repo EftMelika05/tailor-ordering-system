@@ -37,11 +37,11 @@
             {% endif %}
 
             {% if user.is_authenticated %}
-             <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
             {% else %}
-             <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
+            <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
             {% endif %}
-        
+
             <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
         </div>
 
@@ -193,19 +193,21 @@
                         <div class="cart-item" data-id="{{ item.id }}" data-price="{{ item.final_price }}">
                             <div class="product-img">
                                 {% if item.product.images.first %}
-                                <img class="cart-shirt" src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+                                <img class="cart-shirt" src="{{ item.product.images.first.image.url }}"
+                                    alt="{{ item.product.name }}">
                                 {% else %}
-                                <img class="cart-shirt" src="{% static 'imag/no-image.png' %}" alt="{{ item.product.name }}">
+                                <img class="cart-shirt" src="{% static 'imag/no-image.png' %}"
+                                    alt="{{ item.product.name }}">
                                 {% endif %}
                             </div>
                             <div class="product-name">
                                 {{ item.product.name }}
                                 <br>
                                 <small>
-                                    سایز: {{ item.size }}
-                                    {% if item.color %}
-                                    | رنگ: {{ item.color.name }}
-                                    {% endif %}
+                                    {{ item.size }}
+                                    |
+                                    {{ item.color.name }}
+                                </small>
                                 </small>
                             </div>
                             <div class="counter">
@@ -228,7 +230,8 @@
                         <!-- ============================================================ -->
                         <!-- اگه هیچ محصولی نبود -->
                         <!-- ============================================================ -->
-                        {% if not tshirt_items and not hoodie_items and not pants_items and not ready_items %}                        <div class="cart-item">
+                        {% if not tshirt_items and not hoodie_items and not pants_items and not ready_items %} <div
+                            class="cart-item">
                             <p style="text-align: center; width: 100%; padding: 40px 0; color: #888; font-size: 18px;">
                                 سبد خرید شما خالی است
                             </p>
@@ -258,9 +261,9 @@
 
                     <p class="checkout-note">در صورت صحت اطلاعات کلیک کنید</p>
 
-                    <button class="btn-primary checkout-btn">
-                        <i class="fa-solid fa-check"></i>
-                        نهایی سازی سفارش
+                    <button class="btn-primary checkout-btn" onclick="goToCheckout()">
+                    <i class="fa-solid fa-check"></i>
+                         نهایی سازی سفارش
                     </button>
                 </div>
             </aside>
@@ -444,15 +447,30 @@
             }
         });
 
-        // دکمه نهایی سازی
-        document.querySelector(".checkout-btn").addEventListener("click", function () {
-            const totalItems = document.querySelectorAll(".cart-item").length;
-            if (totalItems === 0) {
-                alert("سبد خرید شما خالی است!");
-                return;
-            }
-            alert("سفارش شما با موفقیت ثبت شد!");
-        });
+       // دکمه نهایی سازی
+document.querySelector(".checkout-btn").addEventListener("click", async function () {
+    const totalItems = document.querySelectorAll(".cart-item").length;
+    if (totalItems === 0) {
+        showToast("سبد خرید شما خالی است!");
+        return;
+    }
+    
+    try {
+        const response = await fetch("{% url 'checkout_info' %}");
+        const data = await response.json();
+        
+        if (data.status === 'error') {
+            showToast(data.message);
+            setTimeout(() => {
+                window.location.href = "{% url 'profile' %}";
+            }, 2000);
+        } else {
+            window.location.href = "{% url 'checkout_info' %}";
+        }
+    } catch (error) {
+        window.location.href = "{% url 'checkout_info' %}";
+    }
+});
 
         // محاسبه اولیه
         updateCart();

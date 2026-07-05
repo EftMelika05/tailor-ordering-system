@@ -1,8 +1,10 @@
 import json
+import random
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import (
     Cart,
@@ -23,6 +25,21 @@ from products.models import (
 )
 
 from ready_products.models import Product, Color, Size, ProductVariant
+
+
+# ============================================================
+# دیکشنری ترجمه رنگ‌ها
+# ============================================================
+COLOR_TRANSLATION = {
+    'white': 'سفید',
+    'black': 'سیاه',
+    'gray': 'طوسی',
+    'cream': 'کرمی',
+    'navy': 'سرمه‌ای',
+    'brown': 'قهوه‌ای',
+    'olive': 'زیتونی',
+    'peach': 'گلبهی',
+}
 
 
 # ============================================================
@@ -47,135 +64,77 @@ def cart_page(request):
     return render(request, "cart/cart.html", context)
 
 
+# ============================================================
+# افزودن تیشرت به سبد خرید
+# ============================================================
 @login_required
 def add_tshirt_to_cart(request):
-
     if request.method != "POST":
-
-        return JsonResponse({
-            "status": "error"
-        })
+        return JsonResponse({"status": "error"})
 
     data = json.loads(request.body)
     
-    cart, created = Cart.objects.get_or_create(
-        user=request.user
-    )
+    cart, created = Cart.objects.get_or_create(user=request.user)
 
-    fabric = Fabric.objects.get(
-        id=data["fabric"]
-    )
-
-    collar = CollarType.objects.get(
-        id=data["collar"]
-    )
+    fabric = Fabric.objects.get(id=data["fabric"])
+    collar = CollarType.objects.get(id=data["collar"])
 
     sticker = None
-
-    if data["sticker"] != "0":
-
-        sticker = Sticker.objects.get(
-            id=data["sticker"]
-        )
+    if data.get("sticker") and data["sticker"] != "0":
+        sticker = Sticker.objects.get(id=data["sticker"])
 
     CustomTshirtCartItem.objects.create(
-
         cart=cart,
-
         fabric=fabric,
-
         collar=collar,
-
         sticker=sticker,
-        
         collar_style=data["collar_style"],
-        
         custom_color=data["color"],
-
         body_height=data["body_height"],
-
         body_width=data["body_width"],
-
         sleeve_height=data["sleeve_height"],
-
         quantity=data["quantity"],
-
         final_price=data["final_price"]
-
     )
 
-    return JsonResponse({
-        "status": "success"
-    })
-    
+    return JsonResponse({"status": "success"})
+
 
 # ============================================================
 # افزودن هودی به سبد خرید
 # ============================================================
 @login_required
 def add_hoodie_to_cart(request):
-
     if request.method != "POST":
-
-        return JsonResponse({
-            "status": "error"
-        })
+        return JsonResponse({"status": "error"})
 
     data = json.loads(request.body)
     
-    cart, created = Cart.objects.get_or_create(
-        user=request.user
-    )
+    cart, created = Cart.objects.get_or_create(user=request.user)
 
-    fabric = Fabric.objects.get(
-        id=data["fabric"]
-    )
-
-    hood = HoodType.objects.get(
-        id=data["hood"]
-    )
-
-    zipper = ZipperType.objects.get(
-        id=data["zipper"]
-    )
+    fabric = Fabric.objects.get(id=data["fabric"])
+    hood = HoodType.objects.get(id=data["hood"])
+    zipper = ZipperType.objects.get(id=data["zipper"])
 
     sticker = None
-
     if data.get("sticker") and data["sticker"] != "0":
-
-        sticker = Sticker.objects.get(
-            id=data["sticker"]
-        )
+        sticker = Sticker.objects.get(id=data["sticker"])
 
     CustomHoodieCartItem.objects.create(
-
         cart=cart,
-
         fabric=fabric,
-
         hood=hood,
-
         zipper=zipper,
-
         sticker=sticker,
-        
         custom_color=data["color"],
-
         body_height=data["body_height"],
-
         body_width=data["body_width"],
-
         sleeve_height=data["sleeve_height"],
-
         quantity=data["quantity"],
-
         final_price=data["final_price"]
-
     )
 
-    return JsonResponse({
-        "status": "success"
-    })
+    return JsonResponse({"status": "success"})
 
 
 # ============================================================
@@ -200,8 +159,8 @@ def add_pants_to_cart(request):
         leg=leg,
         pocket=pocket,
         custom_color=data["color"],
-        pants_length=data["pants_height"],   
-        waist=data["waist_width"],            
+        pants_length=data["pants_height"],
+        waist=data["waist_width"],
         hip_width=data["hip_width"],
         thigh_width=data["thigh_width"],
         quantity=data["quantity"],
@@ -227,13 +186,9 @@ def add_ready_to_cart(request):
         color_name = data.get("color")
         quantity = int(data.get("quantity", 1))
         
-        # پیدا کردن محصول
         product = Product.objects.get(id=product_id)
-        
-        # پیدا کردن سایز
         size = Size.objects.get(name=size_name)
         
-        # پیدا کردن رنگ
         color = None
         if color_name:
             try:
@@ -241,7 +196,6 @@ def add_ready_to_cart(request):
             except Color.DoesNotExist:
                 pass
         
-        # پیدا کردن قیمت از واریانت
         variant = ProductVariant.objects.filter(
             product=product,
             size=size
@@ -255,10 +209,8 @@ def add_ready_to_cart(request):
         
         price = variant.price
         
-        # پیدا کردن یا ایجاد سبد خرید
         cart, created = Cart.objects.get_or_create(user=request.user)
         
-        # ایجاد آیتم در سبد خرید
         item = ReadyClothCartItem.objects.create(
             cart=cart,
             product=product,
@@ -284,41 +236,27 @@ def add_ready_to_cart(request):
 @require_POST
 @login_required
 def remove_cart_item(request, item_id):
-
-    # تلاش برای حذف از تیشرت
     try:
-        item = CustomTshirtCartItem.objects.get(
-            id=item_id,
-            cart__user=request.user
-        )
+        item = CustomTshirtCartItem.objects.get(id=item_id, cart__user=request.user)
         item.delete()
         return JsonResponse({"status": "success"})
     except CustomTshirtCartItem.DoesNotExist:
         pass
 
-    # تلاش برای حذف از هودی
     try:
-        item = CustomHoodieCartItem.objects.get(
-            id=item_id,
-            cart__user=request.user
-        )
+        item = CustomHoodieCartItem.objects.get(id=item_id, cart__user=request.user)
         item.delete()
         return JsonResponse({"status": "success"})
     except CustomHoodieCartItem.DoesNotExist:
         pass
 
-    # تلاش برای حذف از شلوار
     try:
-        item = CustomPantsCartItem.objects.get(
-            id=item_id,
-            cart__user=request.user
-        )
+        item = CustomPantsCartItem.objects.get(id=item_id, cart__user=request.user)
         item.delete()
         return JsonResponse({"status": "success"})
     except CustomPantsCartItem.DoesNotExist:
         pass
     
-    # تلاش برای حذف از محصولات آماده
     try:
         item = ReadyClothCartItem.objects.get(id=item_id, cart__user=request.user)
         item.delete()
@@ -326,10 +264,7 @@ def remove_cart_item(request, item_id):
     except ReadyClothCartItem.DoesNotExist:
         pass
 
-    return JsonResponse({
-        "status": "error",
-        "message": "Item not found"
-    })
+    return JsonResponse({"status": "error", "message": "Item not found"})
 
 
 # ============================================================
@@ -338,66 +273,42 @@ def remove_cart_item(request, item_id):
 @require_POST
 @login_required
 def update_cart_quantity(request):
-
     data = json.loads(request.body)
-
     item_id = data.get("item_id")
     action = data.get("action")
 
     item = None
 
-    # تلاش برای پیدا کردن در تیشرت
     try:
-        item = CustomTshirtCartItem.objects.get(
-            id=item_id,
-            cart__user=request.user
-        )
+        item = CustomTshirtCartItem.objects.get(id=item_id, cart__user=request.user)
     except CustomTshirtCartItem.DoesNotExist:
         pass
 
-    # تلاش برای پیدا کردن در هودی
     if not item:
         try:
-            item = CustomHoodieCartItem.objects.get(
-                id=item_id,
-                cart__user=request.user
-            )
+            item = CustomHoodieCartItem.objects.get(id=item_id, cart__user=request.user)
         except CustomHoodieCartItem.DoesNotExist:
             pass
 
-    # تلاش برای پیدا کردن در شلوار
     if not item:
         try:
-            item = CustomPantsCartItem.objects.get(
-                id=item_id,
-                cart__user=request.user
-            )
+            item = CustomPantsCartItem.objects.get(id=item_id, cart__user=request.user)
         except CustomPantsCartItem.DoesNotExist:
             pass
-
     
-    # تلاش برای پیدا کردن در محصولات آماده
     if not item:
         try:
             item = ReadyClothCartItem.objects.get(id=item_id, cart__user=request.user)
         except ReadyClothCartItem.DoesNotExist:
             pass
 
-
     if not item:
-        return JsonResponse({
-            "status": "error",
-            "message": "Item not found"
-        })
+        return JsonResponse({"status": "error", "message": "Item not found"})
 
     if action == "increase":
-
         item.quantity += 1
-
     elif action == "decrease":
-
         if item.quantity > 1:
-
             item.quantity -= 1
 
     item.save()
@@ -406,4 +317,223 @@ def update_cart_quantity(request):
         "status": "success",
         "quantity": item.quantity
     })
- 
+
+
+# ============================================================
+# بررسی اطلاعات کاربر و نمایش خلاصه سفارش
+# ============================================================
+@login_required
+def checkout_info(request):
+    user = request.user
+    
+    missing_fields = []
+    if not user.full_name:
+        missing_fields.append('نام و نام خانوادگی')
+    if not user.phone_number:
+        missing_fields.append('شماره تماس')
+    if not user.address:
+        missing_fields.append('آدرس')
+    if not user.postal_code:
+        missing_fields.append('کد پستی')
+    if not user.gender:
+        missing_fields.append('جنسیت')
+    
+    if missing_fields:
+        messages.error(request, f'لطفاً اطلاعات زیر را تکمیل کنید: {", ".join(missing_fields)}')
+        return redirect('profile')
+        
+    cart, created = Cart.objects.get_or_create(user=user)
+    
+    tshirt_items = CustomTshirtCartItem.objects.filter(cart=cart)
+    hoodie_items = CustomHoodieCartItem.objects.filter(cart=cart)
+    pants_items = CustomPantsCartItem.objects.filter(cart=cart)
+    ready_items = ReadyClothCartItem.objects.filter(cart=cart)
+    
+    total_price = 0
+    for item in tshirt_items:
+        total_price += item.final_price
+    for item in hoodie_items:
+        total_price += item.final_price
+    for item in pants_items:
+        total_price += item.final_price
+    for item in ready_items:
+        total_price += item.final_price
+    
+    context = {
+        'user': user,
+        'total_price': total_price,
+        'tshirt_items': tshirt_items,
+        'hoodie_items': hoodie_items,
+        'pants_items': pants_items,
+        'ready_items': ready_items,
+    }
+    
+    return render(request, 'cart/checkout.html', context)
+
+
+# ============================================================
+# صفحه درگاه پرداخت
+# ============================================================
+@login_required
+def payment_gateway(request):
+    user = request.user
+    cart, created = Cart.objects.get_or_create(user=user)
+    
+    tshirt_items = CustomTshirtCartItem.objects.filter(cart=cart)
+    hoodie_items = CustomHoodieCartItem.objects.filter(cart=cart)
+    pants_items = CustomPantsCartItem.objects.filter(cart=cart)
+    ready_items = ReadyClothCartItem.objects.filter(cart=cart)
+    
+    total_price = 0
+    for item in tshirt_items:
+        total_price += item.final_price
+    for item in hoodie_items:
+        total_price += item.final_price
+    for item in pants_items:
+        total_price += item.final_price
+    for item in ready_items:
+        total_price += item.final_price
+    
+    order_number = random.randint(100000, 999999)
+    
+    context = {
+        'user': user,
+        'total_price': total_price,
+        'order_number': order_number,
+    }
+    
+    return render(request, 'cart/payment_gateway.html', context)
+
+
+# ============================================================
+# ثبت نهایی سفارش
+# ============================================================
+@login_required
+def checkout_payment(request):
+    if request.method != 'POST':
+        return redirect('cart')
+    
+    user = request.user
+    
+    if not user.full_name or not user.phone_number or not user.address:
+        return redirect('profile')
+    
+    cart, created = Cart.objects.get_or_create(user=user)
+    
+    items = []
+    total_price = 0
+    
+    # ===== تیشرت سفارشی =====
+    for item in CustomTshirtCartItem.objects.filter(cart=cart):
+        color_name = COLOR_TRANSLATION.get(item.custom_color, item.custom_color)
+        collar_name = item.collar.name  # فارسی
+        
+        items.append({
+            'product_name': f"تیشرت سفارشی - {item.fabric.name}",
+            'product_type': 'custom_tshirt',
+            'quantity': item.quantity,
+            'price': item.final_price,
+            'fabric_name': item.fabric.name,
+            'custom_color': color_name,
+            'collar_style': collar_name,
+            'clothing_length': item.body_height,
+            'clothing_width': item.body_width,
+            'sleeve_length': item.sleeve_height,
+        })
+        total_price += item.final_price
+    
+    # ===== هودی سفارشی =====
+    for item in CustomHoodieCartItem.objects.filter(cart=cart):
+        color_name = COLOR_TRANSLATION.get(item.custom_color, item.custom_color)
+        
+        items.append({
+            'product_name': f"هودی سفارشی - {item.fabric.name}",
+            'product_type': 'custom_hoodie',
+            'quantity': item.quantity,
+            'price': item.final_price,
+            'fabric_name': item.fabric.name,
+            'custom_color': color_name,
+            'has_hood': (item.hood.name != 'بدون کلاه'),
+            'has_zipper': (item.zipper.name != 'بدون زیپ'),
+            'clothing_length': item.body_height,
+            'clothing_width': item.body_width,
+            'sleeve_length': item.sleeve_height,
+        })
+        total_price += item.final_price
+    
+    # ===== شلوار سفارشی =====
+    for item in CustomPantsCartItem.objects.filter(cart=cart):
+        color_name = COLOR_TRANSLATION.get(item.custom_color, item.custom_color)
+        
+        items.append({
+            'product_name': f"شلوار سفارشی - {item.fabric.name}",
+            'product_type': 'custom_pants',
+            'quantity': item.quantity,
+            'price': item.final_price,
+            'fabric_name': item.fabric.name,
+            'custom_color': color_name,
+            'leg_type': item.leg.name,
+            'has_pocket': (item.pocket.name != 'بدون جیب'),
+            'pants_length': item.pants_length,
+            'waist': item.waist,
+            'crotch_width': item.hip_width,
+        })
+        total_price += item.final_price
+    
+    # ===== محصولات آماده =====
+    for item in ReadyClothCartItem.objects.filter(cart=cart):
+        items.append({
+            'product_name': item.product.name,
+            'product_type': 'ready',
+            'quantity': item.quantity,
+            'price': item.final_price,
+            'size': item.size,
+            'ready_color': item.color.name if item.color else '',
+        })
+        total_price += item.final_price
+    
+    # ===== ایجاد سفارش با وضعیت پرداخت شده =====
+    from orders.models import Order, OrderItem
+    
+    order = Order.objects.create(
+        user=user,
+        full_name=user.full_name,
+        phone=user.phone_number,
+        address=user.address,
+        postal_code=user.postal_code or '',
+        total_price=total_price,
+        status='paid',  # ← پرداخت شده
+    )
+    
+    # ===== ایجاد آیتم‌های سفارش =====
+    for item in items:
+        OrderItem.objects.create(
+            order=order,
+            product_name=item['product_name'],
+            product_type=item['product_type'],
+            quantity=item['quantity'],
+            final_price=item['price'],
+            fabric_name=item.get('fabric_name', ''),
+            custom_color=item.get('custom_color', ''),
+            collar_style=item.get('collar_style', ''),
+            clothing_length=item.get('clothing_length'),
+            clothing_width=item.get('clothing_width'),
+            sleeve_length=item.get('sleeve_length'),
+            has_hood=item.get('has_hood', False),
+            has_zipper=item.get('has_zipper', False),
+            pants_length=item.get('pants_length'),
+            waist=item.get('waist'),
+            crotch_width=item.get('crotch_width'),
+            leg_type=item.get('leg_type', ''),
+            has_pocket=item.get('has_pocket', False),
+            size=item.get('size', ''),
+            ready_color=item.get('ready_color', ''),
+        )
+    
+    # ===== خالی کردن سبد خرید =====
+    CustomTshirtCartItem.objects.filter(cart=cart).delete()
+    CustomHoodieCartItem.objects.filter(cart=cart).delete()
+    CustomPantsCartItem.objects.filter(cart=cart).delete()
+    ReadyClothCartItem.objects.filter(cart=cart).delete()
+    
+    return redirect('order_detail', order_id=order.id)

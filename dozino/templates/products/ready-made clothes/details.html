@@ -401,13 +401,26 @@
             if (activeSize) {
                 selectedSize = activeSize.getAttribute('data-size');
             }
-
-            // گرفتن رنگ انتخاب شده
+            // ===== گرفتن رنگ از متن =====
             let selectedColor = null;
-            const activeColor = document.querySelector('.color-btn.active-color');
-            if (activeColor) {
-                selectedColor = activeColor.getAttribute('data-color');
+            const colorText = document.getElementById('selectedColorText');
+            if (colorText) {
+                const text = colorText.textContent;
+                // حذف "رنگ انتخاب شده: " از اول متن
+                const parts = text.split('رنگ انتخاب شده: ');
+                if (parts.length > 1) {
+                    selectedColor = parts[1].trim();
+                } else {
+                    // اگه با روش بالا نشد، با regex بگیر
+                    const match = text.match(/رنگ انتخاب شده:\s*(.+)/);
+                    if (match && match[1]) {
+                        selectedColor = match[1].trim();
+                    }
+                }
             }
+
+            console.log("🔍 selectedColor:", selectedColor);
+
 
             // گرفتن تعداد
             const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
