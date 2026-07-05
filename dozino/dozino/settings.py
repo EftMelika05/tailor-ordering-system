@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'tailor_panel',
     'Account.apps.AccountConfig',
     'pages.apps.PagesConfig',
     'cart.apps.CartConfig',
