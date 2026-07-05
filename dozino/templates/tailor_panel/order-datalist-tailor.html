@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dozino | جزئیات سفارش</title>
+
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/order-datalist-tailor.css' %}">
+
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="topbar">
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
+                <li><a href="#">محصولات سفارشی</a></li>
+                <li><a href="#">محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
+            </ul>
+        </nav>
+
+        <div class="logo">DOZINO</div>
+
+        <div class="header-icons">
+            <a href="#"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
+        </div>
+
+    </header>
+
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container">
+
+        <!-- Order Header -->
+        <div class="order-header">
+            <div class="back-section">
+                <span class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i></span>
+                <span class="order-number">5401022</span>
+            </div>
+            <span class="order-date"><i class="fa-regular fa-calendar"></i> تاریخ ثبت سفارش: ۱۴۰۵/۰۳/۱۳</span>
+        </div>
+
+        <!-- Order Table -->
+        <div class="order-table-wrapper">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>محصول</th>
+                        <th>توضیحات</th>
+                        <th>تعداد</th>
+                        <th>سایز</th>
+                        <th>رنگ</th>
+                        <th>وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="img-box"><img src="{% static 'images/gray-without-hood-without-zip.png' %}" alt="دورس"></div>
+                        </td>
+                        <td class="product-name">دورس</td>
+                        <td>1</td>
+                        <td><span class="custom-badge">سفارشی</span></td>
+                        <td>
+                            <span class="color-dot" style="background:#6B6B6B;"></span>
+                            <span class="color-name">طوسی</span>
+                        </td>
+                        <td><span class="action-link" onclick="showToast('نمایش جزئیات دورس')">مشاهده جزئیات</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="img-box"><img src="{% static 'images/black-round.png' %}" alt="تیشرت"></div>
+                        </td>
+                        <td class="product-name">تیشرت</td>
+                        <td>1</td>
+                        <td><span class="custom-badge">سفارشی</span></td>
+                        <td>
+                            <span class="color-dot" style="background:#1e1e2f;"></span>
+                            <span class="color-name">مشکی</span>
+                        </td>
+                        <td><span class="action-link" onclick="showToast('نمایش جزئیات تیشرت')">مشاهده جزئیات</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="img-box"><img
+                                    src="{% static 'imag/product detail/ChatGPT Image Jun 1, 2026, 12_12_043 PM.png' %}"
+                                    alt="تیشرت طرح پروانه"></div>
+                        </td>
+                        <td class="product-name">تیشرت طرح پروانه</td>
+                        <td>1</td>
+                        <td>S</td>
+                        <td>
+                            <span class="color-dot" style="background:#a9c4df;"></span>
+                            <span class="color-name">ابی</span>
+                        </td>
+                        <td><span class="ready-status">آماده</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Status Footer -->
+        <div class="status-footer">
+            <div class="status-label">
+                <i class="fa-solid fa-pen-to-square"></i> وضعیت سفارش :
+            </div>
+            <div class="buttons-group">
+                <button class="btn-status status-accept" onclick="selectStatus(this)">
+                    <i class="fa-solid fa-check"></i> پذیرش (درحال آماده‌سازی)
+                </button>
+                <button class="btn-status status-sent" onclick="selectStatus(this)">
+                    <i class="fa-solid fa-truck"></i> ارسال شده
+                </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="submit-row">
+                <button class="btn-submit" onclick="submitStatus()">
+                    <i class="fa-regular fa-floppy-disk"></i> ثبت
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===== BACK BUTTON =====
+        function goBack() {
+            window.history.back();
+        }
+
+        // ===== SELECT STATUS =====
+        function selectStatus(button) {
+            const allBtns = document.querySelectorAll('.btn-status');
+            allBtns.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        // ===== SUBMIT STATUS =====
+        function submitStatus() {
+            const activeBtn = document.querySelector('.btn-status.active');
+            if (activeBtn) {
+                const statusText = activeBtn.textContent.trim();
+                const statusMap = {
+                    'عدم پذیرش': '❌ عدم پذیرش',
+                    'پذیرش (درحال آماده‌سازی)': '✅ پذیرش - درحال آماده‌سازی',
+                    'ارسال شده': '🚚 ارسال شده'
+                };
+                const displayText = statusMap[statusText] || statusText;
+                showToast('وضعیت سفارش به "' + displayText + '" تغییر یافت');
+            } else {
+                showToast('لطفاً یک وضعیت را انتخاب کنید');
+            }
+        }
+
+        // ===== TOAST =====
+        let toastTimeout = null;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== SET DEFAULT ACTIVE =====
+        document.addEventListener('DOMContentLoaded', function () {
+            const defaultBtn = document.querySelector('.btn-status.status-accept');
+            if (defaultBtn) {
+                defaultBtn.classList.add('active');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
