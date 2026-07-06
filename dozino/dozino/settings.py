@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'tailor_panel',
     'Account.apps.AccountConfig',
     'pages.apps.PagesConfig',
     'cart.apps.CartConfig',
@@ -82,14 +83,14 @@ WSGI_APPLICATION = 'dozino.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dozino',
+        'NAME': 'Dozino_DB',
         'USER' : 'postgres',
-        'PASSWORD' :'melika.2005',
-        'HOST':'localhost',
-        'PORT': '5432'
+        'PASSWORD' :'12345678',
+        'HOST':'localhost'
     }
 }
 

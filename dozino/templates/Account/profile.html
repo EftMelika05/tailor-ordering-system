@@ -8,16 +8,13 @@
     <title>پروفایل | Dozino</title>
     <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
     <link rel="stylesheet" href="{% static 'css/Profile.css' %}">
 </head>
 
 <body>
 
     <header class="topbar">
-
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">خانه</a></li>
@@ -26,51 +23,51 @@
                 <li><a href="{% url 'index' %}#about">درباره ما</a></li>
             </ul>
         </nav>
-
         <div class="logo">Dozino</div>
-
         <div class="header-icons">
             <a href="{% url 'cart'%}"><i class="fa-solid fa-cart-shopping"></i></a>
             <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
             <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
         </div>
-
     </header>
+
+    <!-- ===== TOAST MESSAGES ===== -->
+    {% if messages %}
+    <div id="toast-container">
+        {% for message in messages %}
+            <div class="toast-message toast-{{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'error' %}times-circle{% else %}check-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="container">
 
         <!-- بخش راست -->
         <div class="right-panel">
-
             <div class="profile-card">
-
                 <div class="profile-image">
                     <img src="{% static 'imag/home/a0522499-8d30-4690-a254-700a1cb6fa4b.png' %}" alt="تصویر پروفایل کاربر">
                     <button class="change-image" aria-label="تغییر تصویر پروفایل">
                         <i class="fa-solid fa-camera"></i>
                     </button>
                 </div>
-
-                <h2>{{user.full_name}}</h2>
-
+                <h2>{{ user.full_name|default:"کاربر" }}</h2>
                 <p>عضو خانواده Dozino</p>
-
             </div>
 
             <div class="quick-access">
-
                 <h3>دسترسی سریع</h3>
-
                 <a href="{% url 'profile' %}" class="item active">
                     <span>اطلاعات پروفایل</span>
                     <i class="fa-regular fa-user"></i>
                 </a>
-
                 <a href="{% url 'orders' %}" class="item">
                     <span>سفارش‌های من</span>
                     <i class="fa-solid fa-bag-shopping"></i>
                 </a>
-
                 <a href="{% url 'cart' %}" class="item">
                     <span>سبد خرید</span>
                     <i class="fa-solid fa-cart-shopping"></i>
@@ -78,270 +75,179 @@
                 {% if user.is_authenticated %}
                 <form action="{% url 'logout' %}" method="POST">
                    {% csrf_token %}
-                <button type="submit" class="item logout">
-                   خروج
-                 </button>
+                   <button type="submit" class="item logout">خروج</button>
                 </form>
                 {% endif %}
-
             </div>
-
         </div>
 
         <!-- فرم -->
         <div class="main-box">
-
             <div class="title">
                 <i class="fa-regular fa-circle-user"></i>
                 <h1>اطلاعات پروفایل</h1>
             </div>
+            <p class="subtitle">اطلاعات خود را مدیریت و به‌روزرسانی کنید.</p>
 
-            <p class="subtitle">
-                اطلاعات خود را مدیریت و به‌روزرسانی کنید.
-            </p>
-
-                {% if messages %}
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-
-            <form id="profileForm" method="POST" enctype="multipart/form-data" >
+            <form id="profileForm" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
+
                 <!-- ردیف اول -->
                 <div class="row">
-
                     <div class="input-box">
-                        <label for="fullName">
-                            نام و نام خانوادگی
-                            <span class="required-star">*</span>
-                        </label>
-                        <input name="full_name" type="text" id="fullName" value="{{user.full_name}}" placeholder="نام و نام خانوادگی خود را وارد کنید" required>
+                        <label for="fullName">نام و نام خانوادگی <span class="required-star">*</span></label>
+                        <input name="full_name" type="text" id="fullName" value="{{ user.full_name|default:'' }}" placeholder="نام و نام خانوادگی خود را وارد کنید" required>
                     </div>
-
                     <div class="input-box">
-                        <label for="username">
-                            نام کاربری (غیرقابل تغییر)
-                        </label>
-                        <input  name="username" type="text" id="username" value="{{user.username}}" readonly>
+                        <label for="username">نام کاربری (غیرقابل تغییر)</label>
+                        <input name="username" type="text" id="username" value="{{ user.username }}" readonly>
                     </div>
-
                 </div>
 
                 <!-- ردیف دوم -->
                 <div class="row">
-
                     <div class="input-box">
-                        <label for="gender">
-                            جنسیت
-                            <span class="required-star">*</span>
-                        </label>
+                        <label for="gender">جنسیت <span class="required-star">*</span></label>
                         <select name="gender" id="gender" required>
                             <option value="">انتخاب کنید</option>
-                            <option value="woman" {% if user.gender == "woman" %} selected{% endif %} >زن</option>
-                            <option value="man" {% if user.gender == "man" %} selected{% endif %} >مرد</option>
+                            <option value="woman" {% if user.gender == "woman" %}selected{% endif %}>زن</option>
+                            <option value="man" {% if user.gender == "man" %}selected{% endif %}>مرد</option>
                         </select>
                     </div>
-
                     <div class="input-box">
-                        <label for="phone">
-                            شماره تماس
-                            <span class="required-star">*</span>
-                        </label>
-                        <input name="phone_number" type="tel" id="phone" value="{{user.phone_number}}"  required>
+                        <label for="phone">شماره تماس <span class="required-star">*</span></label>
+                        <input name="phone_number" type="tel" id="phone" value="{{ user.phone_number|default:'' }}" required>
                     </div>
-
                 </div>
 
                 <!-- ردیف سوم -->
                 <div class="row">
-
                     <div class="input-box zip">
-                        <label for="postalCode">
-                            کد پستی
-                        </label>
-                        <input name="postal_code" type="text" id="postalCode" value="{{user.postal_code}}" placeholder="کد پستی ۱۰ رقمی">
+                        <label for="postalCode">کد پستی</label>
+                        <input name="postal_code" type="text" id="postalCode" value="{{ user.postal_code|default:'' }}" placeholder="کد پستی ۱۰ رقمی">
                     </div>
-
                     <div class="input-box address">
-                        <label for="address">
-                            آدرس
-                            <span class="required-star">*</span>
-                        </label>
-                        <input name="address" type="text" id="address" value="{{user.address}}" placeholder="آدرس کامل خود را وارد کنید" required>
+                        <label for="address">آدرس <span class="required-star">*</span></label>
+                        <input name="address" type="text" id="address" value="{{ user.address|default:'' }}" placeholder="آدرس کامل خود را وارد کنید" required>
                     </div>
-
                 </div>
 
                 <div class="required">
-                    <span class="required-star">*</span>
-                    فیلدهای اجباری
+                    <span class="required-star">*</span> فیلدهای اجباری
                 </div>
 
                 <div class="buttons">
-
                     <button type="submit" class="btn-primary">
-                        <i class="fa-solid fa-check"></i>
-                        ذخیره تغییرات
+                        <i class="fa-solid fa-check"></i> ذخیره تغییرات
                     </button>
-
-                    <button type="reset" class="btn-outline">
-                        انصراف
-                    </button>
-
+                    <button type="reset" class="btn-outline">انصراف</button>
                 </div>
 
             </form>
-
         </div>
 
     </div>
 
     <footer>
-
         <div class="footer-col">
-
             <h2>DOZINO</h2>
-
-            <p>
-                همراه شما در طراحی و دوخت لباس
-            </p>
-
+            <p>همراه شما در طراحی و دوخت لباس</p>
             <div class="social">
-
-                <a href="https://instagram.com/YOURPAGE" target="_blank" aria-label="اینستاگرام">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-
-                <a href="https://t.me/YOURCHANNEL" target="_blank" aria-label="تلگرام">
-                    <i class="fa-brands fa-telegram"></i>
-                </a>
-
-                <a href="https://wa.me/989123456789" target="_blank" aria-label="واتساپ">
-                    <i class="fa-brands fa-whatsapp"></i>
-                </a>
-
+                <a href="https://instagram.com/YOURPAGE" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://t.me/YOURCHANNEL" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://wa.me/989123456789" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
-
         </div>
-
         <div class="footer-col">
-
             <h3>دسترسی سریع</h3>
-
             <ul>
                 <li><a href="{% url 'index' %}">خانه</a></li>
                 <li><a href="{% url 'list' %}">محصولات آماده</a></li>
                 <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
                 <li><a href="#">تماس با ما</a></li>
             </ul>
-
         </div>
-
         <div class="footer-col">
-
             <h3>خدمات مشتریان</h3>
-
             <ul>
                 <li><a href="#">راهنمای خرید</a></li>
                 <li><a href="#">پشتیبانی</a></li>
             </ul>
-
         </div>
-
         <div class="footer-col">
-
             <h3>خبرنامه</h3>
-
             <input type="email" placeholder="ایمیل شما">
-
-            <button class="btn-subscribe">
-                <i class="fa-regular fa-envelope"></i> عضویت
-            </button>
-
+            <button class="btn-subscribe"><i class="fa-regular fa-envelope"></i> عضویت</button>
         </div>
-
         <div class="footer-col">
-
             <h3>تماس با ما</h3>
-
             <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
             <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
-
         </div>
-
     </footer>
 
     <script>
-        // profile.js
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== تغییر عکس پروفایل =====
             const changeImageBtn = document.querySelector('.change-image');
             const profileImg = document.querySelector('.profile-image img');
-
-            // ۱. ایجاد یک تگ input مخفی برای آپلود فایل به صورت داینامیک
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = 'image/*';
             fileInput.style.display = 'none';
             document.body.appendChild(fileInput);
 
-            // ۲. لود کردن عکس ذخیره شده قبلی (اگر وجود داشته باشد)
             const savedImage = localStorage.getItem('user_profile_avatar');
             if (savedImage && profileImg) {
                 profileImg.src = savedImage;
             }
 
-            // ۳. کلیک روی دکمه دوربین، اینپوت مخفی را فعال می‌کند
             if (changeImageBtn) {
-                changeImageBtn.addEventListener('click', (e) => {
+                changeImageBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     fileInput.click();
                 });
             }
 
-            // ۴. خواندن فایل انتخاب شده و آپدیت عکس پروفایل
-            fileInput.addEventListener('change', (e) => {
+            fileInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function (event) {
+                    reader.onload = function(event) {
                         const base64Image = event.target.result;
-
-                        // تغییر تصویر در صفحه جاری
                         if (profileImg) {
                             profileImg.src = base64Image;
                         }
-
-                        // ذخیره در حافظه مرورگر برای سینک شدن با بقیه صفحات
-                        //localStorage.setItem('user_profile_avatar', base64Image);
                     };
                     reader.readAsDataURL(file);
                 }
             });
 
-            // ۵. مدیریت submit فرم
-            const form = document.getElementById('profileForm');
-            if (form) {
-                form.addEventListener('submit', (e) => {
-                   // e.preventDefault();
-                    // نمایش پیام موفقیت
-                   // alert('اطلاعات شما با موفقیت ذخیره شد!');
-                });
-            }
-
-            // ۶. مدیریت reset فرم
+            // ===== دکمه انصراف =====
             const resetBtn = document.querySelector('.btn-outline');
+            const form = document.getElementById('profileForm');
             if (resetBtn) {
-                resetBtn.addEventListener('click', (e) => {
+                resetBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     if (confirm('آیا از انصراف مطمئن هستید؟')) {
                         form.reset();
                     }
                 });
             }
+
+            // ===== حذف خودکار Toast بعد از 4 ثانیه =====
+            setTimeout(function() {
+                const container = document.getElementById('toast-container');
+                if (container) {
+                    container.style.transition = 'opacity 0.5s ease';
+                    container.style.opacity = '0';
+                    setTimeout(function() {
+                        container.remove();
+                    }, 500);
+                }
+            }, 4000);
         });
     </script>
 
 </body>
-
 </html>

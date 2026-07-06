@@ -1,0 +1,245 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>جزئیات سفارش | Dozino</title>
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}" />
+</head>
+
+<body>
+    <header class="topbar">
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+            </ul>
+        </nav>
+        <div class="logo">Dozino</div>
+        <div class="header-icons">
+            {% if user.is_authenticated %}
+            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% else %}
+            <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            {% else %}
+            <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
+            {% endif %}
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- ===== پنل سمت راست ===== -->
+        <div class="right-panel">
+            <!-- پروفایل -->
+            <div class="profile-card">
+                <div class="profile-image">
+                    <img src="{% static 'imag/home/a0522499-8d30-4690-a254-700a1cb6fa4b.png' %}" alt="تصویر پروفایل کاربر" />
+                    <button class="change-image" aria-label="تغییر تصویر پروفایل">
+                        <i class="fa-solid fa-camera"></i>
+                    </button>
+                </div>
+                <h2>{{ user.full_name|default:user.username }}</h2>
+                <p>عضو خانواده Dozino</p>
+            </div>
+
+            <!-- دسترسی سریع -->
+            <div class="quick-access">
+                <h3>دسترسی سریع</h3>
+                <a href="{% url 'profile' %}" class="item">
+                    <span>اطلاعات پروفایل</span>
+                    <i class="fa-regular fa-user"></i>
+                </a>
+                <a href="{% url 'orders' %}" class="item active">
+                    <span>سفارش‌های من</span>
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </a>
+                <a href="{% url 'cart' %}" class="item">
+                    <span>سبد خرید</span>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+                {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="item logout">خروج</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ===== جزئیات سفارش ===== -->
+        <div class="orders-box">
+            <div class="title">
+                <i class="fa-solid fa-receipt"></i>
+                <h1>جزئیات سفارش #{{ order.id }}</h1>
+            </div>
+
+            <p class="subtitle">
+                تاریخ: {{ order.created_at|date:"Y/m/d" }} | وضعیت: {{ order.get_status_display }}
+            </p>
+
+            <!-- اطلاعات ارسال -->
+            <div class="order-info">
+                <div class="info-row">
+                    <span class="info-label"><i class="fa-solid fa-user"></i> نام و نام خانوادگی:</span>
+                    <span>{{ order.full_name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="fa-solid fa-phone"></i> شماره تماس:</span>
+                    <span>{{ order.phone }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="fa-solid fa-location-dot"></i> آدرس:</span>
+                    <span>{{ order.address }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="fa-solid fa-mailbox"></i> کد پستی:</span>
+                    <span>{{ order.postal_code }}</span>
+                </div>
+            </div>
+
+            <!-- لیست محصولات -->
+            <div class="order-items">
+                <h3><i class="fa-solid fa-boxes"></i> محصولات سفارش</h3>
+                
+                {% for item in items %}
+                <div class="order-item">
+                    <div class="item-info">
+                        <div class="item-name">
+                            <i class="fa-solid fa-tag"></i>
+                            {{ item.product_name }}
+                        </div>
+                        <div class="item-details">
+                            {% if item.product_type == 'ready' %}
+                                <span><i class="fa-solid fa-ruler"></i> سایز: {{ item.size|default:"-" }}</span>
+                                <span><i class="fa-solid fa-palette"></i> رنگ: {{ item.ready_color|default:"-" }}</span>
+                            {% elif item.product_type == 'custom_tshirt' %}
+                                <span><i class="fa-solid fa-tshirt"></i> پارچه: {{ item.fabric_name|default:"-" }}</span>
+                                <span><i class="fa-solid fa-palette"></i> رنگ: {{ item.custom_color|default:"-" }}</span>
+                                <span><i class="fa-solid fa-ruler"></i> یقه: {{ item.collar_style|default:"-" }}</span>
+                                <span><i class="fa-solid fa-arrows-up-down"></i> قد: {{ item.clothing_length|default:"-" }}</span>
+                            {% elif item.product_type == 'custom_hoodie' %}
+                                <span><i class="fa-solid fa-tshirt"></i> پارچه: {{ item.fabric_name|default:"-" }}</span>
+                                <span><i class="fa-solid fa-palette"></i> رنگ: {{ item.custom_color|default:"-" }}</span>
+                                <span><i class="fa-solid fa-hat-wizard"></i> کلاه: {{ item.has_hood|yesno:"دارد,ندارد" }}</span>
+                                <span><i class="fa-solid fa-zipper"></i> زیپ: {{ item.has_zipper|yesno:"دارد,ندارد" }}</span>
+                            {% elif item.product_type == 'custom_pants' %}
+                                <span><i class="fa-solid fa-person"></i> پارچه: {{ item.fabric_name|default:"-" }}</span>
+                                <span><i class="fa-solid fa-palette"></i> رنگ: {{ item.custom_color|default:"-" }}</span>
+                                <span><i class="fa-solid fa-ruler"></i> مدل پاچه: {{ item.leg_type|default:"-" }}</span>
+                                <span><i class="fa-regular fa-pen-to-square"></i> جیب: {{ item.has_pocket|yesno:"دارد,ندارد" }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="item-price">
+                        <span>{{ item.quantity }} × {{ item.final_price|floatformat:0 }} = </span>
+                        <strong>{{ item.total_price|floatformat:0 }} تومان</strong>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="empty-items">هیچ محصولی در این سفارش وجود ندارد.</p>
+                {% endfor %}
+            </div>
+
+            <!-- جمع کل -->
+            <div class="order-total">
+                <span>جمع کل سفارش:</span>
+                <span class="total-price">{{ order.total_price|floatformat:0 }} تومان</span>
+            </div>
+
+            <!-- دکمه بازگشت -->
+            <div class="order-actions">
+                <a href="{% url 'orders' %}" class="btn-outline">
+                    <i class="fa-solid fa-arrow-right"></i> بازگشت به سفارش‌های من
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-col">
+            <h2>DOZINO</h2>
+            <p>همراه شما در طراحی و دوخت لباس</p>
+            <div class="social">
+                <a href="https://instagram.com/YOURPAGE" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://t.me/YOURCHANNEL" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://wa.me/989123456789" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h3>دسترسی سریع</h3>
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>خدمات مشتریان</h3>
+            <ul>
+                <li><a href="#">راهنمای خرید</a></li>
+                <li><a href="#">پشتیبانی</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>خبرنامه</h3>
+            <input type="email" placeholder="ایمیل شما" />
+            <button class="btn-subscribe"><i class="fa-regular fa-envelope"></i> عضویت</button>
+        </div>
+        <div class="footer-col">
+            <h3>تماس با ما</h3>
+            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const changeImageBtn = document.querySelector(".change-image");
+            const profileImg = document.querySelector(".profile-image img");
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.accept = "image/*";
+            fileInput.style.display = "none";
+            document.body.appendChild(fileInput);
+
+            const savedImage = localStorage.getItem("user_profile_avatar");
+            if (savedImage && profileImg) {
+                profileImg.src = savedImage;
+            }
+
+            if (changeImageBtn) {
+                changeImageBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    fileInput.click();
+                });
+            }
+
+            fileInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64Image = event.target.result;
+                        if (profileImg) {
+                            profileImg.src = base64Image;
+                        }
+                        localStorage.setItem("user_profile_avatar", base64Image);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

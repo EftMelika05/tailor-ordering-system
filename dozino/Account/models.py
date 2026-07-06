@@ -6,7 +6,7 @@ class User(AbstractUser):
 
   full_name=models.CharField(max_length=100)
 
-  phone_number=models.CharField(max_length=11 , unique=True,
+  phone_number=models.CharField(max_length=11 ,
                                 validators=[RegexValidator(r'^09\d{9}$',
   'شماره موبایل معتبر نیست')])
 

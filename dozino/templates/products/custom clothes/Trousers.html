@@ -407,7 +407,7 @@
       const pocket = getChecked('pocket').dataset.id;
 
       const response = await fetch(
-        `/products/trousers/calculate/?fabric=${fabric}&leg=${leg}&pocket=${pocket}&pants_height=${pantsHeight.value}&waist_width=${waistWidth.value}&hip_width=${hipWidth.value}&thigh_width=${thighWidth.value}`
+        `/customproducts/trousers/calculate/?fabric=${fabric}&leg=${leg}&pocket=${pocket}&pants_height=${pantsHeight.value}&waist_width=${waistWidth.value}&hip_width=${hipWidth.value}&thigh_width=${thighWidth.value}`
       );
 
       const data = await response.json();

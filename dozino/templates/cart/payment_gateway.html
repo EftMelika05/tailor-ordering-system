@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>درگاه پرداخت | Dozino</title>
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/payment gateway.css' %}">
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="topbar">
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
+            </ul>
+        </nav>
+        <div class="logo">DOZINO</div>
+        <div class="header-icons">
+            {% if user.is_authenticated %}
+            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% else %}
+            <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            {% else %}
+            <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
+            {% endif %}
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!--========================-->
+        <!-- اطلاعات سفارش -->
+        <!--========================-->
+        <div class="order-panel">
+
+            <!-- تایمر -->
+            <div class="timer-card">
+                <div class="timer-title">
+                    <span>زمان باقی مانده</span>
+                    <i class="fa-regular fa-clock"></i>
+                </div>
+                <div id="timer">05:00</div>
+            </div>
+
+            <!-- سفارش -->
+            <div class="order-card">
+                <div class="title">
+                    <h2>اطلاعات سفارش</h2>
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+
+                <!-- فروشگاه -->
+                <div class="shop">
+                    <div class="logo-shop">
+                        <i class="fa-solid fa-scissors"></i>
+                    </div>
+                    <div>
+                        <h3>Dozino</h3>
+                        <p>فروشگاه آنلاین طراحی لباس</p>
+                    </div>
+                </div>
+
+                <!-- آیتم ها -->
+                <div class="info">
+                    <span>شماره سفارش</span>
+                    <div>{{ order_number }}</div>
+                </div>
+
+                <div class="info">
+                    <span>تاریخ سفارش</span>
+                    <div>{% now "Y/m/d" %}</div>
+                </div>
+
+                <div class="info">
+                    <span>نام مشتری</span>
+                    <div>{{ user.full_name }}</div>
+                </div>
+
+                <div class="info">
+                    <span>تلفن همراه</span>
+                    <div>{{ user.phone_number }}</div>
+                </div>
+
+                <div class="info">
+                    <span>آدرس</span>
+                    <div>{{ user.address }}</div>
+                </div>
+
+                <!-- مبلغ -->
+                <div class="price-box">
+                    <span>مبلغ قابل پرداخت</span>
+                    <h1>{{ total_price|floatformat:0 }}</h1>
+                    <p>تومان</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--========================-->
+        <!-- فرم پرداخت -->
+        <!--========================-->
+        <div class="payment-panel">
+            <h1>درگاه پرداخت امن</h1>
+            <p>اطلاعات کارت بانکی خود را وارد کنید</p>
+
+            <form method="POST" action="{% url 'checkout_payment' %}">
+                {% csrf_token %}
+
+                <!-- کارت -->
+                <div class="input-group">
+                    <label>شماره کارت <span class="required-star">*</span></label>
+                    <input id="card" type="text" maxlength="16" placeholder="شماره ۱۶ رقمی کارت" required>
+                    <small></small>
+                </div>
+
+                <!-- نام -->
+                <div class="input-group">
+                    <label>نام صاحب کارت <span class="required-star">*</span></label>
+                    <input id="owner" type="text" placeholder="نام و نام خانوادگی صاحب کارت" required>
+                    <small></small>
+                </div>
+
+                <!-- ردیف -->
+                <div class="row">
+                    <div class="input-group">
+                        <label>CVV2 <span class="required-star">*</span></label>
+                        <input id="cvv" maxlength="4" placeholder="کد ۳ رقمی پشت کارت" required>
+                        <small></small>
+                    </div>
+
+                    <div class="input-group">
+                        <label>تاریخ انقضا <span class="required-star">*</span></label>
+                        <input id="expire" placeholder="ماه/سال (مثال: ۰۳/۰۸)" required>
+                        <small></small>
+                    </div>
+                </div>
+
+                <!-- کپچا -->
+                <div class="captcha-row">
+                    <div class="input-group">
+                        <label>کد امنیتی <span class="required-star">*</span></label>
+                        <input id="captchaInput" placeholder="کد را وارد کنید" required>
+                        <small></small>
+                    </div>
+                    <div class="captcha">
+                        <span id="captchaText"></span>
+                        <button type="button" id="refresh" aria-label="تغییر کد امنیتی">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- رمز پویا -->
+                <div class="otp-section">
+                    <label>رمز پویا <span class="required-star">*</span></label>
+                    <div class="otp-row">
+                        <input type="text" id="otpCode" placeholder="رمز پویا دریافتی" required>
+                        <button type="button" id="sendOtp">
+                            <i class="fa-regular fa-message"></i> ارسال رمز پویا
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ایمیل -->
+                <div class="input-group">
+                    <label>ایمیل</label>
+                    <input id="email" type="email" placeholder="example@email.com">
+                </div>
+
+                <!-- پرداخت -->
+                <button class="btn-primary pay-btn" type="submit">
+                    <i class="fa-solid fa-check"></i> پرداخت
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-col">
+            <h2>DOZINO</h2>
+            <p>همراه شما در طراحی و دوخت لباس</p>
+            <div class="social">
+                <a href="https://instagram.com/YOURPAGE" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://t.me/YOURCHANNEL" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://wa.me/989123456789" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h3>دسترسی سریع</h3>
+            <ul>
+                <li><a href="{% url 'index' %}">خانه</a></li>
+                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>خدمات مشتریان</h3>
+            <ul>
+                <li><a href="#">راهنمای خرید</a></li>
+                <li><a href="#">پشتیبانی</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>خبرنامه</h3>
+            <input type="email" placeholder="ایمیل شما">
+            <button class="btn-subscribe"><i class="fa-regular fa-envelope"></i> عضویت</button>
+        </div>
+        <div class="footer-col">
+            <h3>تماس با ما</h3>
+            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+        </div>
+    </footer>
+
+    <script>
+        //////////////////////////////////////
+        // تایمر
+        //////////////////////////////////////
+        let time = 300;
+        const timer = document.getElementById("timer");
+
+        setInterval(function() {
+            if (time > 0) {
+                time--;
+                let m = Math.floor(time / 60);
+                let s = time % 60;
+                timer.innerHTML = String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+            } else {
+                alert("زمان پرداخت به پایان رسید");
+                location.reload();
+            }
+        }, 1000);
+
+        //////////////////////////////////////
+        // کپچا
+        //////////////////////////////////////
+        function createCaptcha() {
+            let code = Math.floor(10000 + Math.random() * 90000);
+            document.getElementById("captchaText").innerHTML = code;
+        }
+
+        createCaptcha();
+        document.getElementById("refresh").onclick = createCaptcha;
+
+        //////////////////////////////////////
+        // اعتبارسنجی
+        //////////////////////////////////////
+        document.getElementById("payForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            if (document.getElementById("captchaInput").value != document.getElementById("captchaText").innerHTML) {
+                document.querySelector("#captchaInput").parentElement.querySelector("small").innerHTML = "کد امنیتی اشتباه است";
+                return;
+            }
+
+            this.submit();
+        });
+
+        //////////////////////////////////////
+        // رمز پویا
+        //////////////////////////////////////
+        let otpTimer;
+        const btn = document.getElementById("sendOtp");
+
+        btn.addEventListener("click", function() {
+            if (btn.disabled) return;
+            btn.disabled = true;
+            let sec = 120;
+            btn.innerHTML = "۰۲:۰۰";
+
+            otpTimer = setInterval(function() {
+                sec--;
+                let m = Math.floor(sec / 60);
+                let s = sec % 60;
+                btn.innerHTML = String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+
+                if (sec <= 0) {
+                    clearInterval(otpTimer);
+                    btn.disabled = false;
+                    btn.innerHTML = "<i class='fa-regular fa-message'></i> ارسال مجدد";
+                }
+            }, 1000);
+        });
+    </script>
+
+</body>
+
+</html>
