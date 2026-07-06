@@ -19,7 +19,7 @@
         <nav>
             <ul>
                 <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
-                <li><a href="#">محصولات سفارشی</a></li>
+                <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
                 <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
                 <li><a href="#orders">سفارشات</a></li>
             </ul>
@@ -153,9 +153,9 @@
                             سفارشی</h3>
                         <p>ویرایش و مدیریت آیتم‌های قابل سفارش‌دهی</p>
                     </div>
-                    <button class="action-btn">
-                        <i class="fa-regular fa-pen-to-square"></i> تغییر محصولات
-                    </button>
+                    <a href="{% url 'tailor_panel:manage_custom_products' %}" class="action-btn">
+                    <i class="fa-regular fa-pen-to-square"></i> تغییر محصولات
+                    </a>
                 </div>
             </div>
 

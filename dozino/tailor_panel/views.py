@@ -17,8 +17,13 @@ from ready_products.models import Category, Product, Color, Size, ProductVariant
 # ===== import از orders =====
 from orders.models import Order, OrderItem
 
+# ===== import از products (برای مدیریت محصولات سفارشی) =====
+from products.models import Fabric, Sticker, CollarType, HoodType, ZipperType, LegType, PocketOption, SitePrice
 
+
+# ================================================================
 # ===== AUTH VIEWS =====
+# ================================================================
 def tailor_login(request):
     if request.user.is_authenticated and request.user.is_staff:
         return redirect('tailor_panel:dashboard')
@@ -45,26 +50,25 @@ def tailor_logout(request):
     return redirect('tailor_panel:tailor_login')
 
 
-
+# ================================================================
+# ===== DASHBOARD =====
+# ================================================================
 @login_required(login_url='tailor_panel:tailor_login')
 @staff_member_required(login_url='tailor_panel:tailor_login')
 def dashboard(request):
     """پنل اصلی خیاط با لیست سفارشات"""
     all_orders = Order.objects.all().order_by('-created_at')
     
-    # جستجو
     search = request.GET.get('search')
     if search:
         all_orders = all_orders.filter(id__icontains=search)
     
-    # دسته‌بندی بر اساس وضعیت
     new_orders = all_orders.filter(status__in=['pending', 'paid'])
     prep_orders = all_orders.filter(status='processing')
     sent_orders = all_orders.filter(status='shipped')
     completed_orders = all_orders.filter(status='completed')
     cancelled_orders = all_orders.filter(status='cancelled')
     
-    # محاسبه تعداد آیتم‌ها
     for order in all_orders:
         order.total_items = order.items.count()
     
@@ -80,6 +84,9 @@ def dashboard(request):
     return render(request, 'tailor_panel/tailor_panel.html', context)
 
 
+# ================================================================
+# ===== ORDER VIEWS =====
+# ================================================================
 @login_required(login_url='tailor_panel:tailor_login')
 @staff_member_required(login_url='tailor_panel:tailor_login')
 def order_detail(request, order_id):
@@ -109,12 +116,10 @@ def update_order_status(request):
         
         order = get_object_or_404(Order, id=order_id)
         
-        # ===== اصلاح: نگاشت وضعیت‌ها =====
-        # کلیدها همان مقداری هستن که از frontend میاد
         status_map = {
-            'processing': 'processing',   # پذیرش → در حال پردازش
-            'shipped': 'shipped',         # ارسال شده
-            'cancelled': 'cancelled',     # لغو شده
+            'processing': 'processing',
+            'shipped': 'shipped',
+            'cancelled': 'cancelled',
         }
         
         if status in status_map:
@@ -143,7 +148,9 @@ def update_order_status(request):
         })
 
 
-# ===== PRODUCT REGISTRATION VIEWS =====
+# ================================================================
+# ===== PRODUCT REGISTRATION (محصولات آماده) =====
+# ================================================================
 @login_required(login_url='tailor_panel:tailor_login')
 @staff_member_required(login_url='tailor_panel:tailor_login')
 def register_product_page(request):
@@ -190,7 +197,6 @@ def register_product_submit(request):
             is_active=True,
         )
 
-        # مشخصات فنی
         specs = data.get('specifications', {})
         for spec_name, spec_value in specs.items():
             if spec_value:
@@ -200,7 +206,6 @@ def register_product_submit(request):
                     spec_value=spec_value
                 )
 
-        # رنگ‌ها، سایزها و موجودی
         size_prices = data.get('size_prices', {})
         colors_data = data.get('colors', [])
         
@@ -225,7 +230,6 @@ def register_product_submit(request):
                         price=price
                     )
 
-        # تصاویر
         images_data = data.get('images', [])
         for i, image_data in enumerate(images_data):
             try:
@@ -258,3 +262,202 @@ def register_product_submit(request):
             'status': 'error',
             'message': str(e)
         })
+
+
+# ================================================================
+# ===== CUSTOM PRODUCT MANAGEMENT (مدیریت محصولات سفارشی) =====
+# ================================================================
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def manage_custom_products(request):
+    """صفحه مدیریت قیمت‌ها"""
+    fabrics = Fabric.objects.filter(is_active=True)
+    stickers = Sticker.objects.filter(is_active=True)
+    collars = CollarType.objects.all()
+    hoods = HoodType.objects.all()
+    zippers = ZipperType.objects.all()
+    legs = LegType.objects.all()
+    pockets = PocketOption.objects.all()
+    site_price = SitePrice.objects.first()
+    
+    context = {
+        'fabrics': fabrics,
+        'stickers': stickers,
+        'collars': collars,
+        'hoods': hoods,
+        'zippers': zippers,
+        'legs': legs,
+        'pockets': pockets,
+        'site_price': site_price,
+    }
+    
+    return render(request, 'tailor_panel/manage-custom-products.html', context)
+
+
+# ===== FABRIC - فقط ویرایش قیمت =====
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def edit_fabric(request, fabric_id):
+    """API ویرایش قیمت پارچه"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        data = json.loads(request.body)
+        fabric = Fabric.objects.get(id=fabric_id)
+        fabric.price_per_meter = data['price_per_meter']
+        fabric.save()
+        return JsonResponse({
+            'status': 'success',
+            'message': 'قیمت پارچه با موفقیت به‌روزرسانی شد'
+        })
+    except Fabric.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'پارچه یافت نشد'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+# ===== STICKER - اصلاح شده با پشتیبانی از فایل =====
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def add_sticker(request):
+    """API افزودن استیکر جدید با عکس"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        # استفاده از request.POST به جای json.loads
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        svg_file = request.FILES.get('svg_file')
+        
+        if not name or not price:
+            return JsonResponse({'status': 'error', 'message': 'نام و قیمت الزامی است'})
+        
+        sticker = Sticker.objects.create(
+            name=name,
+            price=price,
+            svg_file=svg_file,
+            is_active=True
+        )
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'استیکر با موفقیت اضافه شد',
+            'id': sticker.id,
+            'name': sticker.name,
+            'price': str(sticker.price),
+            'svg_url': sticker.svg_file.url if sticker.svg_file else None
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def update_sticker(request, sticker_id):
+    """API ویرایش قیمت استیکر (بدون فایل)"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        data = json.loads(request.body)
+        sticker = Sticker.objects.get(id=sticker_id)
+        sticker.price = data['price']
+        sticker.save()
+        return JsonResponse({
+            'status': 'success',
+            'message': 'قیمت استیکر با موفقیت به‌روزرسانی شد'
+        })
+    except Sticker.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'استیکر یافت نشد'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def delete_sticker(request, sticker_id):
+    """API حذف استیکر"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        sticker = Sticker.objects.get(id=sticker_id)
+        if sticker.svg_file:
+            sticker.svg_file.delete(save=False)
+        sticker.delete()
+        return JsonResponse({
+            'status': 'success',
+            'message': 'استیکر با موفقیت حذف شد'
+        })
+    except Sticker.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'استیکر یافت نشد'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+# ===== OPTIONS - فقط ویرایش قیمت =====
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def update_option_price(request, option_type, option_id):
+    """API ویرایش قیمت گزینه اضافی"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        data = json.loads(request.body)
+        
+        models = {
+            'collar': CollarType,
+            'hood': HoodType,
+            'zipper': ZipperType,
+            'leg': LegType,
+            'pocket': PocketOption,
+        }
+        
+        model = models.get(option_type)
+        if not model:
+            return JsonResponse({'status': 'error', 'message': 'نوع گزینه نامعتبر است'})
+        
+        option = model.objects.get(id=option_id)
+        option.extra_price = data['extra_price']
+        option.save()
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'قیمت با موفقیت به‌روزرسانی شد'
+        })
+        
+    except model.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'گزینه یافت نشد'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+# ===== SITE PRICES =====
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def update_site_prices(request):
+    """API ویرایش مزد دوخت"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        data = json.loads(request.body)
+        site_price, created = SitePrice.objects.get_or_create(id=1)
+        
+        if 'tshirt_sewing_price' in data:
+            site_price.tshirt_sewing_price = data['tshirt_sewing_price']
+        if 'hoodie_sewing_price' in data:
+            site_price.hoodie_sewing_price = data['hoodie_sewing_price']
+        if 'pants_sewing_price' in data:
+            site_price.pants_sewing_price = data['pants_sewing_price']
+        
+        site_price.save()
+        return JsonResponse({
+            'status': 'success',
+            'message': 'مزد دوخت با موفقیت به‌روزرسانی شد'
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
