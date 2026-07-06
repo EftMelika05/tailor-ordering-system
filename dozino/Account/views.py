@@ -58,6 +58,9 @@ def user_login(request):
         if user is not None:
           login(request, user)
              ##C>>if user is tailor
+          if user.username == "tailor" and user.password== 'fateme.asadi@tailor':
+              messages.success(request,'شما با موفقیت وارد سایت شدید' )
+              return redirect('tailor')  
           messages.success(request,'شما با موفقیت وارد سایت شدید' )
           return redirect('index')
         print("USERNAME:", repr(username))
