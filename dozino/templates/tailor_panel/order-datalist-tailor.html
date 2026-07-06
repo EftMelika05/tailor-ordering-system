@@ -1,0 +1,371 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dozino | جزئیات سفارش #{{ order.id }}</title>
+
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'css/order-datalist-tailor.css' %}" />
+  </head>
+
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="topbar">
+      <nav>
+        <ul>
+          <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
+          <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
+          <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
+          <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
+        </ul>
+      </nav>
+      <div class="logo">DOZINO</div>
+      <div class="header-icons">
+        <a href="{% url 'tailor_panel:tailor_logout' %}"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
+      </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container">
+      <!-- Order Header -->
+      <div class="order-header">
+        <div class="back-section">
+          <span class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i></span>
+          <span class="order-number">#{{ order.id }}</span>
+        </div>
+        <span class="order-date">
+          <i class="fa-regular fa-calendar"></i>
+          تاریخ ثبت سفارش: {{ order.created_at|date:'Y/m/d' }}
+        </span>
+      </div>
+
+      <!-- Order Table -->
+      <div class="order-table-wrapper">
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>محصول</th>
+              <th>توضیحات</th>
+              <th>تعداد</th>
+              <th>سایز</th>
+              <th>رنگ</th>
+              <th>وضعیت</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+              <tr>
+                <td>
+                  <div class="img-box">
+                    {% if item.product_type == 'ready' %}
+                      <span style="font-size:14px; color:#c9a86a; font-weight:700; direction:ltr;">#{{ item.product_id }}</span>
+                    {% else %}
+                      <span style="font-size:22px; color:#c9a86a;"><i class="fa-regular fa-pen-to-square"></i></span>
+                    {% endif %}
+                  </div>
+                </td>
+                <td class="product-name">
+                  {% if item.product_type == 'ready' %}
+                    {{ item.product_name }}
+                    <span style="display:block; font-size:11px; color:#c9a86a; font-weight:400; margin-top:2px;"><i class="fa-regular fa-hashtag"></i> کد محصول: {{ item.product_id }}</span>
+                  {% else %}
+                    {{ item.product_name }}
+                    <span style="display:block; font-size:12px; color:#888; font-weight:400; margin-top:2px;">پارچه: {{ item.fabric_name }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td>
+                  {% if item.size %}
+                    {{ item.size }}
+                  {% else %}
+                    <span class="custom-badge">سفارشی</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.ready_color %}
+                    {{ item.ready_color }}
+                  {% elif item.custom_color %}
+                    {{ item.custom_color }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.product_type == 'ready' %}
+                    <span class="ready-status">آماده</span>
+                  {% else %}
+                    <span class="action-link" onclick="showDetail('{{ forloop.counter0 }}')">مشاهده جزئیات</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" style="text-align:center; padding:40px; color:#888;">
+                  <i class="fa-regular fa-box" style="font-size:24px; display:block; margin-bottom:10px;"></i>
+                  هیچ محصولی در این سفارش وجود ندارد
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Status Footer -->
+      <div class="status-footer">
+        <div class="status-label">
+          <i class="fa-solid fa-pen-to-square"></i> وضعیت سفارش :
+          <span style="color:#c9a86a; font-weight:700; margin-right:8px;">{{ order.get_status_display }}</span>
+        </div>
+
+        <div class="buttons-group">
+          {% if order.status == 'pending' or order.status == 'paid' %}
+            <button class="btn-status status-accept" onclick="selectStatus(this, 'processing')"><i class="fa-solid fa-check"></i> پذیرش (درحال آماده‌سازی)</button>
+            <button class="btn-status status-sent" onclick="selectStatus(this, 'shipped')"><i class="fa-solid fa-truck"></i> ارسال شده</button>
+            <button class="btn-status status-cancel" onclick="selectStatus(this, 'cancelled')"><i class="fa-solid fa-xmark"></i> لغو شده</button>
+          {% elif order.status == 'processing' %}
+            <button class="btn-status status-accept active" onclick="selectStatus(this, 'processing')"><i class="fa-solid fa-check"></i> پذیرش (درحال آماده‌سازی)</button>
+            <button class="btn-status status-sent" onclick="selectStatus(this, 'shipped')"><i class="fa-solid fa-truck"></i> ارسال شده</button>
+            <button class="btn-status status-cancel" onclick="selectStatus(this, 'cancelled')"><i class="fa-solid fa-xmark"></i> لغو شده</button>
+          {% elif order.status == 'shipped' %}
+            <button class="btn-status status-accept" onclick="selectStatus(this, 'processing')"><i class="fa-solid fa-check"></i> پذیرش (درحال آماده‌سازی)</button>
+            <button class="btn-status status-sent active" onclick="selectStatus(this, 'shipped')"><i class="fa-solid fa-truck"></i> ارسال شده</button>
+            <button class="btn-status status-cancel" onclick="selectStatus(this, 'cancelled')"><i class="fa-solid fa-xmark"></i> لغو شده</button>
+          {% elif order.status == 'cancelled' %}
+            <button class="btn-status status-accept" onclick="selectStatus(this, 'processing')"><i class="fa-solid fa-check"></i> پذیرش (درحال آماده‌سازی)</button>
+            <button class="btn-status status-sent" onclick="selectStatus(this, 'shipped')"><i class="fa-solid fa-truck"></i> ارسال شده</button>
+            <button class="btn-status status-cancel active" onclick="selectStatus(this, 'cancelled')"><i class="fa-solid fa-xmark"></i> لغو شده</button>
+          {% else %}
+            <span style="color:#888; font-size:14px; padding:10px;">
+              <i class="fa-regular fa-circle-check"></i>
+              این سفارش قابل تغییر نیست
+            </span>
+          {% endif %}
+        </div>
+
+        {% if order.status != 'completed' and order.status != 'cancelled' %}
+          <div class="divider"></div>
+          <div class="submit-row">
+            <button class="btn-submit" onclick="submitStatus({{ order.id }})"><i class="fa-regular fa-floppy-disk"></i> ثبت</button>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ===== DETAIL MODAL ===== -->
+    <div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this) closeDetail()">
+      <div class="detail-box">
+        <button class="close-btn" onclick="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
+        <h3 id="detailTitle">عنوان محصول</h3>
+        <div class="detail-sub" id="detailSub">توضیحات</div>
+        <div id="detailContent">
+          <!-- جزئیات با جاوااسکریپت پر میشه -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      // ===== DATA: تمام آیتم‌ها از Django =====
+      const itemsData = [
+        {% for item in items %}
+        {
+          id: {{ forloop.counter0 }},
+          name: "{{ item.product_name|escapejs }}",
+          type: "{{ item.product_type }}",
+          fabric: "{{ item.fabric_name|default:'-'|escapejs }}",
+          color: "{% if item.ready_color %}{{ item.ready_color|escapejs }}{% elif item.custom_color %}{{ item.custom_color|escapejs }}{% else %}-{% endif %}",
+          size: "{% if item.size %}{{ item.size|escapejs }}{% else %}سفارشی{% endif %}",
+          quantity: {{ item.quantity }},
+          price: {{ item.final_price|floatformat:0 }},
+          collar: "{{ item.collar_style|default:'-'|escapejs }}",
+          clothing_length: "{{ item.clothing_length|default:'-' }}",
+          clothing_width: "{{ item.clothing_width|default:'-' }}",
+          sleeve_length: "{{ item.sleeve_length|default:'-' }}",
+          has_hood: "{{ item.has_hood|yesno:'دارد,ندارد' }}",
+          has_zipper: "{{ item.has_zipper|yesno:'دارد,ندارد' }}",
+          pants_length: "{{ item.pants_length|default:'-' }}",
+          waist: "{{ item.waist|default:'-' }}",
+          hip_width: "{{ item.hip_width|default:'-' }}",
+          thigh_width: "{{ item.thigh_width|default:'-' }}",
+          leg_type: "{{ item.leg_type|default:'-'|escapejs }}",
+          has_pocket: "{{ item.has_pocket|yesno:'دارد,ندارد' }}",
+          sticker_name: "{{ item.sticker_name|default:'-'|escapejs }}",    
+          sticker_id: {% if item.sticker_id %}{{ item.sticker_id }}{% else %}null{% endif %},
+        },
+        {% endfor %}
+      ];
+
+      // ===== SHOW DETAIL =====
+      // ===== SHOW DETAIL =====
+function showDetail(index) {
+  const item = itemsData[index];
+  if (!item) return;
+
+  document.getElementById('detailTitle').textContent = item.name;
+  document.getElementById('detailSub').textContent = item.type === 'ready' ? 'محصول آماده' : 'محصول سفارشی';
+
+  let html = '';
+  
+  // اطلاعات عمومی
+  html += `<div class="detail-row"><span class="detail-label">تعداد</span><span class="detail-value">${item.quantity}</span></div>`;
+  html += `<div class="detail-row"><span class="detail-label">سایز</span><span class="detail-value">${item.size}</span></div>`;
+  html += `<div class="detail-row"><span class="detail-label">رنگ</span><span class="detail-value">${item.color}</span></div>`;
+  html += `<div class="detail-row"><span class="detail-label">قیمت</span><span class="detail-value">${item.price.toLocaleString('fa-IR')} تومان</span></div>`;
+
+  if (item.type !== 'ready') {
+    // پارچه
+    html += `<div class="detail-row"><span class="detail-label">پارچه</span><span class="detail-value">${item.fabric}</span></div>`;
+
+    // تیشرت سفارشی
+    if (item.type === 'custom_tshirt') {
+      html += `<div class="detail-row"><span class="detail-label">مدل یقه</span><span class="detail-value">${item.collar}</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">قد</span><span class="detail-value">${item.clothing_length} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">عرض</span><span class="detail-value">${item.clothing_width} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">آستین</span><span class="detail-value">${item.sleeve_length} سانتی‌متر</span></div>`;
+      if (item.sticker_name !== '-' && item.sticker_id !== null) {
+  html += `<div class="detail-row"><span class="detail-label">استیکر</span><span class="detail-value">${item.sticker_name} (کد: ${item.sticker_id})</span></div>`;
+}
+    }
+
+    // هودی سفارشی
+    if (item.type === 'custom_hoodie') {
+      html += `<div class="detail-row"><span class="detail-label">قد</span><span class="detail-value">${item.clothing_length} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">عرض</span><span class="detail-value">${item.clothing_width} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">آستین</span><span class="detail-value">${item.sleeve_length} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">کلاه</span><span class="detail-value">${item.has_hood}</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">زیپ</span><span class="detail-value">${item.has_zipper}</span></div>`;
+      if (item.sticker_name !== '-' && item.sticker_id !== null) {
+  html += `<div class="detail-row"><span class="detail-label">استیکر</span><span class="detail-value">${item.sticker_name} (کد: ${item.sticker_id})</span></div>`;
+}
+    }
+
+    // شلوار سفارشی
+    if (item.type === 'custom_pants') {
+      html += `<div class="detail-row"><span class="detail-label">قد شلوار</span><span class="detail-value">${item.pants_length} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">کمر</span><span class="detail-value">${item.waist} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">باسن</span><span class="detail-value">${item.hip_width} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">ران</span><span class="detail-value">${item.thigh_width} سانتی‌متر</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">نوع پاچه</span><span class="detail-value">${item.leg_type}</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">جیب</span><span class="detail-value">${item.has_pocket}</span></div>`;
+    }
+  }
+
+  document.getElementById('detailContent').innerHTML = html;
+  document.getElementById('detailOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+      // ===== CLOSE DETAIL =====
+      function closeDetail() {
+        document.getElementById('detailOverlay').classList.remove('show');
+        document.body.style.overflow = 'auto';
+      }
+
+      // ===== BACK BUTTON =====
+      function goBack() {
+        window.history.back()
+      }
+      
+      // ===== SELECT STATUS =====
+      function selectStatus(button, statusValue) {
+        const allBtns = document.querySelectorAll('.btn-status')
+        allBtns.forEach((btn) => btn.classList.remove('active'))
+        button.classList.add('active')
+        selectedStatus = statusValue
+      }
+      
+      // ===== SUBMIT STATUS =====
+      let selectedStatus = null;
+      
+      function submitStatus(orderId) {
+        if (!selectedStatus) {
+          showToast('لطفاً یک وضعیت را انتخاب کنید')
+          return
+        }
+      
+        const submitBtn = document.querySelector('.btn-submit')
+        const originalText = submitBtn.innerHTML
+        submitBtn.disabled = true
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ثبت...'
+      
+        fetch('/tailor-panel/order/update-status/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken()
+          },
+          body: JSON.stringify({
+            order_id: orderId,
+            status: selectedStatus
+          })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'success') {
+              showToast('✅ ' + data.message)
+              setTimeout(() => {
+                window.location.reload()
+              }, 1500)
+            } else {
+              showToast('❌ ' + data.message)
+              submitBtn.disabled = false
+              submitBtn.innerHTML = originalText
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error)
+            showToast('❌ خطا در ارتباط با سرور')
+            submitBtn.disabled = false
+            submitBtn.innerHTML = originalText
+          })
+      }
+      
+      // ===== GET CSRF TOKEN =====
+      function getCsrfToken() {
+        const cookieValue = document.cookie.match(/csrftoken=([^;]+)/)
+        return cookieValue ? cookieValue[1] : ''
+      }
+      
+      // ===== TOAST =====
+      let toastTimeout = null
+      function showToast(message) {
+        const toast = document.getElementById('toast')
+        toast.textContent = message
+        toast.classList.add('show')
+        clearTimeout(toastTimeout)
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('show')
+        }, 3000)
+      }
+      
+      // ===== SET DEFAULT ACTIVE =====
+      document.addEventListener('DOMContentLoaded', function () {
+        const currentStatus = '{{ order.status }}'
+      
+        if (currentStatus === 'processing') {
+          const btn = document.querySelector('.btn-status.status-accept')
+          if (btn) {
+            btn.classList.add('active')
+            selectedStatus = 'processing'
+          }
+        } else if (currentStatus === 'shipped') {
+          const btn = document.querySelector('.btn-status.status-sent')
+          if (btn) {
+            btn.classList.add('active')
+            selectedStatus = 'shipped'
+          }
+        } else if (currentStatus === 'cancelled') {
+          const btn = document.querySelector('.btn-status.status-cancel')
+          if (btn) {
+            btn.classList.add('active')
+            selectedStatus = 'cancelled'
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

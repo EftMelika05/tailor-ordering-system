@@ -1,0 +1,560 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت قیمت‌ها | پنل خیاط</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/manage-custom-products.css' %}">
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="topbar">
+        <nav>
+            <ul>
+                <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
+                <li><a href="{% url 'tailor_panel:manage_custom_products' %}" class="active">  محصولات سفارشی</a></li>
+                <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
+            </ul>
+        </nav>
+        <div class="logo">DOZINO</div>
+        <div class="header-icons">
+            <a href="{% url 'tailor_panel:tailor_logout' %}"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container">
+        <h1 class="page-title"><i class="fa-solid fa-gear"></i> مدیریت قیمت‌ها</h1>
+        <p class="page-subtitle">ویرایش قیمت پارچه‌ها، استیکرها، مزد دوخت و گزینه‌های اضافی</p>
+        <div class="page-divider"></div>
+
+        <!-- ============================================================ -->
+        <!-- بخش اول: پارچه‌ها (فقط ویرایش قیمت) -->
+        <!-- ============================================================ -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-roll"></i> قیمت پارچه‌ها</h2>
+                <span style="color:#888; font-size:13px;">فقط قابل ویرایش</span>
+            </div>
+            <div class="table-wrapper">
+                <table class="manage-table">
+                    <thead>
+                        <tr>
+                            <th>نام پارچه</th>
+                            <th>قیمت (هر متر)</th>
+                            <th>عرض پارچه</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fabrics-list">
+                        {% for fabric in fabrics %}
+                        <tr>
+                            <td>{{ fabric.name }}</td>
+                            <td>
+                                <input type="number" class="price-input" id="fabric-price-{{ fabric.id }}" 
+                                       value="{{ fabric.price_per_meter|floatformat:0 }}" min="0">
+                            </td>
+                            <td>{{ fabric.fabric_width }} متر</td>
+                            <td>
+                                <button class="btn-edit" onclick="saveFabricPrice({{ fabric.id }})">
+                                    <i class="fa-regular fa-floppy-disk"></i> ذخیره
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#888; padding:30px;">هیچ پارچه‌ای ثبت نشده است</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- بخش دوم: استیکرها -->
+        <!-- ============================================================ -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-palette"></i> استیکرها</h2>
+                <button class="btn-add" onclick="openModal('stickerModal')">
+                    <i class="fa-solid fa-plus"></i> افزودن استیکر جدید
+                </button>
+            </div>
+            <div class="table-wrapper">
+                <table class="manage-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>تصویر</th>
+                            <th>نام</th>
+                            <th>قیمت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stickers-list">
+                        {% for sticker in stickers %}
+                        <tr>
+                            <td>#{{ sticker.id }}</td>
+                            <td>
+                                {% if sticker.svg_file %}
+                                    <img src="{{ sticker.svg_file.url }}" alt="{{ sticker.name }}" style="width:50px; height:50px; object-fit:contain; border-radius:8px; background:#f5efe5; border:1px solid #eae5de;">
+                                {% else %}
+                                    <span style="color:#888; font-size:12px;">بدون تصویر</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ sticker.name }}</td>
+                            <td>
+                                <input type="number" class="price-input" id="sticker-price-{{ sticker.id }}" 
+                                       value="{{ sticker.price|floatformat:0 }}" min="0" style="width:120px;">
+                            </td>
+                            <td>
+                                <button class="btn-edit" onclick="saveStickerPrice({{ sticker.id }})" title="ذخیره قیمت">
+                                    <i class="fa-regular fa-floppy-disk"></i>
+                                </button>
+                                <button class="btn-delete" onclick="deleteSticker({{ sticker.id }})" title="حذف استیکر">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align:center; color:#888; padding:30px;">هیچ استیکری ثبت نشده است</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- بخش سوم: مزد دوخت -->
+        <!-- ============================================================ -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-scissors"></i> مزد دوخت</h2>
+            </div>
+            <div class="price-form">
+                <div class="form-group">
+                    <label>مزد دوخت تیشرت</label>
+                    <input type="number" id="tshirt-sewing-price" value="{{ site_price.tshirt_sewing_price|default:0 }}" min="0">
+                    <span>تومان</span>
+                </div>
+                <div class="form-group">
+                    <label>مزد دوخت هودی</label>
+                    <input type="number" id="hoodie-sewing-price" value="{{ site_price.hoodie_sewing_price|default:0 }}" min="0">
+                    <span>تومان</span>
+                </div>
+                <div class="form-group">
+                    <label>مزد دوخت شلوار</label>
+                    <input type="number" id="pants-sewing-price" value="{{ site_price.pants_sewing_price|default:0 }}" min="0">
+                    <span>تومان</span>
+                </div>
+                <div style="grid-column: span 3;">
+                    <button class="btn-save-prices" onclick="updateSitePrices()">
+                        <i class="fa-regular fa-floppy-disk"></i> ذخیره مزد دوخت
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- بخش چهارم: گزینه‌های اضافی (ردیفی) -->
+        <!-- ============================================================ -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-list-check"></i> گزینه‌های اضافی</h2>
+                <span style="color:#888; font-size:13px;">فقط قابل ویرایش</span>
+            </div>
+            <div class="table-wrapper">
+                <table class="manage-table">
+                    <thead>
+                        <tr>
+                            <th>نوع گزینه</th>
+                            <th>نام</th>
+                            <th>قیمت اضافه</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- مدل یقه -->
+                        {% for collar in collars %}
+                        <tr>
+                            <td><span class="badge-option">یقه</span></td>
+                            <td>{{ collar.name }}</td>
+                            <td>
+                                <input type="number" class="price-input" id="collar-price-{{ collar.id }}" 
+                                       value="{{ collar.extra_price|floatformat:0 }}" min="0" style="width:120px;">
+                            </td>
+                            <td>
+                                <button class="btn-edit" onclick="saveOptionPrice('collar', {{ collar.id }})">
+                                    <i class="fa-regular fa-floppy-disk"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#888; padding:15px;">هیچ مدل یقه‌ای ثبت نشده</td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- نوع کلاه -->
+                        {% for hood in hoods %}
+                        <tr>
+                            <td><span class="badge-option badge-hood">کلاه</span></td>
+                            <td>{{ hood.name }}</td>
+                            <td>
+                                <input type="number" class="price-input" id="hood-price-{{ hood.id }}" 
+                                       value="{{ hood.extra_price|floatformat:0 }}" min="0" style="width:120px;">
+                            </td>
+                            <td>
+                                <button class="btn-edit" onclick="saveOptionPrice('hood', {{ hood.id }})">
+                                    <i class="fa-regular fa-floppy-disk"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#888; padding:15px;">هیچ نوع کلاهی ثبت نشده</td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- نوع زیپ -->
+                        {% for zipper in zippers %}
+                        <tr>
+                            <td><span class="badge-option badge-zipper">زیپ</span></td>
+                            <td>{{ zipper.name }}</td>
+                            <td>
+                                <input type="number" class="price-input" id="zipper-price-{{ zipper.id }}" 
+                                       value="{{ zipper.extra_price|floatformat:0 }}" min="0" style="width:120px;">
+                            </td>
+                            <td>
+                                <button class="btn-edit" onclick="saveOptionPrice('zipper', {{ zipper.id }})">
+                                    <i class="fa-regular fa-floppy-disk"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#888; padding:15px;">هیچ نوع زیپی ثبت نشده</td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- نوع پاچه -->
+                        {% for leg in legs %}
+                        <tr>
+                            <td><span class="badge-option badge-leg">پاچه</span></td>
+                            <td>{{ leg.name }}</td>
+                            <td>
+                                <input type="number" class="price-input" id="leg-price-{{ leg.id }}" 
+                                       value="{{ leg.extra_price|floatformat:0 }}" min="0" style="width:120px;">
+                            </td>
+                            <td>
+                                <button class="btn-edit" onclick="saveOptionPrice('leg', {{ leg.id }})">
+                                    <i class="fa-regular fa-floppy-disk"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#888; padding:15px;">هیچ نوع پاچه‌ای ثبت نشده</td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- گزینه جیب -->
+                        {% for pocket in pockets %}
+                        <tr>
+                            <td><span class="badge-option badge-pocket">جیب</span></td>
+                            <td>{{ pocket.name }}</td>
+                            <td>
+                                <input type="number" class="price-input" id="pocket-price-{{ pocket.id }}" 
+                                       value="{{ pocket.extra_price|floatformat:0 }}" min="0" style="width:120px;">
+                            </td>
+                            <td>
+                                <button class="btn-edit" onclick="saveOptionPrice('pocket', {{ pocket.id }})">
+                                    <i class="fa-regular fa-floppy-disk"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#888; padding:15px;">هیچ گزینه جیبی ثبت نشده</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL: افزودن استیکر -->
+    <!-- ============================================================ -->
+    <div class="modal-overlay" id="stickerModal" onclick="if(event.target===this) closeModal('stickerModal')">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('stickerModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3>افزودن استیکر جدید</h3>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label>نام استیکر</label>
+                    <input type="text" id="stickerName" placeholder="مثال: طرح پروانه">
+                </div>
+                <div class="form-group">
+                    <label>قیمت (تومان)</label>
+                    <input type="number" id="stickerPrice" placeholder="مثال: 50000" min="0">
+                </div>
+                <div class="form-group">
+                    <label>تصویر استیکر</label>
+                    <input type="file" id="stickerFile" accept=".svg,image/svg+xml,image/png,image/jpeg">
+                    <div id="stickerPreview" style="margin-top:10px; display:none;">
+                        <img id="stickerPreviewImg" src="" alt="پیش‌نمایش" style="max-width:100px; max-height:100px; border-radius:8px; border:1px solid #eae5de; padding:5px; background:#f5efe5;">
+                    </div>
+                </div>
+                <button class="btn-submit-modal" onclick="saveSticker()">
+                    <i class="fa-regular fa-floppy-disk"></i> ذخیره
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ================================================================
+        // TOAST
+        // ================================================================
+        let toastTimeout = null;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ================================================================
+        // CSRF
+        // ================================================================
+        function getCsrfToken() {
+            const cookieValue = document.cookie.match(/csrftoken=([^;]+)/);
+            return cookieValue ? cookieValue[1] : '';
+        }
+
+        // ================================================================
+        // MODAL
+        // ================================================================
+        function openModal(id) {
+            if (id === 'stickerModal') {
+                document.getElementById('stickerName').value = '';
+                document.getElementById('stickerPrice').value = '';
+                document.getElementById('stickerFile').value = '';
+                document.getElementById('stickerPreview').style.display = 'none';
+            }
+            document.getElementById(id).classList.add('show');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // ================================================================
+        // STICKER - پیش‌نمایش تصویر
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('stickerFile');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            document.getElementById('stickerPreviewImg').src = event.target.result;
+                            document.getElementById('stickerPreview').style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        // ================================================================
+        // FABRIC
+        // ================================================================
+        function saveFabricPrice(id) {
+            const price = document.getElementById(`fabric-price-${id}`).value;
+            
+            fetch(`/tailor-panel/custom-products/fabric/edit/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ 
+                    price_per_meter: price
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ قیمت پارچه با موفقیت به‌روزرسانی شد');
+                } else {
+                    showToast('❌ ' + data.message);
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور'));
+        }
+
+        // ================================================================
+        // STICKER
+        // ================================================================
+        function saveSticker() {
+            const name = document.getElementById('stickerName').value.trim();
+            const price = document.getElementById('stickerPrice').value;
+            const fileInput = document.getElementById('stickerFile');
+            const file = fileInput.files[0];
+
+            if (!name) { showToast('لطفاً نام استیکر را وارد کنید'); return; }
+            if (!price) { showToast('لطفاً قیمت استیکر را وارد کنید'); return; }
+
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('price', price);
+            if (file) {
+                formData.append('svg_file', file);
+            }
+
+            fetch('/tailor-panel/custom-products/sticker/add/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ ' + data.message);
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast('❌ ' + data.message);
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور'));
+        }
+
+        function saveStickerPrice(id) {
+            const price = document.getElementById(`sticker-price-${id}`).value;
+            
+            fetch(`/tailor-panel/custom-products/sticker/update/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ price })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ قیمت استیکر با موفقیت به‌روزرسانی شد');
+                } else {
+                    showToast('❌ ' + data.message);
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور'));
+        }
+
+        function deleteSticker(id) {
+            if (!confirm('آیا از حذف این استیکر مطمئن هستید؟')) return;
+            
+            fetch(`/tailor-panel/custom-products/sticker/delete/${id}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCsrfToken() }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ ' + data.message);
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast('❌ ' + data.message);
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور'));
+        }
+
+        // ================================================================
+        // OPTIONS
+        // ================================================================
+        function saveOptionPrice(type, id) {
+            const price = document.getElementById(`${type}-price-${id}`).value;
+            
+            fetch(`/tailor-panel/custom-products/option/update/${type}/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ extra_price: price })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ قیمت با موفقیت به‌روزرسانی شد');
+                } else {
+                    showToast('❌ ' + data.message);
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور'));
+        }
+
+        // ================================================================
+        // SITE PRICES
+        // ================================================================
+        function updateSitePrices() {
+            const tshirt = document.getElementById('tshirt-sewing-price').value;
+            const hoodie = document.getElementById('hoodie-sewing-price').value;
+            const pants = document.getElementById('pants-sewing-price').value;
+
+            fetch('/tailor-panel/custom-products/site-price/update/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    tshirt_sewing_price: tshirt,
+                    hoodie_sewing_price: hoodie,
+                    pants_sewing_price: pants
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ ' + data.message);
+                } else {
+                    showToast('❌ ' + data.message);
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور'));
+        }
+
+        // ================================================================
+        // CLOSE MODAL WITH ESC
+        // ================================================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+            }
+        });
+    </script>
+
+</body>
+</html>

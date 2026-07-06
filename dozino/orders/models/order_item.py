@@ -16,12 +16,9 @@ class OrderItem(models.Model):
         related_name="items"
     )
 
-    # product = models.ForeignKey(
-    #     "products.Product",
-    #     on_delete=models.SET_NULL,
-    #     null=True
-    # )
-
+    # ============================================================
+    # اطلاعات پایه محصول
+    # ============================================================
     product_name = models.CharField(
         max_length=255
     )
@@ -38,10 +35,12 @@ class OrderItem(models.Model):
         decimal_places=2
     )
 
-    # -------------------
-    # READY PRODUCT
-    # -------------------
+    # ============================================================
+    # محصولات آماده
+    # ============================================================
+    product_id = models.PositiveIntegerField(null=True, blank=True)  
 
+    
     size = models.CharField(
         max_length=20,
         blank=True,
@@ -54,10 +53,9 @@ class OrderItem(models.Model):
         null=True
     )
 
-    # -------------------
-    # CUSTOM PRODUCT
-    # -------------------
-
+    # ============================================================
+    # محصولات سفارشی (تیشرت، هودی، شلوار)
+    # ============================================================
     fabric_name = models.CharField(
         max_length=255,
         blank=True,
@@ -75,11 +73,16 @@ class OrderItem(models.Model):
         blank=True,
         null=True
     )
+    
+    sticker_id = models.PositiveIntegerField(  
+        null=True,
+        blank=True
+    )
 
-    # -------------------
-    # TSHIRT + HOODIE
-    # -------------------
 
+    # ============================================================
+    # تیشرت + هودی (اندازه‌ها)
+    # ============================================================
     clothing_length = models.FloatField(
         null=True,
         blank=True
@@ -95,10 +98,19 @@ class OrderItem(models.Model):
         blank=True
     )
 
-    # -------------------
-    # HOODIE
-    # -------------------
+    # ============================================================
+    # تیشرت فقط
+    # ============================================================
+    collar_style = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="round, v, scoop"
+    )
 
+    # ============================================================
+    # هودی فقط
+    # ============================================================
     has_hood = models.BooleanField(
         default=False
     )
@@ -107,35 +119,19 @@ class OrderItem(models.Model):
         default=False
     )
 
-    # -------------------
-    # PANTS
-    # -------------------
+    # ============================================================
+    # شلوار فقط
+    # ============================================================
+    pants_length = models.FloatField(null=True, blank=True)      # قد شلوار
+    waist = models.FloatField(null=True, blank=True)             # کمر
+    hip_width = models.FloatField(null=True, blank=True)         # باسن
+    thigh_width = models.FloatField(null=True, blank=True)       # ران
 
-    pants_length = models.FloatField(
-        null=True,
-        blank=True
-    )
-
-    waist = models.FloatField(
-        null=True,
-        blank=True
-    )
-
-    crotch_width = models.FloatField(
-        null=True,
-        blank=True
-    )
-
-    leg_type = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True
-    )
-
-    has_pocket = models.BooleanField(
-        default=False
-    )
-
+    leg_type = models.CharField(max_length=20, blank=True, null=True)  # نوع پاچه
+    has_pocket = models.BooleanField(default=False)
+    # ============================================================
+    # اطلاعات اضافی
+    # ============================================================
     created_at = models.DateTimeField(
         auto_now_add=True
     )

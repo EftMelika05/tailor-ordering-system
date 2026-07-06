@@ -32,11 +32,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'tailor_panel',
     'Account.apps.AccountConfig',
     'pages.apps.PagesConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
+    'ready_products.apps.ReadyProductsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,6 +79,7 @@ WSGI_APPLICATION = 'dozino.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+
 
 DATABASES = {
     'default': {
@@ -129,7 +132,7 @@ STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'dozino/static')
 ]
 
-AUTH_USER_MODEL='Account.user'
+AUTH_USER_MODEL='Account.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT =os.path.join(BASE_DIR / 'media')

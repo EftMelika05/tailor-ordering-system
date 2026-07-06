@@ -33,9 +33,20 @@
       <div class="logo">Dozino</div>
 
       <div class="header-icons">
-        <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
-        <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
-        <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% else %}
+            <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+             <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            {% else %}
+             <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
+            {% endif %}
+        
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
       </div>
     </header>
 
@@ -54,7 +65,7 @@
             </button>
           </div>
 
-          <h2>نگین محمدی</h2>
+          <h2>{{ user.full_name|default:"کاربر" }}</h2>
           <p>عضو خانواده Dozino</p>
         </div>
 
@@ -87,113 +98,87 @@
           
         </div>
       </div>
+      <!-- ===== سفارش‌ها ===== -->
+<div class="orders-box">
+    <div class="title">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <h1>سفارش‌های من</h1>
+    </div>
 
-      <!-- ===== قسمت سفارش ها ===== -->
-      <div class="orders-box">
-        <div class="title">
-          <i class="fa-solid fa-bag-shopping"></i>
-          <h1>سفارش‌های من</h1>
+    <p class="subtitle">
+        در این بخش می‌توانید لیست تمام سفارش‌های خود را مشاهده کنید.
+    </p>
+
+    {% for order in orders %}
+    <!-- سفارش -->
+    <div class="order-card">
+        <div class="order-labels">
+            <div>شماره سفارش:</div>
+            <div>تاریخ سفارش:</div>
+            <div>مبلغ سفارش:</div>
+            <div>تعداد محصولات:</div>
+            <div>وضعیت سفارش:</div>
         </div>
 
-        <p class="subtitle">
-          در این بخش می‌توانید لیست تمام سفارش‌های خود را مشاهده کنید.
+        <div class="order-values">
+            <div class="value-box">
+                <i class="fa-solid fa-hashtag"></i>
+                #{{ order.id }}
+            </div>
+
+            <div class="value-box">
+                <i class="fa-regular fa-calendar"></i>
+                {{ order.created_at|date:"Y/m/d" }}
+            </div>
+
+            <div class="value-box">
+                <i class="fa-solid fa-tag"></i>
+                {{ order.total_price|floatformat:0 }} تومان
+            </div>
+
+            <div class="value-box">
+                <i class="fa-solid fa-cube"></i>
+                {{ order.total_items }} عدد
+            </div>
+
+            <div class="value-box 
+                {% if order.status == 'pending' %}preparing
+                {% elif order.status == 'paid' %}preparing
+                {% elif order.status == 'processing' %}preparing
+                {% elif order.status == 'shipped' %}delivered
+                {% elif order.status == 'completed' %}delivered
+                {% elif order.status == 'cancelled' %}canceled{% endif %}">
+                <span class="dot 
+                    {% if order.status == 'pending' %}yellow
+                    {% elif order.status == 'paid' %}yellow
+                    {% elif order.status == 'processing' %}yellow
+                    {% elif order.status == 'shipped' %}green
+                    {% elif order.status == 'completed' %}green
+                    {% elif order.status == 'cancelled' %}red{% endif %}">
+                </span>
+                {{ order.get_status_display }}
+            </div>
+        </div>
+
+        <!-- دکمه مشاهده جزئیات -->
+        <div class="order-actions">
+            <a href="{% url 'order_detail' order.id %}" class="btn-detail">
+                <i class="fa-solid fa-eye"></i> مشاهده جزئیات
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-orders">
+        <i class="fa-solid fa-bag-shopping" style="font-size: 48px; color: #ccc;"></i>
+        <p style="font-size: 18px; color: #666; margin-top: 20px;">
+            شما هنوز سفارشی ثبت نکرده‌اید.
         </p>
-
-        <!-- سفارش اول -->
-        <div class="order-card">
-          <div class="order-labels">
-            <div>تاریخ سفارش:</div>
-            <div>مبلغ سفارش:</div>
-            <div>تعداد محصولات:</div>
-            <div>وضعیت سفارش:</div>
-          </div>
-
-          <div class="order-values">
-            <div class="value-box">
-              <i class="fa-regular fa-calendar"></i>
-              ۱۴۰۵/۰۳/۰۵
-            </div>
-
-            <div class="value-box">
-              <i class="fa-solid fa-tag"></i>
-              ۳۵۰,۰۰۰ تومان
-            </div>
-
-            <div class="value-box">
-              <i class="fa-solid fa-cube"></i>
-              ۳ عدد
-            </div>
-
-            <div class="value-box preparing">
-              <span class="dot yellow"></span>
-              درحال آماده‌سازی
-            </div>
-          </div>
-        </div>
-
-        <!-- سفارش دوم -->
-        <div class="order-card">
-          <div class="order-labels">
-            <div>تاریخ سفارش:</div>
-            <div>مبلغ سفارش:</div>
-            <div>تعداد محصولات:</div>
-            <div>وضعیت سفارش:</div>
-          </div>
-
-          <div class="order-values">
-            <div class="value-box">
-              <i class="fa-regular fa-calendar"></i>
-              ۱۴۰۵/۰۲/۲۲
-            </div>
-
-            <div class="value-box">
-              <i class="fa-solid fa-tag"></i>
-              ۴۰۰,۰۰۰ تومان
-            </div>
-
-            <div class="value-box">
-              <i class="fa-solid fa-cube"></i>
-              ۱ عدد
-            </div>
-
-            <div class="value-box delivered">
-              <span class="dot green"></span>
-              تحویل داده شده
-            </div>
-          </div>
-        </div>
-
-        <!-- سفارش سوم -->
-        <div class="order-card">
-          <div class="order-labels">
-            <div>تاریخ سفارش:</div>
-            <div>مبلغ سفارش:</div>
-            <div>تعداد محصولات:</div>
-            <div>وضعیت سفارش:</div>
-          </div>
-
-          <div class="order-values">
-            <div class="value-box">
-              <i class="fa-regular fa-calendar"></i>
-              ۱۴۰۵/۰۱/۱۵
-            </div>
-
-            <div class="value-box">
-              <i class="fa-solid fa-tag"></i>
-              ۳۵۰,۰۰۰ تومان
-            </div>
-
-            <div class="value-box">
-              <i class="fa-solid fa-cube"></i>
-              ۲ عدد
-            </div>
-
-            <div class="value-box canceled">
-              <span class="dot red"></span>
-              لغو شده
-            </div>
-          </div>
-        </div>
+        <a href="{% url 'list' %}" class="btn-primary" style="display: inline-block; margin-top: 15px; padding: 12px 30px; background: #c9a86a; color: white; border-radius: 8px; text-decoration: none;">
+            شروع خرید
+        </a>
+    </div>
+    {% endfor %}
+</div>
       </div>
     </div>
 

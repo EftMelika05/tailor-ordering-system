@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل خیاط | مدیریت سفارشات</title>
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/tailor-panel.css' %}">
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="topbar">
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
+                <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
+                <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
+                <li><a href="#orders">سفارشات</a></li>
+            </ul>
+        </nav>
+
+        <div class="logo">DOZINO</div>
+
+        <div class="header-icons">
+            <a href="{% url 'tailor_panel:tailor_logout' %}"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
+        </div>
+
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container">
+
+        <!-- Panel Header -->
+        <div class="panel-header">
+            <h1><i class="fa-solid fa-scissors"></i> پنل خیاط</h1>
+            <div class="badge">
+                <i class="fa-regular fa-clock"></i> امروز: ۱۴۰۵/۰۴/۰۵
+            </div>
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="جستجوی سفارش با کد..." maxlength="20">
+            <button onclick="searchOrder()">
+                <i class="fa-solid fa-magnifying-glass"></i> جستجو
+            </button>
+        </div>
+
+        <!-- ===== SECTION 1: سفارشات جدید ===== -->
+        <div class="order-section" id="orders">
+            <div class="section-header">
+                <div class="left">
+                    <i class="fa-regular fa-message"></i>
+                    <h2>سفارشات جدید</h2>
+                    <span class="count-badge">{{ new_orders.count }}</span>
+                </div>
+            </div>
+            <div class="scroll-horizontal">
+                {% for order in new_orders %}
+                <div class="order-card">
+                    <span class="code">#{{ order.id }}</span>
+                    <span class="order-date"><i class="fa-regular fa-calendar"></i> {{ order.created_at|date:"Y/m/d" }}</span>
+                    <span class="order-items">{{ order.items.count }} محصول</span>
+                    <span class="status-badge status-new">جدید</span>
+                    <button class="view-btn" onclick="viewOrderDetails('{{ order.id }}')">
+                        <i class="fa-regular fa-eye"></i> مشاهده جزئیات
+                    </button>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>هیچ سفارش جدیدی وجود ندارد</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ===== SECTION 2: درحال آماده‌سازی ===== -->
+        <div class="order-section">
+            <div class="section-header">
+                <div class="left">
+                    <i class="fa-regular fa-hourglass-half"></i>
+                    <h2>درحال آماده‌سازی</h2>
+                    <span class="count-badge">{{ prep_orders.count }}</span>
+                </div>
+            </div>
+            <div class="scroll-horizontal">
+                {% for order in prep_orders %}
+                <div class="order-card">
+                    <span class="code">#{{ order.id }}</span>
+                    <span class="order-date"><i class="fa-regular fa-calendar"></i> {{ order.created_at|date:"Y/m/d" }}</span>
+                    <span class="order-items">{{ order.items.count }} محصول</span>
+                    <span class="status-badge status-prep">درحال آماده‌سازی</span>
+                    <button class="view-btn" onclick="viewOrderDetails('{{ order.id }}')">
+                        <i class="fa-regular fa-eye"></i> مشاهده جزئیات
+                    </button>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>هیچ سفارشی در حال آماده‌سازی نیست</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ===== SECTION 3: ارسال شده ===== -->
+        <div class="order-section">
+            <div class="section-header">
+                <div class="left">
+                    <i class="fa-regular fa-paper-plane"></i>
+                    <h2>ارسال شده</h2>
+                    <span class="count-badge">{{ sent_orders.count }}</span>
+                </div>
+            </div>
+            <div class="scroll-horizontal">
+                {% for order in sent_orders %}
+                <div class="order-card">
+                    <span class="code">#{{ order.id }}</span>
+                    <span class="order-date"><i class="fa-regular fa-calendar"></i> {{ order.created_at|date:"Y/m/d" }}</span>
+                    <span class="order-items">{{ order.items.count }} محصول</span>
+                    <span class="status-badge status-sent">ارسال شده</span>
+                    <button class="view-btn" onclick="viewOrderDetails('{{ order.id }}')">
+                        <i class="fa-regular fa-eye"></i> مشاهده جزئیات
+                    </button>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>هیچ سفارش ارسال شده‌ای وجود ندارد</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ===== BOTTOM ACTION CARDS ===== -->
+        <div class="action-grid">
+
+            <!-- کارت تغییر محصولات سفارشی -->
+            <div class="action-card">
+                <div class="card-image">
+                    <img src="{% static 'imag/home/تیشرت و تاپودورس.png' %}" alt="محصولات سفارشی">
+                </div>
+                <div class="card-content">
+                    <div class="info">
+                        <h3><i class="fa-regular fa-pen-to-square" style="color:#c9a86a; margin-left:8px;"></i> محصولات
+                            سفارشی</h3>
+                        <p>ویرایش و مدیریت آیتم‌های قابل سفارش‌دهی</p>
+                    </div>
+                    <a href="{% url 'tailor_panel:manage_custom_products' %}" class="action-btn">
+                    <i class="fa-regular fa-pen-to-square"></i> تغییر محصولات
+                    </a>
+                </div>
+            </div>
+
+            <!-- کارت افزودن محصول آماده -->
+            <div class="action-card">
+                <div class="card-image">
+                    <img src="{% static 'imag/home/4.png' %}" alt="افزودن محصول">
+                </div>
+                <div class="card-content">
+                    <div class="info">
+                        <h3><i class="fa-regular fa-square-plus" style="color:#c9a86a; margin-left:8px;"></i> محصول
+                            آماده</h3>
+                        <p>افزودن یک محصول جدید به فروشگاه</p>
+                    </div>
+                    <a href="{% url 'tailor_panel:register_product' %}" class="action-btn">
+                        <i class="fa-regular fa-square-plus"></i> افزودن محصول
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===== VIEW ORDER DETAILS =====
+        function viewOrderDetails(orderId) {
+            window.location.href = `/tailor-panel/order/${orderId}/`;
+        }
+
+        // ===== SEARCH =====
+        function searchOrder() {
+            const input = document.getElementById('searchInput');
+            const value = input.value.trim();
+            
+            if (value) {
+                window.location.href = `/tailor-panel/dashboard/?search=${value}`;
+            } else {
+                showToast('لطفاً کد سفارش را وارد کنید');
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchOrder();
+            }
+        });
+
+        // ===== TOAST =====
+        let toastTimeout = null;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+
+</body>
+
+</html>

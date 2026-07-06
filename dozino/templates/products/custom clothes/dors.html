@@ -25,9 +25,21 @@
     </nav>
     <div class="logo">Dozino</div>
     <div class="header-icons">
-      <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
-      <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
-      <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% else %}
+            <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+             <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+            {% else %}
+             <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
+            {% endif %}
+        
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+
     </div>
   </header>
 
@@ -512,7 +524,7 @@
 
 
       const response = await fetch(
-        `/products/dors/calculate/?fabric=${fabric}&hood=${hood}&zipper=${zipper}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
+        `/customproducts/dors/calculate/?fabric=${fabric}&hood=${hood}&zipper=${zipper}&sticker=${sticker}&body_height=${bodyHeight}&body_width=${bodyWidth}&sleeve_height=${sleeveHeight}`
       );
 
       const data = await response.json();

@@ -31,7 +31,12 @@
         <div class="logo"> DOZINO </div>
 
         <div class="header-icons">
+
+            {% if user.is_authenticated %}
             <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% else %}
+            <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            {% endif %}
 
             {% if user.is_authenticated %}
              <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
