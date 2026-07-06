@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.views.decorators import staff_member_required
@@ -6,12 +6,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
+from django.db.models import Q
 import json
 import time
 import base64
 
 # ===== import از ready_products =====
 from ready_products.models import Category, Product, Color, Size, ProductVariant, ProductImage, ProductSpecification
+
+# ===== import از orders =====
+from orders.models import Order, OrderItem
 
 
 # ===== AUTH VIEWS =====
@@ -41,10 +45,102 @@ def tailor_logout(request):
     return redirect('tailor_panel:tailor_login')
 
 
+
 @login_required(login_url='tailor_panel:tailor_login')
 @staff_member_required(login_url='tailor_panel:tailor_login')
 def dashboard(request):
-    return render(request, 'tailor_panel/tailor_panel.html')
+    """پنل اصلی خیاط با لیست سفارشات"""
+    all_orders = Order.objects.all().order_by('-created_at')
+    
+    # جستجو
+    search = request.GET.get('search')
+    if search:
+        all_orders = all_orders.filter(id__icontains=search)
+    
+    # دسته‌بندی بر اساس وضعیت
+    new_orders = all_orders.filter(status__in=['pending', 'paid'])
+    prep_orders = all_orders.filter(status='processing')
+    sent_orders = all_orders.filter(status='shipped')
+    completed_orders = all_orders.filter(status='completed')
+    cancelled_orders = all_orders.filter(status='cancelled')
+    
+    # محاسبه تعداد آیتم‌ها
+    for order in all_orders:
+        order.total_items = order.items.count()
+    
+    context = {
+        'new_orders': new_orders,
+        'prep_orders': prep_orders,
+        'sent_orders': sent_orders,
+        'completed_orders': completed_orders,
+        'cancelled_orders': cancelled_orders,
+        'all_orders': all_orders,
+    }
+    
+    return render(request, 'tailor_panel/tailor_panel.html', context)
+
+
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def order_detail(request, order_id):
+    """نمایش جزئیات یک سفارش"""
+    order = get_object_or_404(Order, id=order_id)
+    items = order.items.all().order_by('id')
+    
+    context = {
+        'order': order,
+        'items': items,
+    }
+    
+    return render(request, 'tailor_panel/order-datalist-tailor.html', context)
+
+
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def update_order_status(request):
+    """API برای تغییر وضعیت سفارش"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        data = json.loads(request.body)
+        order_id = data.get('order_id')
+        status = data.get('status')
+        
+        order = get_object_or_404(Order, id=order_id)
+        
+        # ===== اصلاح: نگاشت وضعیت‌ها =====
+        # کلیدها همان مقداری هستن که از frontend میاد
+        status_map = {
+            'processing': 'processing',   # پذیرش → در حال پردازش
+            'shipped': 'shipped',         # ارسال شده
+            'cancelled': 'cancelled',     # لغو شده
+        }
+        
+        if status in status_map:
+            order.status = status_map[status]
+            order.save()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'وضعیت سفارش با موفقیت تغییر کرد',
+                'new_status': order.status
+            })
+        else:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'وضعیت نامعتبر است'
+            })
+            
+    except Order.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'سفارش یافت نشد'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        })
 
 
 # ===== PRODUCT REGISTRATION VIEWS =====
@@ -162,11 +258,3 @@ def register_product_submit(request):
             'status': 'error',
             'message': str(e)
         })
-
-
-# ===== ORDER DETAIL VIEW =====
-@login_required(login_url='tailor_panel:tailor_login')
-@staff_member_required(login_url='tailor_panel:tailor_login')
-def order_detail(request, order_id):
-    """نمایش جزئیات سفارش"""
-    return render(request, 'tailor_panel/order-datalist-tailor.html')

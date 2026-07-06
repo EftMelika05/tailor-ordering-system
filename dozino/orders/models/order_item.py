@@ -38,6 +38,9 @@ class OrderItem(models.Model):
     # ============================================================
     # محصولات آماده
     # ============================================================
+    product_id = models.PositiveIntegerField(null=True, blank=True)  
+
+    
     size = models.CharField(
         max_length=20,
         blank=True,
@@ -70,6 +73,12 @@ class OrderItem(models.Model):
         blank=True,
         null=True
     )
+    
+    sticker_id = models.PositiveIntegerField(  
+        null=True,
+        blank=True
+    )
+
 
     # ============================================================
     # تیشرت + هودی (اندازه‌ها)
@@ -113,31 +122,13 @@ class OrderItem(models.Model):
     # ============================================================
     # شلوار فقط
     # ============================================================
-    pants_length = models.FloatField(
-        null=True,
-        blank=True
-    )
+    pants_length = models.FloatField(null=True, blank=True)      # قد شلوار
+    waist = models.FloatField(null=True, blank=True)             # کمر
+    hip_width = models.FloatField(null=True, blank=True)         # باسن
+    thigh_width = models.FloatField(null=True, blank=True)       # ران
 
-    waist = models.FloatField(
-        null=True,
-        blank=True
-    )
-
-    crotch_width = models.FloatField(
-        null=True,
-        blank=True
-    )
-
-    leg_type = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True
-    )
-
-    has_pocket = models.BooleanField(
-        default=False
-    )
-
+    leg_type = models.CharField(max_length=20, blank=True, null=True)  # نوع پاچه
+    has_pocket = models.BooleanField(default=False)
     # ============================================================
     # اطلاعات اضافی
     # ============================================================

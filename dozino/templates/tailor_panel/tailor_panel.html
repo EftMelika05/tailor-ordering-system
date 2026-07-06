@@ -20,7 +20,7 @@
             <ul>
                 <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
                 <li><a href="#">محصولات سفارشی</a></li>
-                <li><a href="#">محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
                 <li><a href="#orders">سفارشات</a></li>
             </ul>
         </nav>
@@ -28,7 +28,7 @@
         <div class="logo">DOZINO</div>
 
         <div class="header-icons">
-            <a href="#"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
+            <a href="{% url 'tailor_panel:tailor_logout' %}"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
         </div>
 
     </header>
@@ -46,7 +46,7 @@
 
         <!-- Search Box -->
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="جستجوی سفارش با کد ۷ رقمی..." maxlength="7">
+            <input type="text" id="searchInput" placeholder="جستجوی سفارش با کد..." maxlength="20">
             <button onclick="searchOrder()">
                 <i class="fa-solid fa-magnifying-glass"></i> جستجو
             </button>
@@ -58,10 +58,27 @@
                 <div class="left">
                     <i class="fa-regular fa-message"></i>
                     <h2>سفارشات جدید</h2>
-                    <span class="count-badge" id="newCount">۰</span>
+                    <span class="count-badge">{{ new_orders.count }}</span>
                 </div>
             </div>
-            <div class="scroll-horizontal" id="newOrdersContainer"></div>
+            <div class="scroll-horizontal">
+                {% for order in new_orders %}
+                <div class="order-card">
+                    <span class="code">#{{ order.id }}</span>
+                    <span class="order-date"><i class="fa-regular fa-calendar"></i> {{ order.created_at|date:"Y/m/d" }}</span>
+                    <span class="order-items">{{ order.items.count }} محصول</span>
+                    <span class="status-badge status-new">جدید</span>
+                    <button class="view-btn" onclick="viewOrderDetails('{{ order.id }}')">
+                        <i class="fa-regular fa-eye"></i> مشاهده جزئیات
+                    </button>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>هیچ سفارش جدیدی وجود ندارد</span>
+                </div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- ===== SECTION 2: درحال آماده‌سازی ===== -->
@@ -70,10 +87,27 @@
                 <div class="left">
                     <i class="fa-regular fa-hourglass-half"></i>
                     <h2>درحال آماده‌سازی</h2>
-                    <span class="count-badge" id="prepCount">۰</span>
+                    <span class="count-badge">{{ prep_orders.count }}</span>
                 </div>
             </div>
-            <div class="scroll-horizontal" id="prepOrdersContainer"></div>
+            <div class="scroll-horizontal">
+                {% for order in prep_orders %}
+                <div class="order-card">
+                    <span class="code">#{{ order.id }}</span>
+                    <span class="order-date"><i class="fa-regular fa-calendar"></i> {{ order.created_at|date:"Y/m/d" }}</span>
+                    <span class="order-items">{{ order.items.count }} محصول</span>
+                    <span class="status-badge status-prep">درحال آماده‌سازی</span>
+                    <button class="view-btn" onclick="viewOrderDetails('{{ order.id }}')">
+                        <i class="fa-regular fa-eye"></i> مشاهده جزئیات
+                    </button>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>هیچ سفارشی در حال آماده‌سازی نیست</span>
+                </div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- ===== SECTION 3: ارسال شده ===== -->
@@ -82,10 +116,27 @@
                 <div class="left">
                     <i class="fa-regular fa-paper-plane"></i>
                     <h2>ارسال شده</h2>
-                    <span class="count-badge" id="sentCount">۰</span>
+                    <span class="count-badge">{{ sent_orders.count }}</span>
                 </div>
             </div>
-            <div class="scroll-horizontal" id="sentOrdersContainer"></div>
+            <div class="scroll-horizontal">
+                {% for order in sent_orders %}
+                <div class="order-card">
+                    <span class="code">#{{ order.id }}</span>
+                    <span class="order-date"><i class="fa-regular fa-calendar"></i> {{ order.created_at|date:"Y/m/d" }}</span>
+                    <span class="order-items">{{ order.items.count }} محصول</span>
+                    <span class="status-badge status-sent">ارسال شده</span>
+                    <button class="view-btn" onclick="viewOrderDetails('{{ order.id }}')">
+                        <i class="fa-regular fa-eye"></i> مشاهده جزئیات
+                    </button>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>هیچ سفارش ارسال شده‌ای وجود ندارد</span>
+                </div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- ===== BOTTOM ACTION CARDS ===== -->
@@ -119,9 +170,9 @@
                             آماده</h3>
                         <p>افزودن یک محصول جدید به فروشگاه</p>
                     </div>
-                    <button class="action-btn">
+                    <a href="{% url 'tailor_panel:register_product' %}" class="action-btn">
                         <i class="fa-regular fa-square-plus"></i> افزودن محصول
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -133,98 +184,20 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // DATA
-
-        const orders = [
-            { id: '1024567', date: '۱۴۰۵/۰۴/۰۴', status: 'new' },
-            { id: '1024568', date: '۱۴۰۵/۰۴/۰۳', status: 'new' },
-            { id: '1024569', date: '۱۴۰۵/۰۴/۰۲', status: 'new' },
-            { id: '1024570', date: '۱۴۰۵/۰۴/۰۱', status: 'prep' },
-            { id: '1024571', date: '۱۴۰۵/۰۳/۳۰', status: 'prep' },
-            { id: '1024572', date: '۱۴۰۵/۰۳/۲۸', status: 'sent' },
-            { id: '1024573', date: '۱۴۰۵/۰۳/۲۷', status: 'new' },
-            { id: '1024574', date: '۱۴۰۵/۰۳/۲۵', status: 'prep' },
-            { id: '1024575', date: '۱۴۰۵/۰۳/۲۴', status: 'new' },
-            { id: '1024576', date: '۱۴۰۵/۰۳/۲۳', status: 'new' },
-            { id: '1024577', date: '۱۴۰۵/۰۳/۲۲', status: 'prep' },
-            { id: '1024578', date: '۱۴۰۵/۰۳/۲۱', status: 'sent' },
-        ];
-
-        // RENDER
-
-        function renderOrders(filterText = '') {
-            const newContainer = document.getElementById('newOrdersContainer');
-            const prepContainer = document.getElementById('prepOrdersContainer');
-            const sentContainer = document.getElementById('sentOrdersContainer');
-
-            let filtered = orders;
-            if (filterText.trim()) {
-                filtered = orders.filter(o => o.id.includes(filterText.trim()));
-            }
-
-            const newOrders = filtered.filter(o => o.status === 'new');
-            const prepOrders = filtered.filter(o => o.status === 'prep');
-            const sentOrders = filtered.filter(o => o.status === 'sent');
-
-            document.getElementById('newCount').textContent = newOrders.length;
-            document.getElementById('prepCount').textContent = prepOrders.length;
-            document.getElementById('sentCount').textContent = sentOrders.length;
-
-            newContainer.innerHTML = buildOrderCards(newOrders);
-            prepContainer.innerHTML = buildOrderCards(prepOrders);
-            sentContainer.innerHTML = buildOrderCards(sentOrders);
+        // ===== VIEW ORDER DETAILS =====
+        function viewOrderDetails(orderId) {
+            window.location.href = `/tailor-panel/order/${orderId}/`;
         }
 
-        function buildOrderCards(orderArray) {
-            if (!orderArray.length) {
-                return `
-                    <div class="empty-state">
-                        <i class="fa-regular fa-circle-check"></i>
-                        <span>هیچ سفارشی در این دسته نیست</span>
-                    </div>
-                `;
-            }
-
-            let html = '';
-            orderArray.forEach(order => {
-                let statusLabel = '';
-                let statusClass = '';
-
-                if (order.status === 'new') {
-                    statusLabel = 'جدید';
-                    statusClass = 'status-new';
-                } else if (order.status === 'prep') {
-                    statusLabel = 'درحال آماده‌سازی';
-                    statusClass = 'status-prep';
-                } else if (order.status === 'sent') {
-                    statusLabel = 'ارسال شده';
-                    statusClass = 'status-sent';
-                }
-
-                html += `
-                    <div class="order-card">
-                        <span class="code">${order.id}</span>
-                        <span class="order-date"><i class="fa-regular fa-calendar"></i> ${order.date}</span>
-                        <span class="status-badge ${statusClass}">${statusLabel}</span>
-                        <button class="view-btn" onclick="viewOrderDetails('${order.id}')">
-                            <i class="fa-regular fa-eye"></i> مشاهده جزئیات
-                        </button>
-                    </div>
-                `;
-            });
-            return html;
-        }
-
-        // SEARCH
-
+        // ===== SEARCH =====
         function searchOrder() {
             const input = document.getElementById('searchInput');
             const value = input.value.trim();
-            renderOrders(value);
+            
             if (value) {
-                showToast(`جستجوی کد ${value} انجام شد`);
+                window.location.href = `/tailor-panel/dashboard/?search=${value}`;
             } else {
-                showToast('نمایش همه سفارشات');
+                showToast('لطفاً کد سفارش را وارد کنید');
             }
         }
 
@@ -234,15 +207,7 @@
             }
         });
 
-        // VIEW ORDER DETAILS
-        function viewOrderDetails(orderId) {
-            showToast(`مشاهده جزئیات سفارش ${orderId}`);
-            // بعداً به صفحه جزئیات میره
-            // window.location.href = `/tailor-panel/order/${orderId}/`;
-        }
-
-        // TOAST
-
+        // ===== TOAST =====
         let toastTimeout = null;
 
         function showToast(message) {
@@ -254,12 +219,6 @@
                 toast.classList.remove('show');
             }, 3000);
         }
-
-        // INIT
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderOrders();
-        });
     </script>
 
 </body>

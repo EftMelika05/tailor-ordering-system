@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پنل خیاط | ثبت محصول آماده | دوزینو</title>
 
-    <link rel="shortcut icon" href="imag/Dozino_Logo_Transparent.png" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/registering-products.css' %}">
 </head>
 
@@ -17,15 +18,17 @@
     <header class="topbar">
         <nav>
             <ul>
-                <li><a href="#">خانه</a></li>
+                <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
                 <li><a href="#">محصولات سفارشی</a></li>
-                <li><a href="#">محصولات آماده</a></li>
-                <li><a href="#orders">سفارشات</a></li>
+                <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
             </ul>
         </nav>
         <div class="logo">DOZINO</div>
         <div class="header-icons">
-            <a href="login.html"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
+            <a href="{% url 'tailor_panel:tailor_logout' %}">
+                <i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i>
+            </a>
         </div>
     </header>
 
@@ -417,9 +420,8 @@
             images: imageFiles.map(img => img.data)
         };
 
-        console.log("📦 داده ارسالی:", JSON.stringify(productData, null, 2));
-
-        fetch('/readyproducts/register/submit/', {
+        // ===== اصلاح: مسیر جدید =====
+        fetch('/tailor-panel/products/register/submit/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -429,7 +431,6 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log("📥 پاسخ سرور:", data);
             if (data.status === 'success') {
                 showToast('✅ محصول با موفقیت ثبت شد!');
                 setTimeout(() => clearForm(), 500);

@@ -218,6 +218,7 @@ def add_ready_to_cart(request):
             color=color,
             quantity=quantity,
             final_price=price * quantity
+            
         )
         
         return JsonResponse({
@@ -409,6 +410,10 @@ def payment_gateway(request):
 # ثبت نهایی سفارش
 # ============================================================
 @login_required
+# ============================================================
+# ثبت نهایی سفارش
+# ============================================================
+@login_required
 def checkout_payment(request):
     if request.method != 'POST':
         return redirect('cart')
@@ -426,10 +431,10 @@ def checkout_payment(request):
     # ===== تیشرت سفارشی =====
     for item in CustomTshirtCartItem.objects.filter(cart=cart):
         color_name = COLOR_TRANSLATION.get(item.custom_color, item.custom_color)
-        collar_name = item.collar.name  # فارسی
+        collar_name = item.collar.name
         
         items.append({
-            'product_name': f"تیشرت سفارشی - {item.fabric.name}",
+            'product_name': 'تیشرت سفارشی', 
             'product_type': 'custom_tshirt',
             'quantity': item.quantity,
             'price': item.final_price,
@@ -439,6 +444,8 @@ def checkout_payment(request):
             'clothing_length': item.body_height,
             'clothing_width': item.body_width,
             'sleeve_length': item.sleeve_height,
+            'sticker_id': item.sticker.id if item.sticker else None,  
+            'sticker_name': item.sticker.name if item.sticker else '', 
         })
         total_price += item.final_price
     
@@ -447,7 +454,7 @@ def checkout_payment(request):
         color_name = COLOR_TRANSLATION.get(item.custom_color, item.custom_color)
         
         items.append({
-            'product_name': f"هودی سفارشی - {item.fabric.name}",
+            'product_name': 'دورس سفارشی',  # ← فقط اسم محصول، بدون پارچه
             'product_type': 'custom_hoodie',
             'quantity': item.quantity,
             'price': item.final_price,
@@ -458,15 +465,17 @@ def checkout_payment(request):
             'clothing_length': item.body_height,
             'clothing_width': item.body_width,
             'sleeve_length': item.sleeve_height,
+            'sticker_id': item.sticker.id if item.sticker else None,  
+            'sticker_name': item.sticker.name if item.sticker else '',
         })
         total_price += item.final_price
     
-    # ===== شلوار سفارشی =====
+    # ===== شلوار سفارشی (اصلاح شده) =====
     for item in CustomPantsCartItem.objects.filter(cart=cart):
         color_name = COLOR_TRANSLATION.get(item.custom_color, item.custom_color)
         
         items.append({
-            'product_name': f"شلوار سفارشی - {item.fabric.name}",
+            'product_name': 'شلوار سفارشی', 
             'product_type': 'custom_pants',
             'quantity': item.quantity,
             'price': item.final_price,
@@ -476,7 +485,8 @@ def checkout_payment(request):
             'has_pocket': (item.pocket.name != 'بدون جیب'),
             'pants_length': item.pants_length,
             'waist': item.waist,
-            'crotch_width': item.hip_width,
+            'hip_width': item.hip_width,      # ✅ اصلاح
+            'thigh_width': item.thigh_width,  # ✅ اضافه شد
         })
         total_price += item.final_price
     
@@ -489,10 +499,12 @@ def checkout_payment(request):
             'price': item.final_price,
             'size': item.size,
             'ready_color': item.color.name if item.color else '',
+            'product_id': item.product.id, 
+
         })
         total_price += item.final_price
     
-    # ===== ایجاد سفارش با وضعیت پرداخت شده =====
+    # ===== ایجاد سفارش =====
     from orders.models import Order, OrderItem
     
     order = Order.objects.create(
@@ -502,33 +514,54 @@ def checkout_payment(request):
         address=user.address,
         postal_code=user.postal_code or '',
         total_price=total_price,
-        status='paid',  # ← پرداخت شده
+        status='paid',
     )
     
     # ===== ایجاد آیتم‌های سفارش =====
     for item in items:
-        OrderItem.objects.create(
-            order=order,
-            product_name=item['product_name'],
-            product_type=item['product_type'],
-            quantity=item['quantity'],
-            final_price=item['price'],
-            fabric_name=item.get('fabric_name', ''),
-            custom_color=item.get('custom_color', ''),
-            collar_style=item.get('collar_style', ''),
-            clothing_length=item.get('clothing_length'),
-            clothing_width=item.get('clothing_width'),
-            sleeve_length=item.get('sleeve_length'),
-            has_hood=item.get('has_hood', False),
-            has_zipper=item.get('has_zipper', False),
-            pants_length=item.get('pants_length'),
-            waist=item.get('waist'),
-            crotch_width=item.get('crotch_width'),
-            leg_type=item.get('leg_type', ''),
-            has_pocket=item.get('has_pocket', False),
-            size=item.get('size', ''),
-            ready_color=item.get('ready_color', ''),
-        )
+        order_item_data = {
+            'order': order,
+            'product_name': item['product_name'],
+            'product_type': item['product_type'],
+            'quantity': item['quantity'],
+            'final_price': item['price'],
+            'fabric_name': item.get('fabric_name', ''),
+            'custom_color': item.get('custom_color', ''),
+        }
+        
+        # فیلدهای مخصوص تیشرت و هودی
+        if item['product_type'] in ['custom_tshirt', 'custom_hoodie']:
+            order_item_data.update({
+                'collar_style': item.get('collar_style', ''),
+                'clothing_length': item.get('clothing_length'),
+                'clothing_width': item.get('clothing_width'),
+                'sleeve_length': item.get('sleeve_length'),
+                'has_hood': item.get('has_hood', False),
+                'has_zipper': item.get('has_zipper', False),
+                'sticker_name': item.get('sticker_name', ''),  
+                'sticker_id': item.get('sticker_id'),        
+            })
+        
+        # فیلدهای مخصوص شلوار
+        elif item['product_type'] == 'custom_pants':
+            order_item_data.update({
+                'pants_length': item.get('pants_length'),
+                'waist': item.get('waist'),
+                'hip_width': item.get('hip_width'),
+                'thigh_width': item.get('thigh_width'),
+                'leg_type': item.get('leg_type', ''),
+                'has_pocket': item.get('has_pocket', False),
+            })
+        
+        # فیلدهای مخصوص محصول آماده
+        elif item['product_type'] == 'ready':
+            order_item_data.update({
+                'size': item.get('size', ''),
+                'ready_color': item.get('ready_color', ''),
+                'product_id': item.get('product_id'),
+            })
+        
+        OrderItem.objects.create(**order_item_data)
     
     # ===== خالی کردن سبد خرید =====
     CustomTshirtCartItem.objects.filter(cart=cart).delete()
