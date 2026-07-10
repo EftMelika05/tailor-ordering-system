@@ -80,7 +80,7 @@
             value="{{ search }}"
           />
 
-          <select name="sort" class="sort-select">
+          <select name="sort" class="sort-select" onchange="this.form.submit()" >
             <option value="" {% if sort == "" %} selected {% endif %}>
               مرتب سازی
             </option>
@@ -107,7 +107,6 @@
             value="{{ selected_category }}"
           />
           {% endif %} -->
-          <button type="submit">اعمال</button>
         </form>
 
         <!-- Category -->
@@ -183,7 +182,7 @@
                 {% if variant.stock > 0 %}
                  <a href="{% url 'detail' product.slug %}">
                   <button class="btn-cart">
-                   <i class="fa-solid fa-cart-plus"></i>
+                   <i ></i>
                    مشاهده محصول
                   </button>
                  </a>
@@ -283,7 +282,7 @@
 
           <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
 
-          <li><a href="#">تماس با ما</a></li>
+          <!-- <li><a href="#">تماس با ما</a></li> -->
         </ul>
       </div>
 
@@ -291,9 +290,7 @@
         <h3>خدمات مشتریان</h3>
 
         <ul>
-          <li><a href="#">راهنمای خرید</a></li>
-
-          <li><a href="#">پشتیبانی</a></li>
+          <li><a href="{% url 'index' %}#userGuide">راهنمای خرید</a></li>
         </ul>
       </div>
 
@@ -311,18 +308,8 @@
 
       <div class="footer-col">
         <h3>تماس با ما</h3>
-
-        <p>
-          <i class="fa-solid fa-location-dot"></i>
-
-          آدرس: کرمان، خیابان جهاد
-        </p>
-
-        <p>
-          <i class="fa-solid fa-phone"></i>
-
-          شماره: ۰۹۱۲۳۴۵۶۷۸۹
-        </p>
+        <p class="address" ><i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری</p>
+        <p><i class="fa-solid fa-phone"></i> شماره: 09139389391</p>
       </div>
     </footer>
   </body>

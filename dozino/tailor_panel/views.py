@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 import json
 import time
 import base64
@@ -155,28 +157,139 @@ def update_order_status(request):
 @staff_member_required(login_url='tailor_panel:tailor_login')
 def register_product_page(request):
     """صفحه ثبت محصول آماده"""
+    
     return render(request, 'tailor_panel/registering-products.html')
+# views.py
+@csrf_exempt
+def register_product(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # ===== دریافت gender به جای category_id =====
+            gender = data.get('gender')  # 'male', 'female', یا 'kids'
+            
+            if not gender:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'جنسیت دسته‌بندی مشخص نشده است'
+                }, status=400)
+            
+            # پیدا کردن دسته‌بندی بر اساس gender
+            try:
+                category = Category.objects.get(gender=gender)
+            except Category.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'دسته‌بندی با جنسیت "{gender}" یافت نشد'
+                }, status=400)
+            
+            # ایجاد محصول
+            product = Product.objects.create(
+                category=category,
+                name=data['product_name'],
+                price=0,  # قیمت پایه، بعداً از variants گرفته میشه
+                description=data.get('description', ''),
+                is_available=True,
+                is_active=True
+            )
+            
+            # ایجاد مشخصات فنی
+            specs = data.get('specifications', {})
+            for key, value in specs.items():
+                if value and value != 'نامشخص':
+                    ProductSpecification.objects.create(
+                        product=product,
+                        spec_name=key,
+                        spec_value=value
+                    )
+            
+            # ایجاد رنگ‌ها و سایزها و موجودی
+            for color_data in data.get('colors', []):
+                color, _ = Color.objects.get_or_create(
+                    name=color_data['name'],
+                    defaults={'code': color_data.get('code', '#000000')}
+                )
+                
+                for size_name, stock in color_data.get('inventory', {}).items():
+                    if stock > 0:  # فقط اگه موجودی داره
+                        size, _ = Size.objects.get_or_create(name=size_name)
+                        
+                        # قیمت از size_prices گرفته میشه
+                        price = data.get('size_prices', {}).get(size_name, 0)
+                        
+                        ProductVariant.objects.create(
+                            product=product,
+                            color=color,
+                            size=size,
+                            stock=stock,
+                            price=price if price > 0 else None
+                        )
+            
+            # ذخیره تصاویر (این بخش نیاز به مدیریت فایل داره)
+            # برای تصاویر، باید base64 رو به فایل تبدیل کنی
+            # فعلاً یک نمونه ایجاد میکنیم
+            for idx, img_data in enumerate(data.get('images', [])):
+                # اینجا باید تصویر رو ذخیره کنی
+                # از django.core.files.base import ContentFile
+                # import base64
+                # ...
+                pass
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'محصول با موفقیت ثبت شد',
+                'product_id': product.id
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
 
 
 @login_required(login_url='tailor_panel:tailor_login')
 @staff_member_required(login_url='tailor_panel:tailor_login')
+@csrf_exempt
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+@csrf_exempt
 def register_product_submit(request):
-    """API ثبت محصول آماده"""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
 
     try:
         data = json.loads(request.body)
         
-        category = Category.objects.get(id=data['category_id'])
+        # دریافت gender
+        gender = data.get('gender')
+        if not gender:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'جنسیت مشخص نشده'
+            }, status=400)
         
+        # پیدا کردن دسته‌بندی
+        try:
+            category = Category.objects.get(gender=gender)
+        except Category.DoesNotExist:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'دسته‌بندی با جنسیت {gender} پیدا نشد'
+            }, status=400)
+        
+        # اعتبارسنجی نام محصول
         product_name = data.get('product_name', '').strip()
         if not product_name:
             return JsonResponse({
                 'status': 'error',
                 'message': 'نام محصول نمی‌تواند خالی باشد'
-            })
+            }, status=400)
         
+        # ساخت اسلاگ
         base_slug = slugify(product_name)
         if not base_slug:
             base_slug = 'product-' + str(int(time.time()))
@@ -186,26 +299,33 @@ def register_product_submit(request):
         while Product.objects.filter(slug=final_slug).exists():
             final_slug = f"{base_slug}-{counter}"
             counter += 1
-        
+
+        discount = int(
+           data.get('discount_percent',0)
+        )
+        # ===== ایجاد محصول =====
         product = Product.objects.create(
             category=category,
             name=product_name,
             slug=final_slug,
-            price=0,
+            price=data.get("base_price",0),
+            discount_percent=discount,
             description=data.get('description', ''),
             is_available=True,
             is_active=True,
         )
-
+        
+        # ===== ایجاد مشخصات فنی =====
         specs = data.get('specifications', {})
         for spec_name, spec_value in specs.items():
-            if spec_value:
+            if spec_value and spec_value != 'نامشخص':
                 ProductSpecification.objects.create(
                     product=product,
                     spec_name=spec_name,
                     spec_value=spec_value
                 )
-
+        
+        # ===== ایجاد رنگ‌ها و سایزها =====
         size_prices = data.get('size_prices', {})
         colors_data = data.get('colors', [])
         
@@ -214,14 +334,13 @@ def register_product_submit(request):
                 name=color_data['name'],
                 defaults={'code': color_data.get('code', '#000000')}
             )
-
+            
             inventory = color_data.get('inventory', {})
-
             for size_name, stock in inventory.items():
                 if stock > 0:
                     size, _ = Size.objects.get_or_create(name=size_name)
                     price = size_prices.get(size_name, 0)
-
+                    
                     ProductVariant.objects.create(
                         product=product,
                         color=color,
@@ -229,8 +348,10 @@ def register_product_submit(request):
                         stock=stock,
                         price=price
                     )
-
+        
+        # ===== ذخیره تصاویر =====
         images_data = data.get('images', [])
+        main_index = data.get('main_image_index', 0)
         for i, image_data in enumerate(images_data):
             try:
                 format, imgstr = image_data.split(';base64,')
@@ -240,29 +361,23 @@ def register_product_submit(request):
                 ProductImage.objects.create(
                     product=product,
                     image=file_data,
-                    is_main=(i == 0)
+                    is_main=(i == main_index)
                 )
             except Exception as e:
                 print(f"⚠️ خطا در ذخیره تصویر {i}: {e}")
-
+        
         return JsonResponse({
             'status': 'success',
             'message': 'محصول با موفقیت ثبت شد',
             'product_id': product.id,
             'product_slug': product.slug
         })
-
-    except Category.DoesNotExist:
-        return JsonResponse({
-            'status': 'error',
-            'message': 'دسته‌بندی انتخاب شده وجود ندارد'
-        })
+        
     except Exception as e:
         return JsonResponse({
             'status': 'error',
             'message': str(e)
-        })
-
+        }, status=400)
 
 # ================================================================
 # ===== CUSTOM PRODUCT MANAGEMENT (مدیریت محصولات سفارشی) =====

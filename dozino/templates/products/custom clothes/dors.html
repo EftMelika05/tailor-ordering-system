@@ -38,7 +38,7 @@
              <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
             {% endif %}
         
-            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <!-- <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a> -->
 
     </div>
   </header>
@@ -249,14 +249,13 @@
         <li><a href="{% url 'index' %}">خانه</a></li>
         <li><a href="{% url 'list' %}">محصولات آماده</a></li>
         <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-        <li><a href="#">تماس با ما</a></li>
+        <!-- <li><a href="#">تماس با ما</a></li> -->
       </ul>
     </div>
     <div class="footer-col">
       <h3>خدمات مشتریان</h3>
       <ul>
-        <li><a href="#">راهنمای خرید</a></li>
-        <li><a href="#">پشتیبانی</a></li>
+        <li><a href="{% url 'index' %}#userGuide">راهنمای خرید</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -266,8 +265,8 @@
     </div>
     <div class="footer-col">
       <h3>تماس با ما</h3>
-      <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
-      <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+            <p class="address" ><i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: 09139389391</p>
     </div>
   </footer>
 

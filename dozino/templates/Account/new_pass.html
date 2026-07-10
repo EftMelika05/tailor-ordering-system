@@ -318,7 +318,7 @@
                 </header>
                 <h2>رمز عبور جدید</h2>
                 <p>یک رمز عبور جدید برای حساب کاربری خود انتخاب کنید</p>
-
+                {% include 'includes/messages.html' %}
                 <form id="resetPasswordForm" novalidate method="POST">
                     {% csrf_token %}
                     <div class="field">

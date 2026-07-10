@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -44,10 +45,12 @@
              <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
             {% endif %}
         
-            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <!-- <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a> -->
         </div>
 
     </header>
+
+    {% include 'includes/messages.html' %}
 
     <section class="hero">
 
@@ -73,7 +76,7 @@
 
     <section class="how-it-works">
 
-        <h2>نحوه کار سایت</h2>
+        <h2 id="userGuide">نحوه کار سایت</h2>
 
         <div class="steps">
 
@@ -170,63 +173,24 @@
         <p>جدیدترین محصولات آماده دوزینو</p>
 
         <div class="product-grid">
-
+        {% for product in latest_products %}
             <div class="product-card">
-
-                <img src="{% static 'imag/home/1.png' %}" alt="تیشرت طرح دار">
-
-                <h3>تیشرت طرح دار</h3>
-
-                <span>850,000 تومان</span>
-
-                <a href="#"><button class="btn-cart">
-                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
-                    </button></a>
-
+                {% if product.main_image %}
+                   <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                   <img src="{% static 'imag/no-image.png' %}" alt="بدون تصویر">
+                {% endif %}
+                <h3>{{ product.name }}</h3>
+                <span>{{ product.price|floatformat:0|intcomma}}تومان</span>
+                <a href="{% url 'detail' product.slug %}">
+                  <button class="btn-cart">
+                  <i class="fa-solid fa-cart-plus"></i>
+                   مشاهده محصول
+                  </button>
+                </a>
             </div>
 
-            <div class="product-card">
-
-                <img src="{% static 'imag/home/2.png' %}" alt="تیشرت با طرح خرگوشی">
-
-                <h3>تیشرت با طرح خرگوشی</h3>
-
-                <span>850,000 تومان</span>
-
-                <a href="#"><button class="btn-cart">
-                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
-                    </button></a>
-
-            </div>
-
-            <div class="product-card">
-
-                <img src="{% static 'imag/home/3.png' %}" alt="بلوز طرح قاصدک">
-
-                <h3>بلوز طرح قاصدک</h3>
-
-                <span>950,000 تومان</span>
-
-                <a href="#"><button class="btn-cart">
-                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
-                    </button></a>
-
-            </div>
-
-            <div class="product-card">
-
-                <img src="{% static 'imag/home/5.png' %}" alt="دورس مشکی">
-
-                <h3>دورس مشکی</h3>
-
-                <span>1,300,000 تومان</span>
-
-                <a href="#"><button class="btn-cart">
-                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
-                    </button></a>
-
-            </div>
-
+        {% endfor %}
         </div>
 
     </section>
@@ -276,7 +240,7 @@
                 و ما مفتخریم که شما عضوی از خانواده بزرگ دوزینو هستید .
             </p>
 
-            <a href="#"><button class="btn-primary">تماس با ما</button></a>
+            <!-- <a href="#"><button class="btn-primary">تماس با ما</button></a> -->
 
         </div>
 
@@ -324,7 +288,7 @@
                 <li><a href="{% url 'index' %}">خانه</a></li>
                 <li><a href="{% url 'list' %}">محصولات آماده</a></li>
                 <li><a href="#custom-section">دوخت سفارشی</a></li>
-                <li><a href="#">تماس با ما</a></li>
+                <!-- <li><a href="#">تماس با ما</a></li> -->
             </ul>
 
         </div>
@@ -334,8 +298,7 @@
             <h3>خدمات مشتریان</h3>
 
             <ul>
-                <li><a href="#">راهنمای خرید</a></li>
-                <li><a href="#">پشتیبانی</a></li>
+                <li><a href="#userGuide">راهنمای خرید</a></li>
             </ul>
 
         </div>
@@ -355,9 +318,8 @@
         <div class="footer-col">
 
             <h3>تماس با ما</h3>
-
-            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
-            <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+            <p class="address" ><i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: 09139389391</p>
 
         </div>
 

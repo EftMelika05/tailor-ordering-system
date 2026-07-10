@@ -53,7 +53,7 @@ def product_list(request):
         "page_obj": page_obj,
         "categories": Category.objects.all(),
         "search": search or "",
-        "categories": categories,
+        "selected_category": category_slug or "all",
         "selected_sort": sort or "",
     }
 

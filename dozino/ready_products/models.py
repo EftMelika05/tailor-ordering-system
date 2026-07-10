@@ -8,7 +8,7 @@ class Category(models.Model):
         ("female", "زنانه"),
         ("kids", "بچه‌گانه"),
     )
-    ##name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     gender = models.CharField(
         max_length=20,
         choices=gender_choice
@@ -29,6 +29,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     price = models.PositiveIntegerField()
     old_price = models.PositiveIntegerField(blank=True, null=True)
+    discount_percent = models.PositiveIntegerField(default=0,help_text="درصد تخفیف")
     description = models.TextField()
     is_available = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
@@ -48,6 +49,12 @@ class Product(models.Model):
                 / self.old_price * 100
             )
         return 0
+    @property
+    def final_price(self):
+        if self.discount_percent > 0:
+           return self.price - (
+            self.price * self.discount_percent // 100)
+        return self.price
 
     def __str__(self):
         return self.name

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.humanize"
 ]
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -87,9 +88,9 @@ WSGI_APPLICATION = 'dozino.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Dozino_DB',
+        'NAME': 'dozino',
         'USER' : 'postgres',
-        'PASSWORD' :'12345678',
+        'PASSWORD' :'melika.2005',
         'HOST':'localhost'
     }
 }
@@ -139,3 +140,4 @@ AUTH_USER_MODEL= 'Account.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT =os.path.join(BASE_DIR / 'media')
+

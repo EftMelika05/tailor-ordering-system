@@ -262,12 +262,7 @@
                 <div class="brand-name">Dozino</div>
             </header>
 
-                {% if messages %}
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-                            
+            {% include 'includes/messages.html' %}             
             <form id="loginForm" method="POST">
                      {% csrf_token %}
                 <div class="field">
@@ -284,7 +279,7 @@
                     حساب هنوز کاربری ندارید؟ <a href="{% url 'register' %}">ثبت نام کنید </a>
                 </p>
                 <p class="link">
-                    پسورد خود را فراموش کرده اید ؟ <a href="{% url 'resetpassword' %}">رمز خود  را بازیابی کنید</a>
+                    پسورد خود را فراموش کرده اید ؟ <a href="{% url 'resetpassword'  %}">رمز خود  را بازیابی کنید</a>
                 </p>
 
             </form >

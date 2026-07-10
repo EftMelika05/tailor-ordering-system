@@ -18,7 +18,7 @@ urlpatterns = [
     # ===== PRODUCT REGISTRATION (محصولات آماده) =====
     path('products/register/', views.register_product_page, name='register_product'),
     path('products/register/submit/', views.register_product_submit, name='register_product_submit'),
-    
+    path('tailor-panel/products/register/submit/', views.register_product, name='register_product_submit'),
     # ===== CUSTOM PRODUCT MANAGEMENT (مدیریت قیمت‌ها) =====
     path('custom-products/manage/', views.manage_custom_products, name='manage_custom_products'),
     
