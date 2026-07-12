@@ -73,7 +73,33 @@ def dashboard(request):
     
     for order in all_orders:
         order.total_items = order.items.count()
+        # ===== آمار محصولات آماده =====
+    ready_products = Product.objects.filter(is_active=True)
+    total_ready_products = ready_products.count()
+    total_custom_products = (
+    Fabric.objects.filter(is_active=True).count() +
+    Sticker.objects.filter(is_active=True).count() +
+    CollarType.objects.count() +
+    HoodType.objects.count() +
+    ZipperType.objects.count() +
+    LegType.objects.count() +
+    PocketOption.objects.count()
+)
+
+    total_stock = 0
+    low_stock_count = 0
+    out_of_stock_count = 0
     
+    for product in ready_products:
+        variants = product.variants.all()
+        product_stock = sum(v.stock for v in variants)
+        total_stock += product_stock
+        
+        if product_stock == 0:
+            out_of_stock_count += 1
+        elif product_stock < 5:
+            low_stock_count += 1
+
     context = {
         'new_orders': new_orders,
         'prep_orders': prep_orders,
@@ -81,6 +107,11 @@ def dashboard(request):
         'completed_orders': completed_orders,
         'cancelled_orders': cancelled_orders,
         'all_orders': all_orders,
+        'total_ready_products': total_ready_products,
+        'total_custom_products': total_custom_products,
+        'total_stock': total_stock,
+        'low_stock_count': low_stock_count,
+        'out_of_stock_count': out_of_stock_count,
     }
     
     return render(request, 'tailor_panel/tailor_panel.html', context)
@@ -254,9 +285,6 @@ def register_product(request):
 @login_required(login_url='tailor_panel:tailor_login')
 @staff_member_required(login_url='tailor_panel:tailor_login')
 @csrf_exempt
-@login_required(login_url='tailor_panel:tailor_login')
-@staff_member_required(login_url='tailor_panel:tailor_login')
-@csrf_exempt
 def register_product_submit(request):
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
@@ -300,16 +328,25 @@ def register_product_submit(request):
             final_slug = f"{base_slug}-{counter}"
             counter += 1
 
-        discount = int(
-           data.get('discount_percent',0)
-        )
+        discount_percent = int(data.get('discount_percent') or 0)
+        base_price = int(data.get('base_price') or 0)
+
+        if discount_percent > 0:
+            old_price = base_price
+            price = int(base_price * (100 - discount_percent) / 100)
+        else:
+            old_price = None
+            price = base_price
+
         # ===== ایجاد محصول =====
         product = Product.objects.create(
             category=category,
             name=product_name,
             slug=final_slug,
-            price=data.get("base_price",0),
-            discount_percent=discount,
+            price=price,
+            base_price=base_price,
+            old_price=old_price,
+            discount_percent=discount_percent,
             description=data.get('description', ''),
             is_available=True,
             is_active=True,
@@ -339,15 +376,30 @@ def register_product_submit(request):
             for size_name, stock in inventory.items():
                 if stock > 0:
                     size, _ = Size.objects.get_or_create(name=size_name)
-                    price = size_prices.get(size_name, 0)
+                    original_price = size_prices.get(size_name, 0)
                     
-                    ProductVariant.objects.create(
+                    # ===== اعمال تخفیف روی قیمت سایز =====
+                    if discount_percent > 0 and original_price > 0:
+                        variant_price = int(original_price * (100 - discount_percent) / 100)
+                    else:
+                        variant_price = original_price
+                    
+                    # ===== یک بار ایجاد کن با get_or_create =====
+                    variant, created = ProductVariant.objects.get_or_create(
                         product=product,
                         color=color,
                         size=size,
-                        stock=stock,
-                        price=price
+                        defaults={
+                            'stock': stock,
+                            'price': variant_price
+                        }
                     )
+                    
+                    # ===== اگه واریانت قبلاً وجود داشت، آپدیتش کن =====
+                    if not created:
+                        variant.stock = stock
+                        variant.price = variant_price
+                        variant.save()
         
         # ===== ذخیره تصاویر =====
         images_data = data.get('images', [])
@@ -576,3 +628,171 @@ def update_site_prices(request):
         })
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+    
+    
+    ##manage_readymade_products
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def get_products_list(request):
+    products = Product.objects.filter(is_active=True).prefetch_related('variants', 'images', 'specifications')
+    
+    result = []
+    for product in products:
+        variants = product.variants.all()
+        total_stock = sum(v.stock for v in variants)
+        discount_percent = product.discount_percent or 0
+        
+        # ===== ساخت لیست واریانت‌ها با قیمت اصلی =====
+        variant_list = []
+        for v in variants:
+            # ===== محاسبه قیمت اصلی (قبل از تخفیف) =====
+            if discount_percent > 0 and v.price:
+                # قیمت اصلی = قیمت با تخفیف / (1 - discount_percent/100)
+                original_price = int(v.price / (1 - discount_percent / 100))
+            else:
+                original_price = v.price
+            
+            variant_list.append({
+                'id': v.id,
+                'color_name': v.color.name,
+                'color_code': v.color.code,
+                'size_name': v.size.name,
+                'stock': v.stock,
+                'price': v.price,
+                'original_price': original_price
+            })
+        
+        result.append({
+            'id': product.id,
+            'name': product.name,
+            'gender': product.category.gender,
+            'price': product.price,
+            'old_price': product.old_price,
+            'discount_percent': product.discount_percent,
+            'description': product.description,
+            'base_price': product.base_price,
+            'main_image': product.images.filter(is_main=True).first().image.url if product.images.filter(is_main=True).exists() else None,
+            'colors_count': variants.values('color').distinct().count(),
+            'sizes_count': variants.values('size').distinct().count(),
+            'stock_status': 'in-stock' if total_stock > 10 else 'low-stock' if total_stock > 0 else 'out-of-stock',
+            'variants': variant_list 
+        })
+    
+    return JsonResponse({'status': 'success', 'products': result})
+
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+@csrf_exempt
+def update_product(request):
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+    
+    try:
+        data = json.loads(request.body)
+        product = Product.objects.get(id=data['id'])
+        
+        # ===== به‌روزرسانی اطلاعات اصلی =====
+        product.name = data.get('name', product.name)
+        product.description = data.get('description', product.description)
+
+        base_price = data.get('base_price', 0)
+        discount_percent = data.get('discount_percent', 0)
+        
+        # ===== محاسبه قیمت نهایی =====
+        if discount_percent > 0:
+            product.old_price = base_price
+            product.price = int(base_price * (100 - discount_percent) / 100)
+        else:
+            product.old_price = None
+            product.price = base_price
+        
+        product.base_price = base_price
+        product.discount_percent = discount_percent
+        product.save()
+        
+        # ===== به‌روزرسانی دسته‌بندی =====
+        gender = data.get('gender')
+        if gender:
+            category = Category.objects.filter(gender=gender).first()
+            if category:
+                product.category = category
+                product.save()
+        
+        # ===== به‌روزرسانی واریانت‌ها =====
+        existing_variant_ids = []
+        
+        for variant_data in data.get('variants', []):
+            color_name = variant_data.get('color_name', '').strip()
+            if not color_name:
+                continue
+                
+            color, _ = Color.objects.get_or_create(
+                name=color_name,
+                defaults={'code': variant_data.get('color_code', '#000000')}
+            )
+            size, _ = Size.objects.get_or_create(name=variant_data.get('size_name', 'M'))
+            
+            original_price = variant_data.get('price', 0)
+            
+            # ===== اعمال تخفیف روی قیمت واریانت =====
+            if discount_percent > 0 and original_price > 0:
+                variant_price = int(original_price * (100 - discount_percent) / 100)
+            else:
+                variant_price = original_price
+            
+            # ===== چک کن واریانت با این ترکیب وجود داره =====
+            existing_variant = ProductVariant.objects.filter(
+                product=product,
+                color=color,
+                size=size
+            ).first()
+            
+            if variant_data.get('id'):
+                # ===== واریانت با ID: آپدیت =====
+                try:
+                    variant = ProductVariant.objects.get(id=variant_data['id'], product=product)
+                    variant.stock = variant_data.get('stock', 0)
+                    variant.price = variant_price  # ✅ با تخفیف
+                    variant.save()
+                    existing_variant_ids.append(variant.id)
+                except ProductVariant.DoesNotExist:
+                    pass
+            elif existing_variant:
+                # ===== واریانت بدون ID ولی موجود: آپدیت =====
+                existing_variant.stock = variant_data.get('stock', 0)
+                existing_variant.price = variant_price  # ✅ با تخفیف
+                existing_variant.save()
+                existing_variant_ids.append(existing_variant.id)
+            else:
+                # ===== واریانت جدید: فقط اگه موجودی > 0 =====
+                if variant_data.get('stock', 0) > 0:
+                    variant = ProductVariant.objects.create(
+                        product=product,
+                        color=color,
+                        size=size,
+                        stock=variant_data.get('stock', 0),
+                        price=variant_price  # ✅ با تخفیف (اصلاح شد)
+                    )
+                    existing_variant_ids.append(variant.id)
+        
+        # ===== حذف واریانت‌هایی که در لیست نیستند =====
+        ProductVariant.objects.filter(product=product).exclude(id__in=existing_variant_ids).delete()
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'محصول با موفقیت به‌روزرسانی شد',
+            'product_id': product.id
+        })
+        
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'محصول یافت نشد'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+
+
+@login_required(login_url='tailor_panel:tailor_login')
+@staff_member_required(login_url='tailor_panel:tailor_login')
+def manage_products(request):
+    """صفحه مدیریت محصولات آماده"""
+    return render(request, 'tailor_panel/manage-readymade-products.html')

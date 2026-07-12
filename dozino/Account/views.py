@@ -62,6 +62,7 @@ def user_logout(request):
     if request.method == 'POST':
         auth.logout(request)
         messages.success(request, '✅ شما از حساب کاربری خود خارج شدید')
+        return redirect('login')
     return redirect('index')
 
 @login_required

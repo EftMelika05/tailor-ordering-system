@@ -37,7 +37,6 @@
             {% else %}
             <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
             {% endif %}
-            <!-- <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a> -->
         </div>
     </header>
 
@@ -62,12 +61,12 @@
                     <h1 class="product-title">{{ product.name }}</h1>
 
                     <div class="product-price-section">
-                        <span class="current-price" id="productPrice">{{ default_price|floatformat:0|intcomma }}</span> <span
-                            class="currency">تومان</span>
-                        {% if product.old_price %}
-                        <span class="old-price">{{ product.old_price|floatformat:0|intcomma }} تومان</span>
-                        <span class="discount-badge"><i class="fa-solid fa-fire"></i> {{ product.discount_percent }}%
-                            تخفیف ویژه</span>
+                        <span class="current-price" id="productPrice">{{ default_price|floatformat:0|intcomma }}</span>
+                        <span class="currency">تومان</span>
+                        
+                        {% if discount_percent > 0 %}
+                        <span class="old-price" id="originalPrice">{{ default_original_price|floatformat:0|intcomma }} تومان</span>
+                        <span class="discount-badge"><i class="fa-solid fa-fire"></i> {{ discount_percent }}% تخفیف ویژه</span>
                         {% endif %}
                     </div>
 
@@ -78,7 +77,10 @@
                         <div class="size-buttons" id="sizeButtons">
                             {% for size in unique_sizes %}
                             <button class="size-btn{% if size.name == 'M' %} active-size{% endif %}"
-                                data-size="{{ size.name }}" data-price="{{ size.price }}" onclick="selectSize(this)">
+                                data-size="{{ size.name }}" 
+                                data-price="{{ size.price }}" 
+                                data-original_price="{{ size.original_price }}"
+                                onclick="selectSize(this)">
                                 {{ size.name }}
                             </button>
                             {% endfor %}
@@ -338,7 +340,6 @@
                 <li><a href="{% url 'index' %}">خانه</a></li>
                 <li><a href="{% url 'list' %}">محصولات آماده</a></li>
                 <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-                <!-- <li><a href="#">تماس با ما</a></li> -->
             </ul>
         </div>
         <div class="footer-col">
@@ -372,9 +373,22 @@
         function selectSize(element) {
             document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active-size'));
             element.classList.add('active-size');
-            const price = element.dataset.price;
+            
+            const price = parseInt(element.dataset.price) || 0;
+            const originalPrice = parseInt(element.dataset.original_price) || 0;
+            
+            // ===== نمایش قیمت با تخفیف =====
             if (price) {
-                document.getElementById('productPrice').textContent = parseInt(price)
+                document.getElementById('productPrice').textContent = price.toLocaleString();
+            }
+            
+            // ===== نمایش قیمت اصلی (قبل از تخفیف) =====
+            const originalPriceEl = document.getElementById('originalPrice');
+            if (originalPrice > 0 && originalPrice > price) {
+                originalPriceEl.textContent = originalPrice.toLocaleString() + ' تومان';
+                originalPriceEl.style.display = 'inline';
+            } else {
+                originalPriceEl.style.display = 'none';
             }
         }
 
@@ -401,17 +415,16 @@
             if (activeSize) {
                 selectedSize = activeSize.getAttribute('data-size');
             }
-            // ===== گرفتن رنگ از متن =====
+            
+            // گرفتن رنگ
             let selectedColor = null;
             const colorText = document.getElementById('selectedColorText');
             if (colorText) {
                 const text = colorText.textContent;
-                // حذف "رنگ انتخاب شده: " از اول متن
                 const parts = text.split('رنگ انتخاب شده: ');
                 if (parts.length > 1) {
                     selectedColor = parts[1].trim();
                 } else {
-                    // اگه با روش بالا نشد، با regex بگیر
                     const match = text.match(/رنگ انتخاب شده:\s*(.+)/);
                     if (match && match[1]) {
                         selectedColor = match[1].trim();
@@ -419,16 +432,9 @@
                 }
             }
 
-            console.log("🔍 selectedColor:", selectedColor);
-
-
-            // گرفتن تعداد
             const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
-
-            // گرفتن ID محصول از تمپلیت
             const productId = parseInt('{{ product.id }}');
 
-            // ارسال به سرور
             fetch('/cart/add/ready/', {
                 method: 'POST',
                 headers: {
@@ -442,18 +448,18 @@
                     quantity: quantity
                 })
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        showToast('✅ محصول به سبد خرید اضافه شد!');
-                    } else {
-                        showToast('❌ خطا: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('❌ خطا در ارتباط با سرور');
-                });
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ محصول به سبد خرید اضافه شد!');
+                } else {
+                    showToast('❌ خطا: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('❌ خطا در ارتباط با سرور');
+            });
         }
 
         const tabBtns = document.querySelectorAll('.tab-btn');
@@ -503,6 +509,7 @@
             }
             return cookieValue;
         }
+
         function showToast(message) {
             const msgDiv = document.getElementById('cartMessage');
             msgDiv.innerHTML = message;

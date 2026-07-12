@@ -29,32 +29,18 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     price = models.PositiveIntegerField()
     old_price = models.PositiveIntegerField(blank=True, null=True)
-    discount_percent = models.PositiveIntegerField(default=0,help_text="درصد تخفیف")
     description = models.TextField()
     is_available = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    base_price = models.PositiveIntegerField(default=0, help_text="قیمت پایه محصول")
+    discount_percent = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-    
-    @property
-    def discount_percent(self):
-        if self.old_price:
-            return int(
-                (self.old_price - self.price)
-                / self.old_price * 100
-            )
-        return 0
-    @property
-    def final_price(self):
-        if self.discount_percent > 0:
-           return self.price - (
-            self.price * self.discount_percent // 100)
-        return self.price
 
     def __str__(self):
         return self.name

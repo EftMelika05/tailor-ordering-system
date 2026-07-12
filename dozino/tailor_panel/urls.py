@@ -35,4 +35,10 @@ urlpatterns = [
     
     # Site Prices
     path('custom-products/site-price/update/', views.update_site_prices, name='update_site_prices'),
-]
+
+    # urls.py
+    path('products/list/api/', views.get_products_list, name='get_products_list'),
+    path('products/update/api/', views.update_product, name='update_product'),
+    path('manage-products/', views.manage_products, name='manage_products'), 
+] 
+

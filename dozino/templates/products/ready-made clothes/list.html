@@ -139,7 +139,7 @@
               تخفیف ویژه
             </span>
             {% endif %}
-
+            {% if product.is_available %}
             <a href="{% url 'detail' product.slug %}">
               {% if product.main_image %}
 
@@ -159,12 +159,34 @@
 
               {% endif %}
             </a>
+            {% else %}
+              {% if product.main_image %}
 
+              <img
+                src="{{ product.main_image.image.url }}"
+                alt="{{ product.name }}"
+                class="product-image"
+              />
+
+              {% else %}
+
+              <img
+                src="{% static 'imag/no-image.png' %}"
+                alt="{{ product.name }}"
+                class="product-image"
+              />
+              {% endif %}
+
+            {% endif %}
             <div class="product-info">
               <h3 class="product-name">
+                {% if product.is_available %}
                 <a href="{% url 'detail' product.slug %}">
                   {{ product.name }}
                 </a>
+                {% else %}
+                 {{ product.name }}
+                {% endif %}
               </h3>
 
               <div class="product-price">

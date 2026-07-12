@@ -5,237 +5,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پنل خیاط | مدیریت سفارشات</title>
-    <!-- Font Awesome 6 (Free) -->
+    <title>پنل خیاط | دوزینو</title>
+
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/tailor-panel.css' %}">
+
+    
 </head>
 
 <body>
 
     <!-- ===== HEADER ===== -->
-    <header class="topbar">
-
-        <nav>
-            <ul>
-                <li><a href="#">خانه</a></li>
-                <li><a href="#">محصولات سفارشی</a></li>
-                <li><a href="Registering products.html">محصولات آماده</a></li>
-                <li><a href="#orders">سفارشات</a></li>
-            </ul>
-        </nav>
-
-        <div class="logo">DOZINO</div>
-
-        <div class="header-icons">
-            <a href="login.html"><i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i></a>
-        </div>
-
-    </header>
-
+<!-- ===== HEADER ===== -->
+  <header class="topbar">
+    <nav>
+        <ul>
+            <li><a href="{% url 'tailor_panel:dashboard' %}" style="color: #c9a86a;">خانه</a></li>
+            <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
+            <li><a href="{% url 'tailor_panel:register_product' %}">ثبت محصول</a></li>
+            <li><a href="{% url 'tailor_panel:manage_products' %}">مدیریت محصولات</a></li>
+            <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
+        </ul>
+    </nav>
+    <div class="logo">DOZINO</div>
+    <div class="header-icons">
+        <a href="{% url 'tailor_panel:tailor_logout' %}">
+            <i class="fa-solid fa-arrow-right-from-bracket" title="خروج"></i>
+        </a>
+    </div>
+  </header>
     <!-- ===== MAIN CONTENT ===== -->
     <div class="container">
+        <h1 class="page-title"><i class="fas fa-tshirt"></i> پنل خیاط</h1>
+        <div class="page-divider"></div>
 
-        <!-- Panel Header -->
-        <div class="panel-header">
-            <h1><i class="fa-solid fa-scissors"></i> پنل خیاط</h1>
-            <div class="badge">
-                <i class="fa-regular fa-clock"></i> امروز: ۱۴۰۵/۰۴/۰۵
+        <!-- ============================================================ -->
+        <!-- ===== کارت‌های آماری ===== -->
+        <!-- ============================================================ -->
+        <div class="stats-grid">
+            <!-- سفارشات جدید -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #3498db;">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ new_orders_count }}</span>
+                    <span class="stat-label">سفارشات جدید</span>
+                </div>
             </div>
+
+            <!-- محصولات آماده -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #2ecc71;">
+                    <i class="fas fa-tshirt"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ total_ready_products }}</span>
+                    <span class="stat-label">محصولات آماده</span>
+                </div>
+            </div>
+
+            <!-- محصولات سفارشی -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #f39c12;">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ total_custom_products }}</span>
+                    <span class="stat-label">محصولات سفارشی</span>
+                </div>
+            </div>
+
+            <!-- موجودی کل -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #9b59b6;">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ total_stock }}</span>
+                    <span class="stat-label">موجودی کل</span>
+                </div>
+            </div>
+
+            <!-- موجودی کم -->
+            {% if low_stock_count > 0 %}
+            <div class="stat-card warning">
+                <div class="stat-icon" style="background: #e67e22;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ low_stock_count }}</span>
+                    <span class="stat-label">موجودی کم</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ناموجود -->
+            {% if out_of_stock_count > 0 %}
+            <div class="stat-card danger">
+                <div class="stat-icon" style="background: #e74c3c;">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ out_of_stock_count }}</span>
+                    <span class="stat-label">ناموجود</span>
+                </div>
+            </div>
+            {% endif %}
         </div>
 
-        <!-- Search Box -->
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="جستجوی سفارش با کد ۷ رقمی..." maxlength="7">
-            <button onclick="searchOrder()">
-                <i class="fa-solid fa-magnifying-glass"></i> جستجو
-            </button>
+        <!-- ============================================================ -->
+        <!-- ===== لینک‌های سریع ===== -->
+        <!-- ============================================================ -->
+        <div class="quick-actions">
+            <a href="{% url 'tailor_panel:register_product' %}" class="quick-btn">
+                <i class="fas fa-plus-circle"></i> ثبت محصول جدید
+            </a>
+            <a href="{% url 'tailor_panel:manage_products' %}" class="quick-btn">
+                <i class="fas fa-list"></i> مدیریت محصولات
+            </a>
+            <a href="{% url 'tailor_panel:manage_custom_products' %}" class="quick-btn">
+                <i class="fas fa-cog"></i> مدیریت محصولات سفارشی
+            </a>
         </div>
 
-        <!-- ===== SECTION 1: سفارشات جدید ===== -->
-        <div class="order-section" id="orders">
+        <!-- ============================================================ -->
+        <!-- ===== سفارشات ===== -->
+        <!-- ============================================================ -->
+        <div class="orders-section" id="orders">
             <div class="section-header">
-                <div class="left">
-                    <i class="fa-regular fa-message"></i>
-                    <h2>سفارشات جدید</h2>
-                    <span class="count-badge" id="newCount">۰</span>
+                <h3><i class="fas fa-list"></i> سفارشات</h3>
+                <div class="search-box">
+                    <form method="GET" action="{% url 'tailor_panel:dashboard' %}">
+                        <input type="text" name="search" placeholder="جستجوی سفارش با کد..." value="{{ request.GET.search|default:'' }}">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
                 </div>
             </div>
-            <div class="scroll-horizontal" id="newOrdersContainer"></div>
-        </div>
 
-        <!-- ===== SECTION 2: درحال آماده‌سازی ===== -->
-        <div class="order-section">
-            <div class="section-header">
-                <div class="left">
-                    <i class="fa-regular fa-hourglass-half"></i>
-                    <h2>درحال آماده‌سازی</h2>
-                    <span class="count-badge" id="prepCount">۰</span>
-                </div>
+            <!-- ===== تب‌های وضعیت ===== -->
+            <div class="order-tabs">
+                <button class="order-tab active" onclick="filterOrders('all')">همه</button>
+                <button class="order-tab" onclick="filterOrders('pending')">جدید</button>
+                <button class="order-tab" onclick="filterOrders('processing')">در حال آماده‌سازی</button>
+                <button class="order-tab" onclick="filterOrders('shipped')">ارسال شده</button>
+                <button class="order-tab" onclick="filterOrders('completed')">تکمیل شده</button>
+                <button class="order-tab" onclick="filterOrders('cancelled')">لغو شده</button>
             </div>
-            <div class="scroll-horizontal" id="prepOrdersContainer"></div>
-        </div>
 
-        <!-- ===== SECTION 3: ارسال شده ===== -->
-        <div class="order-section">
-            <div class="section-header">
-                <div class="left">
-                    <i class="fa-regular fa-paper-plane"></i>
-                    <h2>ارسال شده</h2>
-                    <span class="count-badge" id="sentCount">۰</span>
-                </div>
-            </div>
-            <div class="scroll-horizontal" id="sentOrdersContainer"></div>
-        </div>
-
-        <!-- ===== BOTTOM ACTION CARDS ===== -->
-        <div class="action-grid">
-
-            <!-- کارت تغییر محصولات سفارشی -->
-            <div class="action-card">
-                <div class="card-image">
-                    <img src="imag/home/تیشرت و تاپودورس.png" alt="محصولات سفارشی">
-                </div>
-                <div class="card-content">
-                    <div class="info">
-                        <h3><i class="fa-regular fa-pen-to-square" style="color:#c9a86a; margin-left:8px;"></i> محصولات
-                            سفارشی</h3>
-                        <p>ویرایش و مدیریت آیتم‌های قابل سفارش‌دهی</p>
+            <!-- ===== لیست سفارشات ===== -->
+            <div class="order-list" id="orderList">
+                {% for order in all_orders %}
+                <div class="order-item" data-status="{{ order.status }}">
+                    <div class="order-info">
+                        <span class="order-id">#{{ order.id }}</span>
+                        <span class="order-date">{{ order.created_at|date:"Y/m/d" }}</span>
+                        <span class="order-products">{{ order.total_items }} محصول</span>
+                        <span class="order-status {{ order.status }}">{{ order.get_status_display }}</span>
                     </div>
-                    <button class="action-btn">
-                        <i class="fa-regular fa-pen-to-square"></i> تغییر محصولات
-                    </button>
-                </div>
-            </div>
-
-            <!-- کارت افزودن محصول آماده -->
-            <div class="action-card">
-                <div class="card-image">
-                    <img src="imag/home/4.png" alt="افزودن محصول">
-                </div>
-                <div class="card-content">
-                    <div class="info">
-                        <h3><i class="fa-regular fa-square-plus" style="color:#c9a86a; margin-left:8px;"></i> محصول
-                            آماده</h3>
-                        <p>افزودن یک محصول جدید به فروشگاه</p>
+                    <div>
+                        <a href="{% url 'tailor_panel:order_detail' order.id %}" style="color: #c9a86a; text-decoration: none;">
+                            <i class="fas fa-eye"></i> مشاهده
+                        </a>
                     </div>
-                    <button class="action-btn">
-                        <i class="fa-regular fa-square-plus"></i> افزودن محصول
-                    </button>
                 </div>
+                {% empty %}
+                <div style="text-align: center; padding: 30px; color: #888;">
+                    <i class="fas fa-inbox" style="font-size: 30px; display: block; margin-bottom: 10px;"></i>
+                    <p>هیچ سفارشی یافت نشد</p>
+                </div>
+                {% endfor %}
             </div>
-
         </div>
-
     </div>
 
     <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
 
     <script>
-        // DATA
+        // ============================================================
+        // ===== فیلتر کردن سفارشات =====
+        // ============================================================
+        function filterOrders(status) {
+            const items = document.querySelectorAll('.order-item');
+            const tabs = document.querySelectorAll('.order-tab');
 
-        const orders = [
-            { id: '1024567', date: '۱۴۰۵/۰۴/۰۴', status: 'new' },
-            { id: '1024568', date: '۱۴۰۵/۰۴/۰۳', status: 'new' },
-            { id: '1024569', date: '۱۴۰۵/۰۴/۰۲', status: 'new' },
-            { id: '1024570', date: '۱۴۰۵/۰۴/۰۱', status: 'prep' },
-            { id: '1024571', date: '۱۴۰۵/۰۳/۳۰', status: 'prep' },
-            { id: '1024572', date: '۱۴۰۵/۰۳/۲۸', status: 'sent' },
-            { id: '1024573', date: '۱۴۰۵/۰۳/۲۷', status: 'new' },
-            { id: '1024574', date: '۱۴۰۵/۰۳/۲۵', status: 'prep' },
-            { id: '1024575', date: '۱۴۰۵/۰۳/۲۴', status: 'new' },
-            { id: '1024576', date: '۱۴۰۵/۰۳/۲۳', status: 'new' },
-            { id: '1024577', date: '۱۴۰۵/۰۳/۲۲', status: 'prep' },
-            { id: '1024578', date: '۱۴۰۵/۰۳/۲۱', status: 'sent' },
-        ];
+            tabs.forEach(tab => tab.classList.remove('active'));
 
-        // RENDER
+            const activeTab = document.querySelector(`.order-tab[onclick="filterOrders('${status}')"]`);
+            if (activeTab) activeTab.classList.add('active');
 
-        function renderOrders(filterText = '') {
-            const newContainer = document.getElementById('newOrdersContainer');
-            const prepContainer = document.getElementById('prepOrdersContainer');
-            const sentContainer = document.getElementById('sentOrdersContainer');
+            let hasVisible = false;
 
-            let filtered = orders;
-            if (filterText.trim()) {
-                filtered = orders.filter(o => o.id.includes(filterText.trim()));
-            }
-
-            const newOrders = filtered.filter(o => o.status === 'new');
-            const prepOrders = filtered.filter(o => o.status === 'prep');
-            const sentOrders = filtered.filter(o => o.status === 'sent');
-
-            document.getElementById('newCount').textContent = newOrders.length;
-            document.getElementById('prepCount').textContent = prepOrders.length;
-            document.getElementById('sentCount').textContent = sentOrders.length;
-
-            newContainer.innerHTML = buildOrderCards(newOrders);
-            prepContainer.innerHTML = buildOrderCards(prepOrders);
-            sentContainer.innerHTML = buildOrderCards(sentOrders);
-        }
-
-        function buildOrderCards(orderArray) {
-            if (!orderArray.length) {
-                return `
-                    <div class="empty-state">
-                        <i class="fa-regular fa-circle-check"></i>
-                        <span>هیچ سفارشی در این دسته نیست</span>
-                    </div>
-                `;
-            }
-
-            let html = '';
-            orderArray.forEach(order => {
-                let statusLabel = '';
-                let statusClass = '';
-
-                if (order.status === 'new') {
-                    statusLabel = 'جدید';
-                    statusClass = 'status-new';
-                } else if (order.status === 'prep') {
-                    statusLabel = 'درحال آماده‌سازی';
-                    statusClass = 'status-prep';
-                } else if (order.status === 'sent') {
-                    statusLabel = 'ارسال شده';
-                    statusClass = 'status-sent';
+            items.forEach(item => {
+                if (status === 'all' || item.dataset.status === status) {
+                    item.style.display = 'flex';
+                    hasVisible = true;
+                } else {
+                    item.style.display = 'none';
                 }
-
-                html += `
-                    <div class="order-card">
-                        <span class="code">${order.id}</span>
-                        <span class="order-date"><i class="fa-regular fa-calendar"></i> ${order.date}</span>
-                        <span class="status-badge ${statusClass}">${statusLabel}</span>
-                        <button class="view-btn" onclick="viewOrderDetails('${order.id}')">
-                            <i class="fa-regular fa-eye"></i> مشاهده جزئیات
-                        </button>
-                    </div>
-                `;
             });
-            return html;
-        }
 
-        // SEARCH
-
-        function searchOrder() {
-            const input = document.getElementById('searchInput');
-            const value = input.value.trim();
-            renderOrders(value);
-            if (value) {
-                showToast(`جستجوی کد ${value} انجام شد`);
+            // اگه هیچ آیتمی نمایش داده نشد
+            const list = document.getElementById('orderList');
+            const emptyMsg = list.querySelector('.empty-message');
+            if (!hasVisible) {
+                if (!emptyMsg) {
+                    const div = document.createElement('div');
+                    div.className = 'empty-message';
+                    div.style.cssText = 'text-align: center; padding: 30px; color: #888;';
+                    div.innerHTML = `
+                        <i class="fas fa-inbox" style="font-size: 30px; display: block; margin-bottom: 10px;"></i>
+                        <p>هیچ سفارشی با این وضعیت یافت نشد</p>
+                    `;
+                    list.appendChild(div);
+                }
             } else {
-                showToast('نمایش همه سفارشات');
+                if (emptyMsg) emptyMsg.remove();
             }
         }
 
-        document.getElementById('searchInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                searchOrder();
-            }
-        });
-
-        // TOAST
-
+        // ============================================================
+        // ===== TOAST =====
+        // ============================================================
         let toastTimeout = null;
 
         function showToast(message) {
@@ -247,12 +240,6 @@
                 toast.classList.remove('show');
             }, 3000);
         }
-
-        // INIT
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderOrders();
-        });
     </script>
 
 </body>

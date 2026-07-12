@@ -298,7 +298,7 @@
             <ul>
                 <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
                 <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
-                <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:manage_products' %}">مدیریت  محصولات آماده</a></li>
                 <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
             </ul>
         </nav>
@@ -802,7 +802,7 @@
             const productData = {
                 product_name: productName,
                 base_price: parseInt(document.getElementById("basePrice").value) || 0,
-                discount_percent: discountPercent,
+                discount_percent:parseInt(document.getElementById('discountPercent').value) || 0,
                 gender: genderMap[category],
                 description: description || 'بدون توضیحات',
                 specifications: {
