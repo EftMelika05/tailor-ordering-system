@@ -88,9 +88,9 @@ WSGI_APPLICATION = 'dozino.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dozino',
+        'NAME': 'Dozino_DB',
         'USER' : 'postgres',
-        'PASSWORD' :'melika.2005',
+        'PASSWORD' :'12345678',
         'HOST':'localhost'
     }
 }

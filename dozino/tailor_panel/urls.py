@@ -18,7 +18,7 @@ urlpatterns = [
     # ===== PRODUCT REGISTRATION (محصولات آماده) =====
     path('products/register/', views.register_product_page, name='register_product'),
     path('products/register/submit/', views.register_product_submit, name='register_product_submit'),
-    path('tailor-panel/products/register/submit/', views.register_product, name='register_product_submit'),
+    
     # ===== CUSTOM PRODUCT MANAGEMENT (مدیریت قیمت‌ها) =====
     path('custom-products/manage/', views.manage_custom_products, name='manage_custom_products'),
     
@@ -36,9 +36,11 @@ urlpatterns = [
     # Site Prices
     path('custom-products/site-price/update/', views.update_site_prices, name='update_site_prices'),
 
-    # urls.py
+    # ===== PRODUCT MANAGEMENT (مدیریت محصولات آماده) =====
     path('products/list/api/', views.get_products_list, name='get_products_list'),
     path('products/update/api/', views.update_product, name='update_product'),
-    path('manage-products/', views.manage_products, name='manage_products'), 
-] 
-
+    path('products/delete/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('products/restore/<int:product_id>/', views.restore_product, name='restore_product'),
+    path('products/delete-permanent/<int:product_id>/', views.delete_permanent, name='delete_permanent'),
+    path('manage-products/', views.manage_products, name='manage_products'),
+]

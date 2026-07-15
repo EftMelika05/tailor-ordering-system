@@ -167,33 +167,56 @@
     </section>
 
     <section class="products">
-
-        <h2>محصولات آماده</h2>
-
-        <p>جدیدترین محصولات آماده دوزینو</p>
-
-        <div class="product-grid">
+    <h2>محصولات آماده</h2>
+    <p>جدیدترین محصولات آماده دوزینو</p>
+    <div class="product-grid">
         {% for product in latest_products %}
-            <div class="product-card">
+        <div class="product-card">
+            {% if product.old_price %}
+            <span class="product-badge">
+                <i class="fa-solid fa-fire"></i>
+                تخفیف ویژه
+            </span>
+            {% endif %}
+            <a href="{% url 'detail' product.slug %}">
                 {% if product.main_image %}
-                   <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}">
+                    <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}">
                 {% else %}
-                   <img src="{% static 'imag/no-image.png' %}" alt="بدون تصویر">
+                    <img src="{% static 'imag/no-image.png' %}" alt="بدون تصویر">
                 {% endif %}
-                <h3>{{ product.name }}</h3>
-                <span>{{ product.price|floatformat:0|intcomma}}تومان</span>
-                <a href="{% url 'detail' product.slug %}">
-                  <button class="btn-cart">
-                  <i class="fa-solid fa-cart-plus"></i>
-                   مشاهده محصول
-                  </button>
-                </a>
+            </a>
+            <div class="product-info">
+                <h3><a href="{% url 'detail' product.slug %}">{{ product.name }}</a></h3>
+                <div class="product-price">
+                    {% if product.old_price %}
+                        <span class="old-price">{{ product.old_price|floatformat:0|intcomma }}</span>
+                    {% endif %}
+                    {{ product.price|floatformat:0|intcomma }} تومان
+                </div>
+                {% if product.variants.exists %}
+                    {% with variant=product.variants.first %}
+                        {% if variant.stock > 0 %}
+                            <a href="{% url 'detail' product.slug %}" class="btn-cart">
+                                <i class="fa-solid fa-eye"></i> مشاهده محصول
+                            </a>
+                        {% else %}
+                            <button class="btn-cart.disabled" disabled>
+                                <i class="fa-solid fa-ban"></i> اتمام موجودی
+                            </button>
+                        {% endif %}
+                    {% endwith %}
+                {% else %}
+                    <button class="btn-cart.disabled" disabled>
+                        <i class="fa-solid fa-ban"></i> ناموجود
+                    </button>
+                {% endif %}
             </div>
-
-        {% endfor %}
         </div>
-
-    </section>
+        {% empty %}
+        <p style="text-align:center; width:100%; color:#888; grid-column: span 4;">هیچ محصولی یافت نشد</p>
+        {% endfor %}
+    </div>
+</section>
 
     <section class="features">
 

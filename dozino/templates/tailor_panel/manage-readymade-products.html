@@ -9,539 +9,7 @@
 
     <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/registering-products.css' %}">
-
-    <style>
-        /* ===== استایل‌های کلی ===== */
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Gandom', Tahoma, sans-serif;
-            background: #f5f5fa;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* ===== Topbar ===== */
-        .topbar {
-            background: #1a1a2e;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 0 0 15px 15px;
-            margin-bottom: 20px;
-        }
-
-        .topbar nav ul {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .topbar nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .topbar nav ul li a:hover {
-            color: #c9a86a;
-        }
-
-        .topbar .logo {
-            color: #c9a86a;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .topbar .header-icons a {
-            color: #fff;
-            font-size: 20px;
-            transition: color 0.3s ease;
-        }
-
-        .topbar .header-icons a:hover {
-            color: #c9a86a;
-        }
-
-        /* ===== Container ===== */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .page-title {
-            text-align: center;
-            color: #1a1a2e;
-            margin-bottom: 10px;
-        }
-
-        .page-divider {
-            height: 2px;
-            background: linear-gradient(to right, transparent, #c9a86a, transparent);
-            margin-bottom: 20px;
-        }
-
-        /* ===== ابزارهای جستجو و فیلتر ===== */
-        .toolbar {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            align-items: center;
-            background: #fff;
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .toolbar .search-box {
-            flex: 1;
-            min-width: 200px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .toolbar .search-box input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .toolbar .search-box button {
-            padding: 10px 20px;
-            background: #c9a86a;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .toolbar .search-box button:hover {
-            background: #b8975a;
-            transform: translateY(-2px);
-        }
-
-        .toolbar .filter-box {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .toolbar .filter-box select {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-            background: #fff;
-        }
-
-        .btn-add-product {
-            padding: 10px 24px;
-            background: #2ecc71;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-add-product:hover {
-            background: #27ae60;
-            transform: translateY(-2px);
-        }
-
-        /* ===== لیست محصولات ===== */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        .product-card .product-image-wrapper {
-            width: 100%;
-            height: 220px;
-            overflow: hidden;
-            background: #f0f0f5;
-            position: relative;
-        }
-        .product-card .product-image {
-           width: 100%;
-           height: 100%;
-           object-fit: cover; 
-            display: block;
-           transition: transform 0.3s ease;
-        }
-        .product-card:hover .product-image {
-           transform: scale(1.03); 
-        }
-
-        .product-card .product-info {
-            padding: 15px;
-        }
-
-        .product-card .product-info h3 {
-            margin: 0 0 5px 0;
-            font-size: 16px;
-            color: #1a1a2e;
-        }
-
-        .product-card .product-info .category-badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .product-card .product-info .category-badge.female {
-            background: #fce4ec;
-            color: #c62828;
-        }
-
-        .product-card .product-info .category-badge.male {
-            background: #e3f2fd;
-            color: #0d47a1;
-        }
-
-        .product-card .product-info .category-badge.kids {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .product-card .product-info .price-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-
-        .product-card .product-info .price-row .current-price {
-            font-size: 18px;
-            font-weight: bold;
-            color: #2ecc71;
-        }
-
-        .product-card .product-info .price-row .old-price {
-            font-size: 14px;
-            color: #e74c3c;
-            text-decoration: line-through;
-        }
-
-        .product-card .product-info .price-row .discount-badge {
-            background: #e74c3c;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .product-card .product-actions {
-            padding: 10px 15px 15px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .product-card .product-actions button {
-            flex: 1;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 13px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-edit {
-            background: #c9a86a;
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background: #b8975a;
-        }
-
-        .btn-delete-product {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .btn-delete-product:hover {
-            background: #c0392b;
-        }
-
-        /* ===== مودال ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #fff;
-            border-radius: 16px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 30px;
-            position: relative;
-        }
-
-        .modal-close {
-            position: sticky;
-            top: 0;
-            float: left;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .modal-close:hover {
-            transform: rotate(90deg);
-            background: #c0392b;
-        }
-
-        .modal-content h2 {
-            margin-top: 0;
-            color: #1a1a2e;
-            border-bottom: 2px solid #c9a86a;
-            padding-bottom: 10px;
-        }
-
-        /* ===== فرم مودال ===== */
-        .modal-content .form-group {
-            margin-bottom: 15px;
-        }
-
-        .modal-content .form-group label {
-            display: block;
-            font-weight: bold;
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .modal-content .form-group input,
-        .modal-content .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .modal-content .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .modal-content .variant-item {
-            background: #f8f7fc;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .modal-content .variant-item .color-dot {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-        }
-
-        .modal-content .variant-item input {
-            flex: 1;
-            min-width: 60px;
-            padding: 6px 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-
-        .modal-content .variant-item .remove-variant {
-            color: #e74c3c;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 0 5px;
-        }
-
-        .modal-content .btn-save {
-            background: #2ecc71;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .modal-content .btn-save:hover {
-            background: #27ae60;
-            transform: translateY(-2px);
-        }
-
-        .modal-content .btn-add-variant {
-            background: #c9a86a;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            margin-top: 5px;
-        }
-
-        .modal-content .btn-add-variant:hover {
-            background: #b8975a;
-        }
-
-        /* ===== Toast ===== */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #1a1a2e;
-            color: #fff;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transition: all 0.4s ease;
-            z-index: 9999;
-            pointer-events: none;
-            font-family: inherit;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            pointer-events: auto;
-        }
-
-        /* ===== وضعیت موجودی ===== */
-        .stock-status {
-            font-size: 12px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            display: inline-block;
-            margin-top: 5px;
-        }
-
-        .stock-status.in-stock {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .stock-status.low-stock {
-            background: #fff3e0;
-            color: #e65100;
-        }
-
-        .stock-status.out-of-stock {
-            background: #fce4ec;
-            color: #c62828;
-        }
-
-        /* ===== Responsive ===== */
-        @media(max-width: 768px) {
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .toolbar .search-box {
-                flex-direction: column;
-            }
-
-            .toolbar .filter-box {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                padding: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/manage-readymade-products.css' %}">
 </head>
 
 <body>
@@ -552,7 +20,7 @@
             <ul>
                 <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
                 <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
-                <li><a href="{% url 'tailor_panel:manage_products' %}" style="color: #c9a86a;">مدیریت محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:manage_products' %}" class="active">مدیریت محصولات آماده</a></li>
                 <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
             </ul>
         </nav>
@@ -590,7 +58,6 @@
 
         <!-- ===== لیست محصولات ===== -->
         <div class="products-grid" id="productsGrid">
-            <!-- محصولات توسط JS بارگذاری میشن -->
             <div style="text-align: center; padding: 50px; color: #888; width: 100%;">
                 <i class="fas fa-spinner fa-spin" style="font-size: 30px;"></i>
                 <p>در حال بارگذاری...</p>
@@ -606,18 +73,16 @@
             <form id="editForm" onsubmit="saveProduct(event)">
                 <input type="hidden" id="editProductId">
                 
+                <!-- ===== اطلاعات پایه ===== -->
                 <div class="form-group">
                     <label><i class="fas fa-tag"></i> نام محصول *</label>
                     <input type="text" id="editProductName" required>
                 </div>
 
                 <div class="form-group">
-                    <label><i class="fas fa-layer-group"></i> دسته‌بندی *</label>
-                    <select id="editCategory" required>
-                        <option value="female">زنانه</option>
-                        <option value="male">مردانه</option>
-                        <option value="kids">بچه گانه</option>
-                    </select>
+                    <label><i class="fas fa-layer-group"></i> دسته‌بندی</label>
+                    <input type="text" id="editCategoryDisplay" disabled style="background:#f5f5f5;">
+                    <input type="hidden" id="editCategory">
                 </div>
 
                 <div class="form-row">
@@ -627,7 +92,7 @@
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-percent"></i> درصد تخفیف</label>
-                        <input type="number" id="editDiscountPercent" min="0" max="100" step="1">
+                        <input type="number" id="editDiscountPercent" min="0" max="100" step="1" value="0">
                     </div>
                 </div>
 
@@ -638,13 +103,34 @@
 
                 <hr style="margin: 20px 0;">
 
-                <h4 style="margin-bottom: 10px;"><i class="fas fa-palette"></i> رنگ‌ها و موجودی</h4>
+                <!-- ===== گالری تصاویر ===== -->
+                <h4 style="margin-bottom: 10px;"><i class="fas fa-images"></i> تصاویر محصول</h4>
+                <div class="gallery-container" id="galleryContainer">
+                    <div class="gallery-main">
+                        <img id="galleryMainImage" src="" alt="تصویر اصلی">
+                    </div>
+                    <div class="gallery-thumbnails" id="galleryThumbnails">
+                        <!-- تصاویر توسط JS ساخته میشن -->
+                    </div>
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <!-- ===== قیمت هر سایز (مستقل از رنگ) ===== -->
+                <h4 style="margin-bottom: 10px;"><i class="fas fa-money-bill-wave"></i> قیمت هر سایز</h4>
+                <div class="price-section" id="priceSection">
+                    <div class="price-row-global" id="priceRowGlobal">
+                        <!-- قیمت سایزها توسط JS ساخته میشن -->
+                    </div>
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <!-- ===== رنگ‌ها و موجودی ===== -->
+                <h4 style="margin-bottom: 10px;"><i class="fa-solid fa-palette"></i> رنگ‌ها و موجودی</h4>
                 <div id="editVariantsContainer">
                     <!-- واریانت‌ها توسط JS ساخته میشن -->
                 </div>
-                <button type="button" class="btn-add-variant" onclick="addVariantRow()">
-                    <i class="fas fa-plus"></i> افزودن رنگ جدید
-                </button>
 
                 <button type="submit" class="btn-save"><i class="fas fa-save"></i> ذخیره تغییرات</button>
             </form>
@@ -660,6 +146,11 @@
         // ============================================================
         let products = [];
         let editingProduct = null;
+        let currentImageIndex = 0;
+        let productImages = [];
+        const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+        let pendingVariantUpdates = {};
+        let globalPriceUpdates = {};
 
         // ============================================================
         // ===== TOAST =====
@@ -697,63 +188,127 @@
         // ===== RENDER PRODUCTS =====
         // ============================================================
         function renderProducts(productsList) {
-    const grid = document.getElementById('productsGrid');
+            const grid = document.getElementById('productsGrid');
 
-    if (!productsList || productsList.length === 0) {
-        grid.innerHTML = `
-            <div style="text-align: center; padding: 50px; color: #888; width: 100%;">
-                <i class="fas fa-box-open" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                <p>هیچ محصولی یافت نشد</p>
-                <a href="{% url 'tailor_panel:register_product' %}" class="btn-add-product" style="margin-top: 10px;">
-                    <i class="fas fa-plus"></i> ثبت محصول جدید
-                </a>
-            </div>
-        `;
-        return;
-    }
+            if (!productsList || productsList.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align: center; padding: 50px; color: #888; width: 100%;">
+                        <i class="fas fa-box-open" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
+                        <p>هیچ محصولی یافت نشد</p>
+                        <a href="{% url 'tailor_panel:register_product' %}" class="btn-add-product" style="margin-top: 10px; display:inline-flex;">
+                            <i class="fas fa-plus"></i> ثبت محصول جدید
+                        </a>
+                    </div>
+                `;
+                return;
+            }
 
-    grid.innerHTML = productsList.map(product => `
-        <div class="product-card" data-id="${product.id}">
-            <div class="product-image-wrapper">
-                <img src="${product.main_image || 'https://via.placeholder.com/300x220/eee/ccc?text=بدون+تصویر'}" 
-                     alt="${product.name}" class="product-image" 
-                     onerror="this.src='https://via.placeholder.com/300x220/eee/ccc?text=بدون+تصویر'">
-            </div>
-            <div class="product-info">
-                <h3>${product.name}</h3>
-                <span class="category-badge ${product.gender}">
-                    ${product.gender === 'female' ? '👩 زنانه' : 
-                      product.gender === 'male' ? '👨 مردانه' : '👶 بچه گانه'}
-                </span>
-                <div class="price-row">
-                    <span class="current-price">${(product.price || 0).toLocaleString()} تومان</span>
-                    ${product.old_price ? `
-                        <span class="old-price">${product.old_price.toLocaleString()} تومان</span>
-                        <span class="discount-badge">${product.discount_percent || 0}%</span>
-                    ` : ''}
+            grid.innerHTML = productsList.map(product => `
+                <div class="product-card ${!product.is_active ? 'product-deleted' : ''}" data-id="${product.id}">
+                    <div class="product-image-wrapper">
+                        <img src="${product.main_image || 'https://via.placeholder.com/400x300/eee/ccc?text=بدون+تصویر'}" 
+                             alt="${product.name}" class="product-image" 
+                             onerror="this.src='https://via.placeholder.com/400x300/eee/ccc?text=بدون+تصویر'">
+                        ${!product.is_active ? '<span class="product-deleted-badge">حذف شده</span>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                            <h3 style="margin:0; ${!product.is_active ? 'color:#999;' : ''}">${product.name}</h3>
+                            <span style="font-size:11px; color:#c9a86a; font-weight:600; background:#f5efe5; padding:2px 10px; border-radius:12px; direction:ltr;">
+                                #${product.id}
+                            </span>
+                        </div>
+                        <span class="category-badge ${product.gender}">
+                            ${product.gender === 'female' ? '👩 زنانه' : 
+                              product.gender === 'male' ? '👨 مردانه' : '👶 بچه گانه'}
+                        </span>
+                        <div class="price-row">
+                            <span class="current-price" style="${!product.is_active ? 'color:#999;' : ''}">${(product.price || 0).toLocaleString()} تومان</span>
+                            ${product.old_price ? `
+                                <span class="old-price">${product.old_price.toLocaleString()} تومان</span>
+                                <span class="discount-badge">${product.discount_percent || 0}%</span>
+                            ` : ''}
+                        </div>
+                        <div>
+                            <span class="stock-status ${product.stock_status || 'out-of-stock'}">
+                                ${!product.is_active ? '⛔ حذف شده' :
+                                  product.stock_status === 'in-stock' ? '✅ موجود' :
+                                  product.stock_status === 'low-stock' ? '⚠️ موجودی کم' : '❌ ناموجود'}
+                            </span>
+                        </div>
+                        <div style="font-size: 12px; color: #888; margin-top: 5px;">
+                            <i class="fas fa-palette"></i> ${product.colors_count || 0} رنگ
+                            <i class="fas fa-tshirt" style="margin-right: 10px;"></i> ${product.sizes_count || 0} سایز
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        ${product.is_active ? `
+                            <button class="btn-edit" onclick="editProduct(${product.id})">
+                                <i class="fas fa-edit"></i> ویرایش
+                            </button>
+                            <button class="btn-delete-product" onclick="deleteProduct(${product.id})">
+                                <i class="fas fa-trash-alt"></i> حذف
+                            </button>
+                        ` : `
+                            <button class="btn-restore" onclick="restoreProduct(${product.id})">
+                                <i class="fas fa-undo"></i> بازیابی
+                            </button>
+                            <button class="btn-delete-permanent" onclick="deletePermanent(${product.id})">
+                                <i class="fas fa-trash-alt"></i> حذف کامل
+                            </button>
+                        `}
+                    </div>
                 </div>
-                <div>
-                    <span class="stock-status ${product.stock_status || 'out-of-stock'}">
-                        ${product.stock_status === 'in-stock' ? '✅ موجود' :
-                          product.stock_status === 'low-stock' ? '⚠️ موجودی کم' : '❌ ناموجود'}
-                    </span>
-                </div>
-                <div style="font-size: 12px; color: #888; margin-top: 5px;">
-                    <i class="fas fa-palette"></i> ${product.colors_count || 0} رنگ
-                    <i class="fas fa-tshirt" style="margin-right: 10px;"></i> ${product.sizes_count || 0} سایز
-                </div>
-            </div>
-            <div class="product-actions">
-                <button class="btn-edit" onclick="editProduct(${product.id})">
-                    <i class="fas fa-edit"></i> ویرایش
-                </button>
-                <button class="btn-delete-product" onclick="deleteProduct(${product.id})">
-                    <i class="fas fa-trash-alt"></i> حذف
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
+            `).join('');
+        }
+
+        // ============================================================
+        // ===== RESTORE PRODUCT =====
+        // ============================================================
+        function restoreProduct(productId) {
+            if (!confirm('آیا از بازیابی این محصول مطمئن هستید؟')) return;
+
+            fetch(`/tailor-panel/products/restore/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ محصول با موفقیت بازیابی شد');
+                    loadProducts();
+                } else {
+                    showToast('❌ ' + data.message, 'error');
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور', 'error'));
+        }
+
+        // ============================================================
+        // ===== DELETE PERMANENT =====
+        // ============================================================
+        function deletePermanent(productId) {
+            if (!confirm('⚠️ آیا از حذف کامل این محصول مطمئن هستید؟ این عمل قابل بازگشت نیست!')) return;
+
+            fetch(`/tailor-panel/products/delete-permanent/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ محصول با موفقیت حذف شد');
+                    loadProducts();
+                } else {
+                    showToast('❌ ' + data.message, 'error');
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور', 'error'));
+        }
 
         // ============================================================
         // ===== FILTER PRODUCTS =====
@@ -776,6 +331,30 @@
         }
 
         // ============================================================
+        // ===== DELETE PRODUCT =====
+        // ============================================================
+        function deleteProduct(productId) {
+            if (!confirm('آیا از حذف این محصول مطمئن هستید؟')) return;
+
+            fetch(`/tailor-panel/products/delete/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ محصول با موفقیت حذف شد');
+                    loadProducts();
+                } else {
+                    showToast('❌ ' + data.message, 'error');
+                }
+            })
+            .catch(() => showToast('❌ خطا در ارتباط با سرور', 'error'));
+        }
+
+        // ============================================================
         // ===== EDIT PRODUCT =====
         // ============================================================
         function editProduct(productId) {
@@ -786,15 +365,30 @@
             }
 
             editingProduct = product;
+            pendingVariantUpdates = {};
+            globalPriceUpdates = {};
 
             document.getElementById('editProductId').value = product.id;
             document.getElementById('editProductName').value = product.name;
+            document.getElementById('editCategoryDisplay').value = 
+                product.gender === 'female' ? '👩 زنانه' : 
+                product.gender === 'male' ? '👨 مردانه' : '👶 بچه گانه';
             document.getElementById('editCategory').value = product.gender;
             document.getElementById('editUnitPrice').value = product.base_price || product.price || 0;
             document.getElementById('editDiscountPercent').value = product.discount_percent || 0;
             document.getElementById('editDescription').value = product.description || '';
 
-            // رندر واریانت‌ها
+            // ===== بارگذاری تصاویر =====
+            productImages = product.images || [];
+            if (productImages.length === 0 && product.main_image) {
+                productImages = [{image: product.main_image}];
+            }
+            renderGallery();
+
+            // ===== رندر قیمت‌های هر سایز =====
+            renderSizePrices(product.variants || []);
+
+            // ===== رندر موجودی هر رنگ و سایز =====
             renderVariants(product.variants || []);
 
             document.getElementById('modalTitle').textContent = `ویرایش: ${product.name}`;
@@ -802,7 +396,86 @@
         }
 
         // ============================================================
-        // ===== RENDER VARIANTS =====
+        // ===== RENDER GALLERY =====
+        // ============================================================
+        function renderGallery() {
+            const mainImg = document.getElementById('galleryMainImage');
+            const thumbnails = document.getElementById('galleryThumbnails');
+
+            if (!productImages || productImages.length === 0) {
+                mainImg.src = 'https://via.placeholder.com/400x400/eee/ccc?text=بدون+تصویر';
+                thumbnails.innerHTML = '';
+                return;
+            }
+
+            currentImageIndex = 0;
+            const firstImage = typeof productImages[0] === 'string' ? productImages[0] : (productImages[0].image || productImages[0]);
+            mainImg.src = firstImage || 'https://via.placeholder.com/400x400/eee/ccc?text=بدون+تصویر';
+
+            thumbnails.innerHTML = productImages.map((img, index) => {
+                const src = typeof img === 'string' ? img : (img.image || img);
+                return `
+                    <img src="${src || 'https://via.placeholder.com/70x70/eee/ccc?text=بدون'}" 
+                         class="gallery-thumb ${index === 0 ? 'active' : ''}"
+                         onclick="changeGalleryImage(${index})"
+                         alt="تصویر ${index + 1}"
+                         onerror="this.src='https://via.placeholder.com/70x70/eee/ccc?text=بدون'">
+                `;
+            }).join('');
+        }
+
+        function changeGalleryImage(index) {
+            currentImageIndex = index;
+            const src = typeof productImages[index] === 'string' ? productImages[index] : (productImages[index].image || productImages[index]);
+            document.getElementById('galleryMainImage').src = src || 'https://via.placeholder.com/400x400/eee/ccc?text=بدون+تصویر';
+            document.querySelectorAll('.gallery-thumb').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+        }
+
+        // ============================================================
+        // ===== RENDER SIZE PRICES (مستقل از رنگ) =====
+        // ============================================================
+        function renderSizePrices(variants) {
+            const container = document.getElementById('priceRowGlobal');
+            container.innerHTML = '';
+
+            // استخراج قیمت هر سایز از واریانت‌ها
+            const sizePrices = {};
+            variants.forEach(v => {
+                const sizeName = v.size_name || 'S';
+                if (!sizePrices[sizeName]) {
+                    sizePrices[sizeName] = v.original_price || v.price || 0;
+                }
+            });
+
+            ALL_SIZES.forEach(size => {
+                const price = sizePrices[size] || 0;
+                const div = document.createElement('div');
+                div.className = 'price-item';
+                div.innerHTML = `
+                    <span class="size-label">${size}</span>
+                    <input type="number" class="global-price-input" 
+                           value="${price}" min="0" step="1000"
+                           data-size="${size}"
+                           onchange="updateGlobalPrice(this)">
+                    <span class="price-label">تومان</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ============================================================
+        // ===== UPDATE GLOBAL PRICE =====
+        // ============================================================
+        function updateGlobalPrice(input) {
+            const size = input.dataset.size;
+            const value = parseInt(input.value) || 0;
+            globalPriceUpdates[size] = value;
+        }
+
+        // ============================================================
+        // ===== RENDER VARIANTS (موجودی هر رنگ و سایز) =====
         // ============================================================
         function renderVariants(variants) {
             const container = document.getElementById('editVariantsContainer');
@@ -817,160 +490,165 @@
                 return;
             }
 
-            variants.forEach((variant, index) => {
+            // گروه‌بندی بر اساس رنگ برای موجودی
+            const colorGroups = {};
+            variants.forEach(v => {
+                const colorName = v.color_name || 'بدون نام';
+                if (!colorGroups[colorName]) {
+                    colorGroups[colorName] = {
+                        color_name: v.color_name,
+                        color_code: v.color_code || '#cccccc',
+                        sizes: {}
+                    };
+                }
+                const sizeName = v.size_name || 'S';
+                colorGroups[colorName].sizes[sizeName] = {
+                    id: v.id,
+                    stock: v.stock || 0
+                };
+            });
+
+            Object.values(colorGroups).forEach(group => {
                 const div = document.createElement('div');
-                div.className = 'variant-item';
+                div.className = 'variant-group';
+                
+                let sizesHTML = '';
+                ALL_SIZES.forEach(size => {
+                    const sizeData = group.sizes[size] || { id: null, stock: 0 };
+                    sizesHTML += `
+                        <div class="size-row">
+                            <span class="size-label">${size}</span>
+                            <input type="number" class="stock-input" 
+                                   value="${sizeData.stock}" min="0"
+                                   data-color="${group.color_name}"
+                                   data-size="${size}"
+                                   data-variant-id="${sizeData.id || ''}"
+                                   onchange="updateVariantStock(this)">
+                        </div>
+                    `;
+                });
+
                 div.innerHTML = `
-                    <span class="color-dot" style="background:${variant.color_code || '#ccc'};"></span>
-                    <span style="font-weight:bold; min-width:50px;">${variant.color_name || 'بدون نام'}</span>
-                    <input type="hidden" name="variant_id[]" value="${variant.id || ''}">
-                    <input type="text" name="variant_color[]" value="${variant.color_name || ''}" placeholder="نام رنگ" style="min-width:80px;">
-                    <input type="color" name="variant_color_code[]" value="${variant.color_code || '#cccccc'}" style="width:40px; height:35px; padding:2px;">
-                    <input type="number" name="variant_stock[]" value="${variant.stock || 0}" placeholder="موجودی" min="0" style="width:70px;">
-                    <span style="font-size:12px; color:#888;">سایز: ${variant.size_name || 'S'}</span>
-                    <input type="number" name="variant_price[]" value="${variant.original_price || variant.price || 0}" placeholder="قیمت" min="0" step="1000" style="width:100px;">
-                    <span class="remove-variant" onclick="removeVariant(this)"><i class="fas fa-times-circle"></i></span>
+                    <div class="variant-header">
+                        <span class="color-dot" style="background:${group.color_code};"></span>
+                        <span class="color-name">${group.color_name}</span>
+                        <span class="variant-stock-total">جمع: ${Object.values(group.sizes).reduce((sum, s) => sum + s.stock, 0)}</span>
+                    </div>
+                    <div class="variant-sizes">
+                        ${sizesHTML}
+                    </div>
                 `;
                 container.appendChild(div);
             });
         }
 
         // ============================================================
-        // ===== ADD VARIANT ROW =====
+        // ===== UPDATE VARIANT STOCK =====
         // ============================================================
-        function addVariantRow() {
-            const container = document.getElementById('editVariantsContainer');
+        function updateVariantStock(input) {
+            const variantId = input.dataset.variantId;
+            const colorName = input.dataset.color;
+            const sizeName = input.dataset.size;
+            const value = parseInt(input.value) || 0;
             
-            // اگه پیام "هیچ رنگی" وجود داره، پاکش کن
-            const emptyMsg = container.querySelector('div[style*="color:#aaa"]');
-            if (emptyMsg) emptyMsg.remove();
-
-            const div = document.createElement('div');
-            div.className = 'variant-item';
-            div.innerHTML = `
-                <span class="color-dot" style="background:#e74c3c;"></span>
-                <span style="font-weight:bold; min-width:50px;">جدید</span>
-                <input type="hidden" name="variant_id[]" value="">
-                <input type="text" name="variant_color[]" value="" placeholder="نام رنگ" style="min-width:80px;">
-                <input type="color" name="variant_color_code[]" value="#e74c3c" style="width:40px; height:35px; padding:2px;">
-                <input type="number" name="variant_stock[]" value="0" placeholder="موجودی" min="0" style="width:70px;">
-                <select name="variant_size[]" style="padding:6px; border:1px solid #ddd; border-radius:4px;">
-                    ${['S','M','L','XL','XXL'].map(s => `<option value="${s}">${s}</option>`).join('')}
-                </select>
-                <input type="number" name="variant_price[]" value="0" placeholder="قیمت" min="0" step="1000" style="width:100px;">
-                <span class="remove-variant" onclick="removeVariant(this)"><i class="fas fa-times-circle"></i></span>
-            `;
-            container.appendChild(div);
-        }
-        
-        function removeVariant(element) {
-            const item = element.closest('.variant-item');
-            if (item.querySelector('input[name="variant_id[]"]')?.value) {
-                if (!confirm('آیا از حذف این رنگ مطمئن هستید؟')) return;
+            const key = variantId || `${colorName}-${sizeName}`;
+            
+            if (pendingVariantUpdates[key]) {
+                pendingVariantUpdates[key].stock = value;
+            } else {
+                pendingVariantUpdates[key] = {
+                    id: variantId || null,
+                    color_name: colorName,
+                    size_name: sizeName,
+                    stock: value,
+                    is_new: !variantId
+                };
             }
-            item.remove();
         }
 
         // ============================================================
         // ===== SAVE PRODUCT =====
         // ============================================================
         function saveProduct(event) {
-           event.preventDefault();
- 
-          const productId = document.getElementById('editProductId').value;
-          const name = document.getElementById('editProductName').value.trim();
-          const gender = document.getElementById('editCategory').value;
-          const unitPrice = parseInt(document.getElementById('editUnitPrice').value) || 0;
-          const discountPercent = parseInt(document.getElementById('editDiscountPercent').value) || 0;
-          const description = document.getElementById('editDescription').value.trim();
+            event.preventDefault();
 
-       if (!name) {
-         showToast('❌ نام محصول الزامی است', 'error');
-         return;
-        }  
-      if (unitPrice <= 0) {
-        showToast('❌ قیمت واحد باید بیشتر از صفر باشد', 'error');
-        return;
-       }
+            const productId = document.getElementById('editProductId').value;
+            const name = document.getElementById('editProductName').value.trim();
+            const unitPrice = parseInt(document.getElementById('editUnitPrice').value) || 0;
+            const discountPercent = parseInt(document.getElementById('editDiscountPercent').value) || 0;
+            const description = document.getElementById('editDescription').value.trim();
 
-    // ===== محاسبه قیمت نهایی =====
-      const finalPrice = unitPrice - (unitPrice * discountPercent / 100);
-      const roundedPrice = Math.round(finalPrice / 1000) * 1000;
+            if (!name) {
+                showToast('❌ نام محصول الزامی است', 'error');
+                return;
+            }
+            if (unitPrice <= 0) {
+                showToast('❌ قیمت واحد باید بیشتر از صفر باشد', 'error');
+                return;
+            }
 
-    // جمع‌آوری واریانت‌ها
-      const variantRows = document.querySelectorAll('#editVariantsContainer .variant-item');
-      const variants = [];
+            const finalPrice = unitPrice - (unitPrice * discountPercent / 100);
+            const roundedPrice = Math.round(finalPrice / 1000) * 1000;
 
-      variantRows.forEach(row => {
-        const id = row.querySelector('input[name="variant_id[]"]')?.value || '';
-        const colorName = row.querySelector('input[name="variant_color[]"]')?.value.trim();
-        const colorCode = row.querySelector('input[name="variant_color_code[]"]')?.value || '#cccccc';
-        const stock = parseInt(row.querySelector('input[name="variant_stock[]"]')?.value) || 0;
-        const sizeName = row.querySelector('select[name="variant_size[]"]')?.value || 'S';
-        const price = parseInt(row.querySelector('input[name="variant_price[]"]')?.value) || 0;
+            // ===== جمع‌آوری قیمت‌های هر سایز =====
+            const sizePrices = {};
+            document.querySelectorAll('.global-price-input').forEach(input => {
+                const size = input.dataset.size;
+                const price = parseInt(input.value) || 0;
+                if (price > 0) {
+                    sizePrices[size] = price;
+                }
+            });
 
-        if (colorName && stock >= 0) {
-            variants.push({ 
-                id: id, 
-                color_name: colorName, 
-                color_code: colorCode, 
-                stock: stock, 
-                size_name: sizeName, 
-                price: price 
+            // ===== جمع‌آوری موجودی هر رنگ و سایز =====
+            const variantUpdates = Object.values(pendingVariantUpdates);
+
+            const data = {
+                id: productId,
+                name: name,
+                price: roundedPrice,
+                old_price: discountPercent > 0 ? unitPrice : null,
+                description: description,
+                base_price: unitPrice,
+                discount_percent: discountPercent,
+                size_prices: sizePrices,
+                variant_updates: variantUpdates
+            };
+
+            fetch('/tailor-panel/products/update/api/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    showToast('✅ محصول با موفقیت به‌روزرسانی شد');
+                    closeModal();
+                    loadProducts();
+                } else {
+                    showToast('❌ ' + result.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('❌ خطا:', error);
+                showToast('❌ خطا در ارتباط با سرور', 'error');
             });
         }
-      });
 
-      if (variants.length === 0) {
-          showToast('❌ حداقل یک رنگ با موجودی وارد کنید', 'error');
-         return;
-      }
-
-      const data = {
-        id: productId,
-        name: name,
-        gender: gender,
-        price: roundedPrice,  // ← قیمت نهایی
-        old_price: discountPercent > 0 ? unitPrice : null,  // ← قیمت قدیمی
-        description: description,
-        base_price: unitPrice, 
-        variants: variants
-      };
-
-      console.log('📦 ارسال به سرور:', data);  // برای دیباگ
-
-      fetch('/tailor-panel/products/update/api/', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCsrfToken()
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(result => {
-        if (result.status === 'success') {
-            showToast('✅ محصول با موفقیت به‌روزرسانی شد');
-            closeModal();
-            loadProducts();
-        } else {
-            showToast('❌ ' + result.message, 'error');
-        }
-       })
-      .catch(error => {
-        console.error('❌ خطا:', error);
-        showToast('❌ خطا در ارتباط با سرور', 'error');
-      });
-     }
         // ============================================================
         // ===== MODAL CONTROLS =====
         // ============================================================
         function closeModal() {
             document.getElementById('editModal').classList.remove('show');
             editingProduct = null;
+            pendingVariantUpdates = {};
+            globalPriceUpdates = {};
         }
 
-        // بستن مودال با کلیک روی overlay
         document.getElementById('editModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
