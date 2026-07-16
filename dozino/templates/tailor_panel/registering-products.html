@@ -10,284 +10,6 @@
     <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/registering-products.css' %}">
-
-    <style>
-        /* ===== استایل‌های اضافی ===== */
-        
-        /* Custom Color Section */
-        .custom-color-section {
-            background: #f8f7fc;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-
-        .custom-color-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .custom-color-row input[type="color"] {
-            width: 50px;
-            height: 50px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 2px;
-            cursor: pointer;
-        }
-
-        .custom-color-row input[type="text"] {
-            flex: 1;
-            min-width: 120px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .btn-add-color {
-            background: #c9a86a;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .btn-add-color:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(201, 168, 106, 0.4);
-        }
-        .main-image {
-    border: 3px solid #c9a86a;
-    position: relative;
-}
-
-.main-image::after {
-    content: "عکس اصلی";
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #c9a86a;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 8px;
-    font-size: 12px;
-}
-
-.set-main-btn{
-    position:absolute;
-    bottom:8px;
-    right:8px;
-    border:none;
-    background:#fff;
-    padding:5px 10px;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-
-        /* ===== Toast ===== */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #1a1a2e;
-            color: #fff;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transition: all 0.4s ease;
-            z-index: 999;
-            pointer-events: none;
-            font-family: inherit;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            pointer-events: auto;
-        }
-
-        /* ===== رنگ‌های انتخابی ===== */
-        .color-option {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #ddd;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-            border-color: #999;
-        }
-
-        .color-option.selected {
-            border-color: #c9a86a;
-            box-shadow: 0 0 0 3px rgba(201, 168, 106, 0.3);
-            transform: scale(1.1);
-        }
-
-        .colors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 40px);
-            gap: 10px;
-            justify-content: flex-start;
-        }
-
-        /* ===== موجودی رنگ ===== */
-        .color-inventory-block {
-            background: #f8f7fc;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .color-inv-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .color-dot {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: inline-block;
-            border: 1px solid #ddd;
-        }
-
-        .color-name {
-            font-weight: bold;
-            flex: 1;
-            font-size: 14px;
-        }
-
-        .remove-color {
-            color: #e74c3c;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        .remove-color:hover {
-            transform: scale(1.2);
-        }
-
-        .color-inv-sizes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .inv-size-row {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .inv-size-label {
-            font-weight: bold;
-            font-size: 13px;
-            min-width: 30px;
-        }
-
-        .inv-qty-input {
-            width: 50px;
-            padding: 4px 6px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-
-        /* ===== سایز و قیمت ===== */
-        .size-price-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-        }
-
-        .size-price-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .size-price-item label {
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .size-price-input {
-            padding: 6px 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
-            width: 100%;
-        }
-
-        .size-price-item span {
-            font-size: 12px;
-            color: #888;
-        }
-
-        /* ===== دکمه‌های دسته‌بندی ===== */
-        .category-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .category-btn {
-            padding: 8px 16px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            background: #fff;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .category-btn:hover {
-            border-color: #c9a86a;
-            background: #f8f7fc;
-        }
-
-        .category-btn.active {
-            border-color: #c9a86a;
-            background: #c9a86a;
-            color: white;
-        }
-
-        /* ===== Responsive ===== */
-        @media(max-width: 768px) {
-            .form-layout {
-                flex-direction: column;
-            }
-            
-            .custom-color-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .colors-grid {
-                grid-template-columns: repeat(auto-fill, 35px);
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -298,7 +20,7 @@
             <ul>
                 <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
                 <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
-                <li><a href="{% url 'tailor_panel:manage_products' %}">مدیریت  محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:manage_products' %}">مدیریت محصولات آماده</a></li>
                 <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
             </ul>
         </nav>
@@ -321,10 +43,6 @@
                 <h3><i class="fas fa-images"></i> تصاویر محصول</h3>
                 <div class="upload-area">
                     <div class="image-grid" id="imageGrid"></div>
-                    <div class="add-image-btn" onclick="addImageInput()">
-                        <span>+</span>
-                        <p>افزودن عکس جدید</p>
-                    </div>
                 </div>
             </div>
 
@@ -364,21 +82,20 @@
                 <!-- ===== قیمت هر سایز ===== -->
                 <div class="form-group">
                     <label>
-                     <i class="fas fa-percent"></i>تخفیف محصول             
+                        <i class="fas fa-percent"></i> تخفیف محصول
                     </label>
-                    <input  type="number" id="discountPercent" 
-                    placeholder="مثلا 5" min="0" max="100" >
+                    <input type="number" id="discountPercent" placeholder="مثلا 5" min="0" max="100">
                 </div>
                 <div class="price-section-inline">
                     <h3 style="margin-bottom: 12px;"><i class="fas fa-money-bill-wave"></i> قیمت هر سایز</h3>
+                    
                     <div class="form-group">
                         <label>
-                         <i class="fas fa-money-bill"></i>
-                         قیمت پایه محصول
+                            <i class="fas fa-money-bill"></i>
+                            قیمت پایه محصول (میانگین)
                         </label>
-
-                        <input type="number" id="basePrice" 
-                        class="size-price-input" placeholder="مثلاً 850000">
+                        <input type="text" id="basePriceDisplay" placeholder="به صورت خودکار محاسبه می‌شود" readonly style="background-color: #f5f5f5; color: #555; cursor: default;">
+                        <input type="hidden" id="basePrice" value="0">
                     </div>
                     <hr style="margin:15px 0;">
                     <div class="size-price-grid" id="sizePriceGrid">
@@ -462,9 +179,8 @@
         }
 
         // ============================================================
-        // ===== IMAGES WITH MAIN IMAGE SELECTION =====
+        // ===== IMAGES =====
         // ============================================================
-
         function addImageInput() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -495,22 +211,59 @@
             const grid = document.getElementById('imageGrid');
             grid.innerHTML = '';
 
-            imageFiles.forEach((img) => {
+            const mainImageIndex = imageFiles.findIndex(img => img.isMain);
+
+            // ===== ردیف اول: عکس اصلی (اگر وجود داشته باشد) =====
+            if (mainImageIndex !== -1) {
+                const mainRow = document.createElement('div');
+                mainRow.className = 'main-image-row';
+                const mainImg = imageFiles[mainImageIndex];
                 const div = document.createElement('div');
-                div.className = 'image-item' + (img.isMain ? ' main-image' : '');
+                div.className = 'image-item main-image-large';
                 div.innerHTML = `
+                    <img src="${mainImg.data}" alt="تصویر اصلی">
+                    <button class="delete-image" onclick="deleteImage(${mainImg.id})">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+                mainRow.appendChild(div);
+                grid.appendChild(mainRow);
+            }
+
+            // ===== ردیف دوم: عکس‌های فرعی و دکمه افزودن (همیشه ساخته شود) =====
+            const thumbRow = document.createElement('div');
+            thumbRow.className = 'thumbnail-row';
+
+            // اضافه کردن عکس‌های فرعی
+            imageFiles.forEach((img, index) => {
+                if (index !== mainImageIndex) {
+                    const div2 = document.createElement('div');
+                    div2.className = 'image-item';
+                    div2.innerHTML = `
                         <img src="${img.data}" alt="تصویر محصول">
                         <button class="delete-image" onclick="deleteImage(${img.id})">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        ${!img.isMain ? `
-                            <button class="set-main-btn" onclick="setMainImage(${img.id})">
-                                <i class="fas fa-star"></i> اصلی
-                            </button>
-                        ` : ''}
+                        <button class="set-main-btn" onclick="setMainImage(${img.id})">
+                            <i class="fas fa-star"></i> اصلی
+                        </button>
                     `;
-                grid.appendChild(div);
+                    thumbRow.appendChild(div2);
+                }
             });
+
+            // ===== دکمه افزودن عکس (همیشه اضافه شود) =====
+            const addBtn = document.createElement('div');
+            addBtn.className = 'add-image-btn';
+            addBtn.onclick = addImageInput;
+            addBtn.innerHTML = `
+                <span>+</span>
+                <p>افزودن عکس جدید</p>
+            `;
+            thumbRow.appendChild(addBtn);
+
+            // ===== اضافه کردن ردیف دوم به صفحه (این خط باعث نمایش دکمه می‌شود) =====
+            grid.appendChild(thumbRow);
         }
 
         function setMainImage(id) {
@@ -543,7 +296,7 @@
         }
 
         // ============================================================
-        // ===== SIZE PRICES =====
+        // ===== SIZE PRICES & AVERAGE CALCULATION =====
         // ============================================================
         function renderSizePrices() {
             const container = document.getElementById('sizePriceGrid');
@@ -553,31 +306,52 @@
                 const div = document.createElement('div');
                 div.className = 'size-price-item';
                 div.innerHTML = `
-                        <label>سایز ${size}</label>
-                        <input type="number" class="size-price-input" 
-                               value="${sizePrices[size] || 0}" 
-                               min="0" 
-                               step="1000"
-                               data-size="${size}"
-                               oninput="updateSizePrice(this)">
-                        <span>تومان</span>
-                    `;
+                    <label>سایز ${size}</label>
+                    <input type="number" class="size-price-input" 
+                           value="${sizePrices[size] || 0}" 
+                           min="0" 
+                           step="1000"
+                           data-size="${size}"
+                           oninput="updateSizePrice(this)">
+                    <span>تومان</span>
+                `;
                 container.appendChild(div);
             });
+
+            calculateAveragePrice();
         }
 
         function updateSizePrice(input) {
             const size = input.dataset.size;
             const value = parseInt(input.value) || 0;
             sizePrices[size] = Math.max(0, value);
+            calculateAveragePrice();
+        }
+
+        function calculateAveragePrice() {
+            let total = 0;
+            let count = 0;
+
+            for (const size in sizePrices) {
+                if (sizePrices[size] > 0) { // فقط سایزهای غیر صفر در میانگین محاسبه شوند
+                    total += sizePrices[size];
+                    count++;
+                }
+            }
+
+            const average = count > 0 ? Math.round(total / count) : 0;
+            
+            const displayField = document.getElementById('basePriceDisplay');
+            if (displayField) {
+                displayField.value = average.toLocaleString(); 
+            }
+            document.getElementById('basePrice').value = average;
         }
 
         // ============================================================
-        // ===== COLORS WITH CUSTOM COLOR PICKER =====
+        // ===== COLORS =====
         // ============================================================
-
-        // رنگ‌های پیش‌فرض
-        const defaultColors = [
+        let defaultColors = [
             { name: 'مشکی', code: '#1e1e2f' },
             { name: 'سفید', code: '#ffffff' },
             { name: 'گلبهی', code: '#ac8888' },
@@ -601,6 +375,11 @@
                 div.style.background = color.code;
                 div.setAttribute('data-color', color.name);
                 div.setAttribute('data-code', color.code);
+
+                if (selectedColors.includes(color.name)) {
+                    div.classList.add('selected');
+                }
+
                 div.onclick = function() { toggleColor(this); };
                 container.appendChild(div);
             });
@@ -619,17 +398,9 @@
             }
 
             defaultColors.push({ name: colorName, code: colorCode });
-
-            const container = document.getElementById('defaultColors');
-            const div = document.createElement('div');
-            div.className = 'color-option';
-            div.style.background = colorCode;
-            div.setAttribute('data-color', colorName);
-            div.setAttribute('data-code', colorCode);
-            div.onclick = function() { toggleColor(this); };
-            container.appendChild(div);
-
+            renderDefaultColors();
             nameInput.value = '';
+            picker.value = '#e74c3c';
             showToast('✅ رنگ "' + colorName + '" با موفقیت اضافه شد');
         }
 
@@ -673,32 +444,32 @@
                 fixedSizes.forEach(size => {
                     const qty = colorInventory[colorName]?.[size] || 0;
                     sizesHTML += `
-                            <div class="inv-size-row">
-                                <span class="inv-size-label">${size}</span>
-                                <input type="number" class="inv-qty-input" 
-                                       value="${qty}" 
-                                       min="0" 
-                                       step="1"
-                                       data-color="${colorName}"
-                                       data-size="${size}"
-                                       oninput="updateInventory(this)">
-                            </div>
-                        `;
+                        <div class="inv-size-row">
+                            <span class="inv-size-label">${size}</span>
+                            <input type="number" class="inv-qty-input" 
+                                   value="${qty}" 
+                                   min="0" 
+                                   step="1"
+                                   data-color="${colorName}"
+                                   data-size="${size}"
+                                   oninput="updateInventory(this)">
+                        </div>
+                    `;
                 });
 
                 const colorCode = getColorCode(colorName);
                 block.innerHTML = `
-                        <div class="color-inv-header">
-                            <span class="color-dot" style="background:${colorCode}; border:1px solid #ccc;"></span>
-                            <span class="color-name">${colorName}</span>
-                            <span class="remove-color" onclick="removeColor('${colorName}')">
-                                <i class="fas fa-times-circle"></i>
-                            </span>
-                        </div>
-                        <div class="color-inv-sizes">
-                            ${sizesHTML}
-                        </div>
-                    `;
+                    <div class="color-inv-header">
+                        <span class="color-dot" style="background:${colorCode}; border:1px solid #ccc;"></span>
+                        <span class="color-name">${colorName}</span>
+                        <span class="remove-color" onclick="removeColor('${colorName}')">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                    </div>
+                    <div class="color-inv-sizes">
+                        ${sizesHTML}
+                    </div>
+                `;
 
                 container.appendChild(block);
             });
@@ -706,8 +477,7 @@
 
         function getColorCode(colorName) {
             const found = defaultColors.find(c => c.name === colorName);
-            if (found) return found.code;
-            return '#cccccc';
+            return found ? found.code : '#cccccc';
         }
 
         function updateInventory(input) {
@@ -724,19 +494,25 @@
         function removeColor(colorName) {
             selectedColors = selectedColors.filter(c => c !== colorName);
             delete colorInventory[colorName];
+
+            const index = defaultColors.findIndex(c => c.name === colorName);
+            if (index !== -1) {
+                defaultColors.splice(index, 1);
+            }
+
+            renderDefaultColors();
+            renderColorInventory();
+
             document.querySelectorAll('.color-option').forEach(opt => {
                 if (opt.getAttribute('data-color') === colorName) {
                     opt.classList.remove('selected');
                 }
             });
-            renderColorInventory();
         }
 
         // ============================================================
         // ===== SUBMIT =====
         // ============================================================
-        const discountPercent = 
-        document.getElementById('discountPercent').value || 0;
         function submitProduct() {
             const productName = document.getElementById('productName').value.trim();
             const category = document.getElementById('category').value;
@@ -747,16 +523,15 @@
             const sleeveType = document.getElementById('sleeveType').value.trim();
             const fabricThickness = document.getElementById('fabricThickness').value.trim();
 
-            // ===== اعتبارسنجی =====
             if (!productName) {
                 showToast('لطفاً نام محصول را وارد کنید');
                 return;
             }
-            const basePrice =
-              parseInt(document.getElementById("basePrice").value);
-            if (!basePrice || basePrice <= 0){
-              showToast("قیمت پایه محصول را وارد کنید");
-              return;
+            // مقدار basePrice از فیلد مخفی خوانده می‌شود (که میانگین محاسبه شده را دارد)
+            const basePrice = parseInt(document.getElementById("basePrice").value);
+            if (!basePrice || basePrice <= 0) {
+                showToast("لطفاً حداقل برای یک سایز قیمت وارد کنید");
+                return;
             }
             if (!category) {
                 showToast('لطفاً دسته‌بندی را انتخاب کنید');
@@ -792,7 +567,6 @@
                 return;
             }
 
-            // ===== ساخت دیتا =====
             const genderMap = {
                 'زنانه': 'female',
                 'مردانه': 'male',
@@ -802,7 +576,7 @@
             const productData = {
                 product_name: productName,
                 base_price: parseInt(document.getElementById("basePrice").value) || 0,
-                discount_percent:parseInt(document.getElementById('discountPercent').value) || 0,
+                discount_percent: parseInt(document.getElementById('discountPercent').value) || 0,
                 gender: genderMap[category],
                 description: description || 'بدون توضیحات',
                 specifications: {
@@ -821,28 +595,27 @@
                 main_image_index: imageFiles.findIndex(img => img.isMain) || 0
             };
 
-            // ===== ارسال به سرور =====
             fetch('/tailor-panel/products/register/submit/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken()
-                    },
-                    body: JSON.stringify(productData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        showToast('✅ محصول با موفقیت ثبت شد!');
-                        setTimeout(() => clearForm(), 500);
-                    } else {
-                        showToast('❌ خطا: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error("❌ خطا:", error);
-                    showToast('❌ خطا در ارتباط با سرور');
-                });
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify(productData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ محصول با موفقیت ثبت شد!');
+                    setTimeout(() => clearForm(), 500);
+                } else {
+                    showToast('❌ خطا: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("❌ خطا:", error);
+                showToast('❌ خطا در ارتباط با سرور');
+            });
         }
 
         function getCsrfToken() {
@@ -856,7 +629,8 @@
         function clearForm() {
             if (confirm('آیا از پاک کردن فرم مطمئن هستید؟')) {
                 document.getElementById('productName').value = '';
-                document.getElementById('basePrice').value='';
+                document.getElementById('basePriceDisplay').value = '';
+                document.getElementById('basePrice').value = '0';
                 document.getElementById('category').value = '';
                 document.getElementById('description').value = '';
                 document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
@@ -877,9 +651,10 @@
         // ============================================================
         // ===== INIT =====
         // ============================================================
-        renderSizePrices();
-        renderColorInventory();
+        renderImages();
         renderDefaultColors();
+        renderColorInventory();
+        renderSizePrices();
     </script>
 
 </body>

@@ -189,8 +189,11 @@ def update_order_status(request):
 def register_product_page(request):
     """صفحه ثبت محصول آماده"""
     
-    return render(request, 'tailor_panel/registering-products.html')
-
+    context = {
+        'title': 'ثبت محصول آماده',
+    }
+    
+    return render(request, 'tailor_panel/registering-products.html', context)
 
 @login_required(login_url='tailor_panel:tailor_login')
 @staff_member_required(login_url='tailor_panel:tailor_login')
