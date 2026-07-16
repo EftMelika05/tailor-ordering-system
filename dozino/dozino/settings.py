@@ -1,3 +1,6 @@
+import dj_database_url
+import os
+
 """
 Django settings for dozino project.
 
@@ -86,13 +89,9 @@ WSGI_APPLICATION = 'dozino.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Dozino_DB',
-        'USER' : 'postgres',
-        'PASSWORD' :'12345678',
-        'HOST':'localhost'
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL')
+    )
 }
 
 
