@@ -80,7 +80,7 @@
             value="{{ search }}"
           />
 
-          <select name="sort" class="sort-select">
+          <select name="sort" class="sort-select" onchange="this.form.submit()" >
             <option value="" {% if sort == "" %} selected {% endif %}>
               مرتب سازی
             </option>
@@ -100,24 +100,20 @@
             </option>
           </select>
 
-          {% if selected_category %}
+          <!-- {% if selected_category %}
           <input
             type="hidden"
             name="category"
             value="{{ selected_category }}"
           />
-          {% endif %}
-
-          <button type="submit">اعمال</button>
+          {% endif %} -->
         </form>
 
         <!-- Category -->
 
         <div class="category-tabs">
-          <a
-            href="{% url 'list' %}"
-            class="category-tab {% if not selected_category %}active{% endif %}"
-          >
+          <a href="{% url 'list' %}" 
+          class="category-tab {% if not request.GET.category %}active{% endif %}">
             همه
           </a>
 
@@ -125,9 +121,9 @@
 
           <a
             href="?category={{ category.slug }}"
-            class="category-tab {% if selected_category == category.slug %} active {% endif %}"
+            class="category-tab {% if request.GET.category == category.gender %} active {% endif %}"
           >
-            {{ category.name }}
+            {{  category.get_gender_display }}
           </a>
 
           {% endfor %}
@@ -143,7 +139,7 @@
               تخفیف ویژه
             </span>
             {% endif %}
-
+            {% if product.is_available %}
             <a href="{% url 'detail' product.slug %}">
               {% if product.main_image %}
 
@@ -163,12 +159,34 @@
 
               {% endif %}
             </a>
+            {% else %}
+              {% if product.main_image %}
 
+              <img
+                src="{{ product.main_image.image.url }}"
+                alt="{{ product.name }}"
+                class="product-image"
+              />
+
+              {% else %}
+
+              <img
+                src="{% static 'imag/no-image.png' %}"
+                alt="{{ product.name }}"
+                class="product-image"
+              />
+              {% endif %}
+
+            {% endif %}
             <div class="product-info">
               <h3 class="product-name">
+                {% if product.is_available %}
                 <a href="{% url 'detail' product.slug %}">
                   {{ product.name }}
                 </a>
+                {% else %}
+                 {{ product.name }}
+                {% endif %}
               </h3>
 
               <div class="product-price">
@@ -186,7 +204,7 @@
                 {% if variant.stock > 0 %}
                  <a href="{% url 'detail' product.slug %}">
                   <button class="btn-cart">
-                   <i class="fa-solid fa-cart-plus"></i>
+                   <i ></i>
                    مشاهده محصول
                   </button>
                  </a>
@@ -286,7 +304,7 @@
 
           <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
 
-          <li><a href="#">تماس با ما</a></li>
+          <!-- <li><a href="#">تماس با ما</a></li> -->
         </ul>
       </div>
 
@@ -294,9 +312,7 @@
         <h3>خدمات مشتریان</h3>
 
         <ul>
-          <li><a href="#">راهنمای خرید</a></li>
-
-          <li><a href="#">پشتیبانی</a></li>
+          <li><a href="{% url 'index' %}#userGuide">راهنمای خرید</a></li>
         </ul>
       </div>
 
@@ -314,18 +330,8 @@
 
       <div class="footer-col">
         <h3>تماس با ما</h3>
-
-        <p>
-          <i class="fa-solid fa-location-dot"></i>
-
-          آدرس: کرمان، خیابان جهاد
-        </p>
-
-        <p>
-          <i class="fa-solid fa-phone"></i>
-
-          شماره: ۰۹۱۲۳۴۵۶۷۸۹
-        </p>
+        <p class="address" ><i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری</p>
+        <p><i class="fa-solid fa-phone"></i> شماره: 09139389391</p>
       </div>
     </footer>
   </body>

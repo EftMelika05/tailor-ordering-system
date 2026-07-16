@@ -167,7 +167,6 @@ header.topbar .header-icons a:hover {
     }
 }
 
-
 /* ===== CONTAINER ===== */
 .container {
     max-width: 1300px;
@@ -237,83 +236,226 @@ header.topbar .header-icons a:hover {
     margin-left: 8px;
 }
 
-/* ===== UPLOAD AREA ===== */
+/* ================================================================ */
+/* ===== GALLERY / IMAGES (اصلاح شده طبق تصویر درخواستی) ===== */
+/* ================================================================ */
 .upload-area {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    width: 100%;
 }
 
 .image-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
 }
 
-.image-item {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 12px;
+/* تنظیم ردیف اول: عکس اصلی */
+.image-grid .main-image-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* تنظیم ردیف دوم: عکس‌های کوچک و دکمه افزودن */
+.image-grid .thumbnail-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    min-height: 80px; 
+}
+
+/* ===== استایل عکس اصلی (بزرگ و مربع در بالا) ===== */
+.image-item.main-image-large,
+.image-item.main-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    border: 3px solid #c9a86a;
     overflow: hidden;
-    border: 2px solid #f0ebe5;
+    position: relative;
+    background: #fafafa;
+    box-shadow: 0 4px 25px rgba(201, 168, 106, 0.15);
 }
 
-.image-item img {
+.image-item.main-image-large img,
+.image-item.main-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.image-item .delete-image {
+/* برچسب "عکس اصلی" روی عکس اصلی */
+.image-item.main-image-large::after,
+.image-item.main-image::after {
+    content: "عکس اصلی";
     position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 28px;
-    height: 28px;
+    top: 16px;
+    right: 16px;
+    background: #c9a86a;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 2;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* دکمه حذف روی عکس اصلی */
+.image-item.main-image-large .delete-image,
+.image-item.main-image .delete-image {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.65);
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: 0.3s;
+    z-index: 2;
 }
 
-.image-item .delete-image:hover {
+.image-item.main-image-large .delete-image:hover,
+.image-item.main-image .delete-image:hover {
     background: #e74c3c;
     transform: scale(1.1);
 }
 
+/* ===== استایل عکس‌های کوچک (ترمب‌نیل‌ها در پایین) ===== */
+.image-item:not(.main-image):not(.main-image-large) {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    border: 2px solid #f0ebe5;
+    overflow: hidden;
+    position: relative;
+    background: #fafafa;
+    flex-shrink: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-item:not(.main-image):not(.main-image-large):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+.image-item:not(.main-image):not(.main-image-large) img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* دکمه "اصلی ⭐" روی عکس‌های کوچک */
+.image-item:not(.main-image):not(.main-image-large) .set-main-btn {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    border: none;
+    background: rgba(255, 255, 255, 0.92);
+    color: #1e1e1e;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.image-item:not(.main-image):not(.main-image-large) .set-main-btn:hover {
+    background: #c9a86a;
+    color: white;
+}
+
+.image-item:not(.main-image):not(.main-image-large) .set-main-btn i {
+    color: #c9a86a;
+}
+.image-item:not(.main-image):not(.main-image-large) .set-main-btn:hover i {
+    color: white;
+}
+
+/* دکمه حذف روی عکس‌های کوچک */
+.image-item:not(.main-image):not(.main-image-large) .delete-image {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    z-index: 2;
+}
+
+.image-item:not(.main-image):not(.main-image-large) .delete-image:hover {
+    background: #e74c3c;
+    transform: scale(1.1);
+}
+
+/* ===== دکمه افزودن عکس جدید (هم‌سایز عکس‌های کوچک) ===== */
 .add-image-btn {
+    width: 80px;
+    height: 80px;
     border: 2px dashed #c9a86a;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 16px;
     text-align: center;
     cursor: pointer;
     transition: 0.3s;
     color: #7a7267;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
 }
 
 .add-image-btn:hover {
     background: #faf8f6;
     border-color: #b38f55;
+    transform: translateY(-3px);
 }
 
 .add-image-btn span {
-    font-size: 30px;
+    font-size: 28px;
     color: #c9a86a;
     display: block;
+    margin-bottom: 2px;
 }
 
 .add-image-btn p {
-    font-size: 14px;
-    margin-top: 4px;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.2;
 }
 
+/* ================================================================ */
 /* ===== FORM GROUP ===== */
+/* ================================================================ */
 .form-group {
     margin-bottom: 16px;
 }
@@ -366,7 +508,9 @@ header.topbar .header-icons a:hover {
     margin-bottom: 0;
 }
 
+/* ================================================================ */
 /* ===== CATEGORY BUTTONS ===== */
+/* ================================================================ */
 .category-buttons {
     display: flex;
     gap: 10px;
@@ -402,7 +546,9 @@ header.topbar .header-icons a:hover {
     font-size: 16px;
 }
 
+/* ================================================================ */
 /* ===== PRICE SECTION ===== */
+/* ================================================================ */
 .price-section-inline {
     margin-top: 16px;
 }
@@ -450,373 +596,6 @@ header.topbar .header-icons a:hover {
     white-space: nowrap;
 }
 
-/* ===== COLORS ===== */
-.color-option {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    border: 3px solid #f0ebe5;
-    cursor: pointer;
-    transition: 0.3s;
-    position: relative;
-}
-
-
-.colors-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-bottom: 12px;
-    max-width: 220px;
-}
-
-.color-option:hover {
-    transform: scale(1.05);
-}
-
-.color-option.selected {
-    border-color: #c9a86a;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px #c9a86a;
-}
-
-.color-option.selected::after {
-    content: "\f00c";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    color: white;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.selected-colors-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    min-height: 36px;
-    padding: 8px;
-    background: #faf8f6;
-    border-radius: 12px;
-    border: 1px dashed #f0ebe5;
-}
-
-.color-tag {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: white;
-    padding: 4px 10px 4px 6px;
-    border-radius: 20px;
-    border: 1px solid #f0ebe5;
-    font-size: 13px;
-}
-
-.color-tag .dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.color-tag .remove {
-    cursor: pointer;
-    color: #e74c3c;
-    font-size: 14px;
-    margin-right: 4px;
-}
-
-.color-tag .remove:hover {
-    transform: scale(1.2);
-}
-
-/* ===== SIZES ===== */
-.sizes-inventory-container {
-    margin-top: 12px;
-}
-
-#sizeList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.size-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    background: #faf8f6;
-    border-radius: 10px;
-}
-
-.size-row .size-label {
-    font-weight: 600;
-    font-size: 14px;
-    color: #555;
-    min-width: 70px;
-}
-
-.size-row .size-qty-input {
-    width: 60px;
-    height: 36px;
-    border: 2px solid #f0ebe5;
-    border-radius: 8px;
-    padding: 0 8px;
-    font-size: 14px;
-    font-family: Gandom, Vazirmatn, sans-serif;
-    outline: none;
-    background: white;
-    text-align: center;
-}
-
-.size-row .size-qty-input:focus {
-    border-color: #c9a86a;
-}
-
-.size-row span {
-    font-size: 14px;
-    color: #7a7267;
-}
-
-/* ===== DESCRIPTION ===== */
-.description-section {
-    background: white;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 0 20px rgba(201, 168, 106, 0.08);
-    border: 1px solid #f0ebe5;
-    margin-bottom: 30px;
-    transition: all 0.3s ease;
-}
-
-.description-section:hover {
-    box-shadow: 0 10px 35px rgba(201, 168, 106, 0.15);
-}
-
-.description-section label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 8px;
-}
-
-.description-section label i {
-    color: #c9a86a;
-    margin-left: 6px;
-}
-
-.description-section textarea {
-    width: 100%;
-    min-height: 100px;
-    border: 2px solid #f0ebe5;
-    border-radius: 12px;
-    padding: 12px 16px;
-    font-size: 15px;
-    font-family: Gandom, Vazirmatn, sans-serif;
-    outline: none;
-    transition: 0.3s;
-    background: #fafafa;
-    color: #1e1e1e;
-    resize: vertical;
-}
-
-.description-section textarea:focus {
-    border-color: #c9a86a;
-    box-shadow: 0 0 15px rgba(201, 168, 106, 0.15);
-    background: white;
-}
-
-.description-section textarea::placeholder {
-    color: #b5aea3;
-}
-
-/* ===== FORM ACTIONS ===== */
-.form-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
-}
-
-.btn-delete {
-    padding: 12px 30px;
-    border-radius: 30px;
-    background: #fde8e8;
-    color: #a94442;
-    font-size: 16px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.btn-delete:hover {
-    background: #e74c3c;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
-}
-
-.btn-delete i {
-    margin-left: 8px;
-}
-
-.btn-submit {
-    padding: 12px 35px;
-    border-radius: 30px;
-    background: linear-gradient(135deg, #c9a86a, #b38f55);
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(201, 168, 106, 0.3);
-    transition: 0.3s;
-}
-
-.btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(201, 168, 106, 0.4);
-}
-
-.btn-submit i {
-    margin-left: 8px;
-}
-
-/* ===== TOAST ===== */
-.toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: #1e1e1e;
-    color: #fff;
-    padding: 14px 32px;
-    border-radius: 60px;
-    font-size: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
-    pointer-events: none;
-    z-index: 999;
-    font-family: Gandom, Tahoma, sans-serif;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1200px) {
-    .form-layout {
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-}
-
-@media (max-width: 992px) {
-    header.topbar {
-        flex-direction: column;
-        height: auto;
-        padding: 16px;
-        gap: 16px;
-        position: relative;
-    }
-
-    header.topbar nav {
-        position: static;
-    }
-
-    header.topbar .header-icons {
-        position: static;
-    }
-
-    header.topbar nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
-
-@media (max-width: 768px) {
-    .form-layout {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .container {
-        padding: 0 15px 40px;
-    }
-
-    .page-title {
-        font-size: 24px;
-    }
-
-    .gallery-section,
-    .product-info-section,
-    .variant-section {
-        padding: 18px;
-    }
-
-    .colors-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    .form-actions {
-        flex-direction: column;
-    }
-
-    .btn-delete,
-    .btn-submit {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .price-group {
-        flex-wrap: wrap;
-    }
-
-    .image-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    header.topbar .logo {
-        font-size: 24px;
-    }
-
-    header.topbar .header-icons {
-        gap: 12px;
-        font-size: 16px;
-    }
-
-    header.topbar nav ul {
-        gap: 12px;
-    }
-
-    header.topbar nav a {
-        font-size: 14px;
-    }
-
-    .colors-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .image-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .category-buttons {
-        flex-direction: column;
-    }
-
-    .category-btn {
-        justify-content: center;
-    }
-}
-
-/* ===== SIZE PRICE GRID ===== */
 .size-price-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -860,7 +639,90 @@ header.topbar .header-icons a:hover {
     color: #888;
 }
 
+/* ================================================================ */
+/* ===== COLORS SECTION ===== */
+/* ================================================================ */
+.custom-color-section {
+    background: #f8f7fc;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.custom-color-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.custom-color-row input[type="color"] {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.custom-color-row input[type="text"] {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.btn-add-color {
+    background: #c9a86a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-add-color:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(201, 168, 106, 0.4);
+}
+
+.colors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 40px);
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+    border-color: #999;
+}
+
+.color-option.selected {
+    border-color: #c9a86a;
+    box-shadow: 0 0 0 3px rgba(201, 168, 106, 0.3);
+    transform: scale(1.1);
+}
+
+/* ================================================================ */
 /* ===== COLOR INVENTORY ===== */
+/* ================================================================ */
 #colorInventoryContainer {
     margin-top: 12px;
     display: flex;
@@ -954,4 +816,272 @@ header.topbar .header-icons a:hover {
 
 .inv-size-row .inv-qty-input:focus {
     border-color: #c9a86a;
+}
+
+/* ================================================================ */
+/* ===== DESCRIPTION ===== */
+/* ================================================================ */
+.description-section {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(201, 168, 106, 0.08);
+    border: 1px solid #f0ebe5;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.description-section:hover {
+    box-shadow: 0 10px 35px rgba(201, 168, 106, 0.15);
+}
+
+.description-section label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.description-section label i {
+    color: #c9a86a;
+    margin-left: 6px;
+}
+
+.description-section textarea {
+    width: 100%;
+    min-height: 100px;
+    border: 2px solid #f0ebe5;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-family: Gandom, Vazirmatn, sans-serif;
+    outline: none;
+    transition: 0.3s;
+    background: #fafafa;
+    color: #1e1e1e;
+    resize: vertical;
+}
+
+.description-section textarea:focus {
+    border-color: #c9a86a;
+    box-shadow: 0 0 15px rgba(201, 168, 106, 0.15);
+    background: white;
+}
+
+.description-section textarea::placeholder {
+    color: #b5aea3;
+}
+
+/* ================================================================ */
+/* ===== FORM ACTIONS ===== */
+/* ================================================================ */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.btn-delete {
+    padding: 12px 30px;
+    border-radius: 30px;
+    background: #fde8e8;
+    color: #a94442;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-delete:hover {
+    background: #e74c3c;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+}
+
+.btn-delete i {
+    margin-left: 8px;
+}
+
+.btn-submit {
+    padding: 12px 35px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #c9a86a, #b38f55);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(201, 168, 106, 0.3);
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201, 168, 106, 0.4);
+}
+
+.btn-submit i {
+    margin-left: 8px;
+}
+
+/* ================================================================ */
+/* ===== TOAST ===== */
+/* ================================================================ */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1e1e1e;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 60px;
+    font-size: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    font-family: Gandom, Tahoma, sans-serif;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ================================================================ */
+/* ===== RESPONSIVE ===== */
+/* ================================================================ */
+@media (max-width: 1200px) {
+    .form-layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    header.topbar {
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+        gap: 16px;
+        position: relative;
+    }
+
+    header.topbar nav {
+        position: static;
+    }
+
+    header.topbar .header-icons {
+        position: static;
+    }
+
+    header.topbar nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .container {
+        padding: 0 15px 40px;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+
+    .gallery-section,
+    .product-info-section,
+    .variant-section {
+        padding: 18px;
+    }
+
+    .colors-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-delete,
+    .btn-submit {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .price-group {
+        flex-wrap: wrap;
+    }
+
+    /* تنظیم عکس‌های کوچک در موبایل */
+    .image-grid .thumbnail-row {
+        justify-content: center;
+    }
+    .image-item:not(.main-image):not(.main-image-large) {
+        width: 70px;
+        height: 70px;
+    }
+    .add-image-btn {
+        width: 70px;
+        height: 70px;
+    }
+    .add-image-btn span {
+        font-size: 24px;
+    }
+    .add-image-btn p {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    header.topbar .logo {
+        font-size: 24px;
+    }
+
+    header.topbar .header-icons {
+        gap: 12px;
+        font-size: 16px;
+    }
+
+    header.topbar nav ul {
+        gap: 12px;
+    }
+
+    header.topbar nav a {
+        font-size: 14px;
+    }
+
+    .colors-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .category-buttons {
+        flex-direction: column;
+    }
+
+    .category-btn {
+        justify-content: center;
+    }
+
+    .image-item:not(.main-image):not(.main-image-large) {
+        width: 60px;
+        height: 60px;
+    }
+    .add-image-btn {
+        width: 60px;
+        height: 60px;
+    }
+    .add-image-btn span {
+        font-size: 20px;
+    }
+    .add-image-btn p {
+        font-size: 10px;
+    }
 }

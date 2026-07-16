@@ -318,7 +318,7 @@
                 </header>
                 <h2>رمز عبور جدید</h2>
                 <p>یک رمز عبور جدید برای حساب کاربری خود انتخاب کنید</p>
-
+                {% include 'includes/messages.html' %}
                 <form id="resetPasswordForm" novalidate method="POST">
                     {% csrf_token %}
                     <div class="field">
@@ -383,27 +383,27 @@
             successBox.classList.remove('show');
 
             // اعتبارسنجی
-            if (password.value.length < 6) {
+            /*if (password.value.length < 6) {
                 errorBox.textContent = 'رمز عبور باید حداقل ۶ کاراکتر باشد';
                 errorBox.classList.add('show', 'error');
                 password.focus();
                 return;
-            }
+            }*/
 
-            if (password.value !== confirmPassword.value) {
+            /*if (password.value !== confirmPassword.value) {
                 errorBox.textContent = 'رمز عبور و تکرار آن یکسان نیستند';
                 errorBox.classList.add('show', 'error');
                 confirmPassword.focus();
                 return;
-            }
+            }*/
 
             // موفقیت
-            successBox.textContent = 'رمز عبور با موفقیت تغییر یافت';
-            successBox.classList.add('show');
+            /*successBox.textContent = 'رمز عبور با موفقیت تغییر یافت';
+            successBox.classList.add('show');*/
 
             // پاک کردن فیلدها
-            password.value = '';
-            confirmPassword.value = '';
+            //password.value = '';
+            //confirmPassword.value = '';
 
             // شبیه‌سازی رفتن به صفحه ورود بعد از ۲ ثانیه
             setTimeout(function () {

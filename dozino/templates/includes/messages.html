@@ -1,0 +1,111 @@
+{% if messages %}
+<div id="toast-container">
+    {% for message in messages %}
+        <div class="toast-message toast-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'error' %}times-circle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+
+<style>
+    #toast-container {
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        width: 90%;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+    }
+
+    .toast-message {
+        background: #1e1e1e;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 999px;
+        font-size: 14px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, .2);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        pointer-events: auto;
+        animation: slideDown 0.5s ease forwards;
+        border: none;
+        font-weight: 500;
+        direction: rtl;
+    }
+
+    .toast-message i {
+        font-size: 18px;
+    }
+
+    .toast-error {
+        background: #dc3545;
+        color: white;
+    }
+
+    .toast-error i {
+        color: white;
+    }
+
+    .toast-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .toast-success i {
+        color: white;
+    }
+
+    .toast-info {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .toast-info i {
+        color: white;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .toast-message {
+        animation: slideDown 0.5s ease forwards, fadeOut 0.5s ease 4s forwards;
+    }
+
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const container = document.getElementById('toast-container');
+            if (container) {
+                container.style.transition = 'opacity 0.5s ease';
+                container.style.opacity = '0';
+                setTimeout(function() {
+                    container.remove();
+                }, 500);
+            }
+        }, 4000);
+    });
+</script>
+{% endif %}

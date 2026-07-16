@@ -295,13 +295,7 @@
 
                 <h1 class="title">به دوزینو خوش اومدید</h1>
                 <p class="subtitle">در یک دقیقه اکانت خود را بسازید</p>
-                {% if messages %}
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-
-
+                {% include 'includes/messages.html' %}
                 <form class="form" method="POST" >
                         {% csrf_token %}
                     <div class="field">
@@ -385,6 +379,7 @@
         document.querySelector('input[name="password2"]').addEventListener('input', function () {
             this.setCustomValidity('');
         });
+ 
     </script>
 
 </body>

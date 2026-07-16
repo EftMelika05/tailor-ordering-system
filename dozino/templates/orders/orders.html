@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!doctype html>
 <html lang="fa" dir="rtl">
   <head>
@@ -46,7 +47,7 @@
              <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
             {% endif %}
         
-            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <!-- <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a> -->
       </div>
     </header>
 
@@ -57,12 +58,13 @@
         <div class="profile-card">
           <div class="profile-image">
             <img
-              src="{% static 'imag/home/a0522499-8d30-4690-a254-700a1cb6fa4b.png' %}"
-              alt="تصویر پروفایل کاربر"
-            />
-            <button class="change-image" aria-label="تغییر تصویر پروفایل">
-              <i class="fa-solid fa-camera"></i>
-            </button>
+             src="
+              {% if request.user.profile_image %}
+                {{ request.user.profile_image.url }}
+              {% else %}
+                {% static 'imag/home/a0522499-8d30-4690-a254-700a1cb6fa4b.png' %}
+              {% endif %}"
+              alt="تصویر پروفایل کاربر">
           </div>
 
           <h2>{{ user.full_name|default:"کاربر" }}</h2>
@@ -133,7 +135,7 @@
 
             <div class="value-box">
                 <i class="fa-solid fa-tag"></i>
-                {{ order.total_price|floatformat:0 }} تومان
+                {{ order.total_price|floatformat:0|intcomma }} تومان
             </div>
 
             <div class="value-box">
@@ -222,7 +224,7 @@
           <li><a href="{% url 'index' %}">خانه</a></li>
           <li><a href="{% url 'list' %}">محصولات آماده</a></li>
           <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-          <li><a href="#">تماس با ما</a></li>
+          <!-- <li><a href="#">تماس با ما</a></li> -->
         </ul>
       </div>
 
@@ -230,8 +232,7 @@
         <h3>خدمات مشتریان</h3>
 
         <ul>
-          <li><a href="#">راهنمای خرید</a></li>
-          <li><a href="#">پشتیبانی</a></li>
+          <li><a href="{% url 'index' %}#userGuide">راهنمای خرید</a></li>
         </ul>
       </div>
 
@@ -248,54 +249,12 @@
       <div class="footer-col">
         <h3>تماس با ما</h3>
 
-        <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
-        <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+            <p class="address" ><i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: 09139389391</p>
       </div>
     </footer>
 
     <script>
-      // orders.js
-      document.addEventListener("DOMContentLoaded", () => {
-        const changeImageBtn = document.querySelector(".change-image");
-        const profileImg = document.querySelector(".profile-image img");
-
-        // ۱. ایجاد یک تگ input مخفی برای آپلود فایل
-        const fileInput = document.createElement("input");
-        fileInput.type = "file";
-        fileInput.accept = "image/*";
-        fileInput.style.display = "none";
-        document.body.appendChild(fileInput);
-
-        // ۲. همگام‌سازی و لود عکس پروفایل از حافظه مشترک
-        const savedImage = localStorage.getItem("user_profile_avatar");
-        if (savedImage && profileImg) {
-          profileImg.src = savedImage;
-        }
-
-        // ۳. باز شدن گالری با کلیک روی دوربین در صفحه سفارشات
-        if (changeImageBtn) {
-          changeImageBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            fileInput.click();
-          });
-        }
-
-        // ۴. ذخیره تغییرات جدید در صورت تعویض عکس از همین صفحه
-        fileInput.addEventListener("change", (e) => {
-          const file = e.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-              const base64Image = event.target.result;
-              if (profileImg) {
-                profileImg.src = base64Image;
-              }
-              localStorage.setItem("user_profile_avatar", base64Image);
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      });
     </script>
   </body>
 </html>

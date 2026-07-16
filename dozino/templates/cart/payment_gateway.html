@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -36,7 +37,7 @@
             {% else %}
             <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
             {% endif %}
-            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <!-- <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a> -->
         </div>
     </header>
 
@@ -103,7 +104,7 @@
                 <!-- مبلغ -->
                 <div class="price-box">
                     <span>مبلغ قابل پرداخت</span>
-                    <h1>{{ total_price|floatformat:0 }}</h1>
+                    <h1>{{ total_price|floatformat:0|intcomma }}</h1>
                     <p>تومان</p>
                 </div>
 
@@ -118,7 +119,7 @@
             <h1>درگاه پرداخت امن</h1>
             <p>اطلاعات کارت بانکی خود را وارد کنید</p>
 
-            <form method="POST" action="{% url 'checkout_payment' %}">
+            <form id="payForm" method="POST" action="{% url 'checkout_payment' %}">
                 {% csrf_token %}
 
                 <!-- کارت -->
@@ -145,7 +146,7 @@
 
                     <div class="input-group">
                         <label>تاریخ انقضا <span class="required-star">*</span></label>
-                        <input id="expire" placeholder="ماه/سال (مثال: ۰۳/۰۸)" required>
+                        <input id="expire" maxlength="5"  inputmode="numeric" placeholder="ماه/سال (مثال: ۰۳/۰۸)" required>
                         <small></small>
                     </div>
                 </div>
@@ -174,6 +175,7 @@
                             <i class="fa-regular fa-message"></i> ارسال رمز پویا
                         </button>
                     </div>
+                    <small></small>
                 </div>
 
                 <!-- ایمیل -->
@@ -210,14 +212,13 @@
                 <li><a href="{% url 'index' %}">خانه</a></li>
                 <li><a href="{% url 'list' %}">محصولات آماده</a></li>
                 <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-                <li><a href="#">تماس با ما</a></li>
+                <!-- <li><a href="#">تماس با ما</a></li> -->
             </ul>
         </div>
         <div class="footer-col">
             <h3>خدمات مشتریان</h3>
             <ul>
-                <li><a href="#">راهنمای خرید</a></li>
-                <li><a href="#">پشتیبانی</a></li>
+                <li><a href="{% url 'index' %}#userGuide">راهنمای خرید</a></li>
             </ul>
         </div>
         <div class="footer-col">
@@ -227,82 +228,336 @@
         </div>
         <div class="footer-col">
             <h3>تماس با ما</h3>
-            <p><i class="fa-solid fa-location-dot"></i> آدرس: کرمان ،خیابان جهاد</p>
-            <p><i class="fa-solid fa-phone"></i> شماره: +09000000</p>
+            <p class="address" ><i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری</p>
+            <p><i class="fa-solid fa-phone"></i> شماره: 09139389391</p>
         </div>
     </footer>
 
-    <script>
-        //////////////////////////////////////
-        // تایمر
-        //////////////////////////////////////
-        let time = 300;
-        const timer = document.getElementById("timer");
+ <script>
 
-        setInterval(function() {
-            if (time > 0) {
-                time--;
-                let m = Math.floor(time / 60);
-                let s = time % 60;
-                timer.innerHTML = String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
-            } else {
-                alert("زمان پرداخت به پایان رسید");
-                location.reload();
-            }
-        }, 1000);
+    //////////////////////////////////////
+    // تایمر پرداخت
+    //////////////////////////////////////
 
-        //////////////////////////////////////
-        // کپچا
-        //////////////////////////////////////
-        function createCaptcha() {
-            let code = Math.floor(10000 + Math.random() * 90000);
-            document.getElementById("captchaText").innerHTML = code;
+    let time = 300;
+    const timer = document.getElementById("timer");
+
+    setInterval(function () {
+
+        if (time > 0) {
+
+            time--;
+
+            let m = Math.floor(time / 60);
+            let s = time % 60;
+
+            timer.innerHTML =
+                String(m).padStart(2, '0') +
+                ":" +
+                String(s).padStart(2, '0');
+
+        } else {
+
+            alert("زمان پرداخت به پایان رسید");
+            location.reload();
+
         }
 
+    }, 1000);
+
+
+
+    //////////////////////////////////////
+    // کپچا
+    //////////////////////////////////////
+
+    function createCaptcha() {
+
+        let code = Math.floor(10000 + Math.random() * 90000);
+
+        document.getElementById("captchaText").textContent = code;
+
+    }
+
+
+    createCaptcha();
+
+
+    document.getElementById("refresh").onclick = function () {
+
         createCaptcha();
-        document.getElementById("refresh").onclick = createCaptcha;
+
+        document.getElementById("captchaInput")
+        .parentElement
+        .querySelector("small")
+        .innerHTML = "";
+
+    };
+
+
+
+    //////////////////////////////////////
+    // تاریخ انقضای کارت
+    //////////////////////////////////////
+
+    const expireInput = document.getElementById("expire");
+
+
+    expireInput.addEventListener("input", function (e) {
+
+
+        let value = e.target.value.replace(/\D/g, "");
+
+
+        if (value.length > 4) {
+
+            value = value.slice(0, 4);
+
+        }
+
+
+        if (value.length >= 3) {
+
+            value =
+                value.slice(0, 2) +
+                "/" +
+                value.slice(2);
+
+        }
+
+
+        e.target.value = value;
+
+
+    });
+
+
+
+
+    //////////////////////////////////////
+    // اعتبارسنجی فرم پرداخت
+    //////////////////////////////////////
+
+    document.getElementById("payForm")
+    .addEventListener("submit", function(e) {
+
+
+        e.preventDefault();
+
+
+
+        // پاک کردن ارورهای قبلی
+
+        document.querySelectorAll("small")
+        .forEach(function(item){
+
+            item.innerHTML = "";
+
+        });
+
+
 
         //////////////////////////////////////
-        // اعتبارسنجی
+        // بررسی کپچا
         //////////////////////////////////////
-        document.getElementById("payForm").addEventListener("submit", function(e) {
-            e.preventDefault();
 
-            if (document.getElementById("captchaInput").value != document.getElementById("captchaText").innerHTML) {
-                document.querySelector("#captchaInput").parentElement.querySelector("small").innerHTML = "کد امنیتی اشتباه است";
-                return;
+        let captchaInput =
+            document.getElementById("captchaInput").value;
+
+
+        let captchaText =
+            document.getElementById("captchaText").textContent;
+
+
+
+        if (captchaInput !== captchaText) {
+
+
+            document.getElementById("captchaInput")
+            .parentElement
+            .querySelector("small")
+            .innerHTML = "کد امنیتی اشتباه است";
+
+
+            createCaptcha();
+
+
+            return;
+
+        }
+
+
+
+
+
+        //////////////////////////////////////
+        // بررسی تاریخ انقضا
+        //////////////////////////////////////
+
+
+        let expire =
+            document.getElementById("expire").value;
+
+
+
+        if (!/^\d{2}\/\d{2}$/.test(expire)) {
+
+
+            document.getElementById("expire")
+            .parentElement
+            .querySelector("small")
+            .innerHTML =
+            "تاریخ را به صورت ماه/سال وارد کنید";
+
+
+            return;
+
+        }
+
+
+
+        let month =
+            parseInt(expire.split("/")[0]);
+
+
+
+        if (month < 1 || month > 12) {
+
+
+            document.getElementById("expire")
+            .parentElement
+            .querySelector("small")
+            .innerHTML =
+            "ماه وارد شده صحیح نیست";
+
+
+            return;
+
+        }
+
+
+
+
+
+        //////////////////////////////////////
+        // ارسال رمز پویا
+        //////////////////////////////////////
+
+
+        let otp =
+            document.getElementById("otpCode").value;
+
+
+
+        if (otp.length < 4) {
+
+
+           /* document.getElementById("otpCode")
+            .parentElement
+            .querySelector("small")*/
+            document.querySelector(".otp-section small")
+            .innerHTML =
+            "رمز پویا را وارد کنید";
+
+
+            return;
+
+        }
+
+
+
+
+
+        // همه چیز درست است
+
+        this.submit();
+
+
+    });
+
+
+
+
+
+    //////////////////////////////////////
+    // تایمر رمز پویا
+    //////////////////////////////////////
+
+    let otpTimer;
+
+    const btn =
+        document.getElementById("sendOtp");
+
+
+
+    btn.addEventListener("click", function () {
+
+
+        if (btn.disabled)
+            return;
+
+
+
+        btn.disabled = true;
+
+
+
+        let sec = 120;
+
+
+
+        btn.innerHTML = "02:00";
+
+
+
+        otpTimer = setInterval(function () {
+
+
+            sec--;
+
+
+            let m =
+                Math.floor(sec / 60);
+
+
+            let s =
+                sec % 60;
+
+
+
+            btn.innerHTML =
+                String(m).padStart(2, '0') +
+                ":" +
+                String(s).padStart(2, '0');
+
+
+
+
+            if (sec <= 0) {
+
+
+                clearInterval(otpTimer);
+
+
+                btn.disabled = false;
+
+
+                btn.innerHTML =
+                "<i class='fa-regular fa-message'></i> ارسال مجدد";
+
+
             }
 
-            this.submit();
-        });
 
-        //////////////////////////////////////
-        // رمز پویا
-        //////////////////////////////////////
-        let otpTimer;
-        const btn = document.getElementById("sendOtp");
+        },1000);
 
-        btn.addEventListener("click", function() {
-            if (btn.disabled) return;
-            btn.disabled = true;
-            let sec = 120;
-            btn.innerHTML = "۰۲:۰۰";
 
-            otpTimer = setInterval(function() {
-                sec--;
-                let m = Math.floor(sec / 60);
-                let s = sec % 60;
-                btn.innerHTML = String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
 
-                if (sec <= 0) {
-                    clearInterval(otpTimer);
-                    btn.disabled = false;
-                    btn.innerHTML = "<i class='fa-regular fa-message'></i> ارسال مجدد";
-                }
-            }, 1000);
-        });
-    </script>
+    });
 
+
+
+</script>
 </body>
 
 </html>

@@ -35,4 +35,12 @@ urlpatterns = [
     
     # Site Prices
     path('custom-products/site-price/update/', views.update_site_prices, name='update_site_prices'),
+
+    # ===== PRODUCT MANAGEMENT (مدیریت محصولات آماده) =====
+    path('products/list/api/', views.get_products_list, name='get_products_list'),
+    path('products/update/api/', views.update_product, name='update_product'),
+    path('products/delete/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('products/restore/<int:product_id>/', views.restore_product, name='restore_product'),
+    path('products/delete-permanent/<int:product_id>/', views.delete_permanent, name='delete_permanent'),
+    path('manage-products/', views.manage_products, name='manage_products'),
 ]

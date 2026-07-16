@@ -20,7 +20,7 @@
             <ul>
                 <li><a href="{% url 'tailor_panel:dashboard' %}">خانه</a></li>
                 <li><a href="{% url 'tailor_panel:manage_custom_products' %}">محصولات سفارشی</a></li>
-                <li><a href="{% url 'tailor_panel:register_product' %}">محصولات آماده</a></li>
+                <li><a href="{% url 'tailor_panel:manage_products' %}">مدیریت محصولات آماده</a></li>
                 <li><a href="{% url 'tailor_panel:dashboard' %}#orders">سفارشات</a></li>
             </ul>
         </nav>
@@ -43,10 +43,6 @@
                 <h3><i class="fas fa-images"></i> تصاویر محصول</h3>
                 <div class="upload-area">
                     <div class="image-grid" id="imageGrid"></div>
-                    <div class="add-image-btn" onclick="addImageInput()">
-                        <span>+</span>
-                        <p>افزودن عکس جدید</p>
-                    </div>
                 </div>
             </div>
 
@@ -63,11 +59,14 @@
                     <label><i class="fas fa-layer-group"></i> دسته‌بندی *</label>
                     <div class="category-buttons">
                         <button type="button" class="category-btn" onclick="selectCategory(this, 'زنانه')">
-                            <i class="fa-solid fa-person-dress"></i> زنانه</button>
+                            <i class="fa-solid fa-person-dress"></i> زنانه
+                        </button>
                         <button type="button" class="category-btn" onclick="selectCategory(this, 'مردانه')">
-                            <i class="fas fa-shirt"></i> مردانه</button>
+                            <i class="fas fa-shirt"></i> مردانه
+                        </button>
                         <button type="button" class="category-btn" onclick="selectCategory(this, 'بچگانه')">
-                            <i class="fas fa-baby"></i> بچگانه</button>
+                            <i class="fas fa-baby"></i> بچه گانه
+                        </button>
                     </div>
                     <input type="hidden" id="category">
                 </div>
@@ -81,8 +80,24 @@
                 </div>
 
                 <!-- ===== قیمت هر سایز ===== -->
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-percent"></i> تخفیف محصول
+                    </label>
+                    <input type="number" id="discountPercent" placeholder="مثلا 5" min="0" max="100">
+                </div>
                 <div class="price-section-inline">
                     <h3 style="margin-bottom: 12px;"><i class="fas fa-money-bill-wave"></i> قیمت هر سایز</h3>
+                    
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-money-bill"></i>
+                            قیمت پایه محصول (میانگین)
+                        </label>
+                        <input type="text" id="basePriceDisplay" placeholder="به صورت خودکار محاسبه می‌شود" readonly style="background-color: #f5f5f5; color: #555; cursor: default;">
+                        <input type="hidden" id="basePrice" value="0">
+                    </div>
+                    <hr style="margin:15px 0;">
                     <div class="size-price-grid" id="sizePriceGrid">
                         <!-- سایزها با قیمت توسط JS ساخته میشن -->
                     </div>
@@ -93,32 +108,31 @@
             <div class="variant-section">
                 <h3><i class="fas fa-palette"></i> رنگ‌ها و موجودی</h3>
 
-                <div class="colors-grid">
-                    <div class="color-option" style="background:#1e1e2f" data-color="مشکی" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#ffffff" data-color="سفید" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#ac8888" data-color="گلبهی" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#a9c4df" data-color="آبی" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#abd4bd" data-color="سبز" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#d4af37" data-color="طلایی" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#8B0000" data-color="شرابی" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#2c3e50" data-color="طوسی" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#f5f5dc" data-color="کرم" onclick="toggleColor(this)">
-                    </div>
-                    <div class="color-option" style="background:#5a012e" data-color="ارغوانی"
-                        onclick="toggleColor(this)"></div>
-                    <div class="color-option" style="background:#d81b83" data-color="صورتی" onclick="toggleColor(this)">
+                <!-- ===== انتخاب رنگ با پالت ===== -->
+                <div class="custom-color-section">
+                    <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #555;">
+                        <i class="fas fa-plus-circle"></i> افزودن رنگ دلخواه
+                    </h4>
+                    <div class="custom-color-row">
+                        <input type="color" id="customColorPicker" value="#e74c3c">
+                        <input type="text" id="customColorName" placeholder="نام رنگ (مثال: قرمز)">
+                        <button onclick="addCustomColor()" class="btn-add-color">
+                            <i class="fas fa-plus"></i> افزودن
+                        </button>
                     </div>
                 </div>
 
-                <div id="colorInventoryContainer">
+                <!-- ===== رنگ‌های از پیش تعیین شده ===== -->
+                <div style="margin-top: 15px;">
+                    <h4 style="margin: 10px 0; font-size: 14px; color: #555;">
+                        <i class="fas fa-palette"></i> رنگ‌های پیش‌فرض
+                    </h4>
+                    <div class="colors-grid" id="defaultColors">
+                        <!-- رنگ‌های پیش‌فرض توسط JS ساخته میشن -->
+                    </div>
+                </div>
+
+                <div id="colorInventoryContainer" style="margin-top: 15px;">
                     <!-- رنگ‌های انتخاب شده با موجودی سایزها اینجا اضافه میشن -->
                 </div>
             </div>
@@ -127,8 +141,7 @@
         <!-- توضیحات -->
         <div class="description-section">
             <label><i class="fas fa-align-right"></i> توضیحات محصول</label>
-            <textarea id="description"
-                placeholder="توضیحات کامل محصول، راهنمای سایزبندی، نحوه شستشو، جنس و ..."></textarea>
+            <textarea id="description" placeholder="توضیحات کامل محصول، راهنمای سایزبندی، نحوه شستشو، جنس و ..."></textarea>
         </div>
 
         <div class="form-actions">
@@ -141,339 +154,508 @@
     <div class="toast" id="toast"></div>
 
     <script>
-    // ===== VARIABLES =====
-    let selectedColors = [];
-    let imageFiles = [];
-    const fixedSizes = ["S", "M", "L", "XL", "XXL"];
-    let sizePrices = {};
-    let colorInventory = {};
+        // ============================================================
+        // ===== VARIABLES =====
+        // ============================================================
+        let selectedColors = [];
+        let imageFiles = [];
+        const fixedSizes = ["S", "M", "L", "XL", "XXL"];
+        let sizePrices = {};
+        let colorInventory = {};
 
-    // ===== TOAST =====
-    let toastTimeout = null;
+        // ============================================================
+        // ===== TOAST =====
+        // ============================================================
+        let toastTimeout = null;
 
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.classList.add('show');
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-
-    // ===== IMAGES =====
-    function addImageInput() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.multiple = true;
-        input.style.display = 'none';
-        input.onchange = function(e) {
-            const files = e.target.files;
-            for (let file of files) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imageId = Date.now() + Math.random();
-                    imageFiles.push({ id: imageId, file: file, data: event.target.result });
-                    renderImages();
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-        input.click();
-    }
-
-    function renderImages() {
-        const grid = document.getElementById('imageGrid');
-        grid.innerHTML = '';
-        imageFiles.forEach(img => {
-            const div = document.createElement('div');
-            div.className = 'image-item';
-            div.innerHTML = `
-                <img src="${img.data}" alt="تصویر محصول">
-                <button class="delete-image" onclick="deleteImage(${img.id})"><i class="fas fa-trash-alt"></i></button>
-            `;
-            grid.appendChild(div);
-        });
-    }
-
-    function deleteImage(id) {
-        imageFiles = imageFiles.filter(img => img.id !== id);
-        renderImages();
-    }
-
-    // ===== CATEGORY =====
-    function selectCategory(btn, categoryName) {
-        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('category').value = categoryName;
-    }
-
-    // ===== SIZE PRICES =====
-    function renderSizePrices() {
-        const container = document.getElementById('sizePriceGrid');
-        container.innerHTML = '';
-
-        fixedSizes.forEach(size => {
-            const div = document.createElement('div');
-            div.className = 'size-price-item';
-            div.innerHTML = `
-                <label>سایز ${size}</label>
-                <input type="number" class="size-price-input" 
-                       value="${sizePrices[size] || 0}" 
-                       min="0" 
-                       step="1000"
-                       data-size="${size}"
-                       oninput="updateSizePrice(this)">
-                <span>تومان</span>
-            `;
-            container.appendChild(div);
-        });
-    }
-
-    function updateSizePrice(input) {
-        const size = input.dataset.size;
-        const value = parseInt(input.value) || 0;
-        sizePrices[size] = Math.max(0, value);
-    }
-
-    // ===== COLORS =====
-    function toggleColor(element) {
-        const colorName = element.getAttribute('data-color');
-        const index = selectedColors.indexOf(colorName);
-
-        if (index !== -1) {
-            selectedColors.splice(index, 1);
-            element.classList.remove('selected');
-            delete colorInventory[colorName];
-        } else {
-            selectedColors.push(colorName);
-            element.classList.add('selected');
-            colorInventory[colorName] = {};
-            fixedSizes.forEach(size => {
-                colorInventory[colorName][size] = 0;
-            });
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
-        renderColorInventory();
-    }
-
-    function renderColorInventory() {
-        const container = document.getElementById('colorInventoryContainer');
-        container.innerHTML = '';
-
-        if (selectedColors.length === 0) {
-            container.innerHTML = `<div style="color:#aaa; text-align:center; padding:20px; font-size:14px;">
-                <i class="fas fa-hand-pointer"></i> روی رنگ‌ها کلیک کنید تا موجودی وارد کنید
-            </div>`;
-            return;
+        // ============================================================
+        // ===== IMAGES =====
+        // ============================================================
+        function addImageInput() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            input.style.display = 'none';
+            input.onchange = function(e) {
+                const files = e.target.files;
+                for (let file of files) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageId = Date.now() + Math.random();
+                        imageFiles.push({
+                            id: imageId,
+                            file: file,
+                            data: event.target.result,
+                            isMain: imageFiles.length === 0
+                        });
+                        renderImages();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
         }
 
-        selectedColors.forEach(colorName => {
-            const block = document.createElement('div');
-            block.className = 'color-inventory-block';
+        function renderImages() {
+            const grid = document.getElementById('imageGrid');
+            grid.innerHTML = '';
 
-            let sizesHTML = '';
-            fixedSizes.forEach(size => {
-                const qty = colorInventory[colorName]?.[size] || 0;
-                sizesHTML += `
-                    <div class="inv-size-row">
-                        <span class="inv-size-label">${size}</span>
-                        <input type="number" class="inv-qty-input" 
-                               value="${qty}" 
-                               min="0" 
-                               step="1"
-                               data-color="${colorName}"
-                               data-size="${size}"
-                               oninput="updateInventory(this)">
-                    </div>
+            const mainImageIndex = imageFiles.findIndex(img => img.isMain);
+
+            // ===== ردیف اول: عکس اصلی (اگر وجود داشته باشد) =====
+            if (mainImageIndex !== -1) {
+                const mainRow = document.createElement('div');
+                mainRow.className = 'main-image-row';
+                const mainImg = imageFiles[mainImageIndex];
+                const div = document.createElement('div');
+                div.className = 'image-item main-image-large';
+                div.innerHTML = `
+                    <img src="${mainImg.data}" alt="تصویر اصلی">
+                    <button class="delete-image" onclick="deleteImage(${mainImg.id})">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 `;
+                mainRow.appendChild(div);
+                grid.appendChild(mainRow);
+            }
+
+            // ===== ردیف دوم: عکس‌های فرعی و دکمه افزودن (همیشه ساخته شود) =====
+            const thumbRow = document.createElement('div');
+            thumbRow.className = 'thumbnail-row';
+
+            // اضافه کردن عکس‌های فرعی
+            imageFiles.forEach((img, index) => {
+                if (index !== mainImageIndex) {
+                    const div2 = document.createElement('div');
+                    div2.className = 'image-item';
+                    div2.innerHTML = `
+                        <img src="${img.data}" alt="تصویر محصول">
+                        <button class="delete-image" onclick="deleteImage(${img.id})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button class="set-main-btn" onclick="setMainImage(${img.id})">
+                            <i class="fas fa-star"></i> اصلی
+                        </button>
+                    `;
+                    thumbRow.appendChild(div2);
+                }
             });
 
-            block.innerHTML = `
-                <div class="color-inv-header">
-                    <span class="color-dot" style="background:${getColorCode(colorName)}; border:1px solid #ccc;"></span>
-                    <span class="color-name">${colorName}</span>
-                    <span class="remove-color" onclick="removeColor('${colorName}')">
-                        <i class="fas fa-times-circle"></i>
-                    </span>
-                </div>
-                <div class="color-inv-sizes">
-                    ${sizesHTML}
-                </div>
+            // ===== دکمه افزودن عکس (همیشه اضافه شود) =====
+            const addBtn = document.createElement('div');
+            addBtn.className = 'add-image-btn';
+            addBtn.onclick = addImageInput;
+            addBtn.innerHTML = `
+                <span>+</span>
+                <p>افزودن عکس جدید</p>
             `;
+            thumbRow.appendChild(addBtn);
 
-            container.appendChild(block);
-        });
-    }
-
-    function getColorCode(colorName) {
-        const map = {
-            'مشکی': '#1e1e2f',
-            'سفید': '#ffffff',
-            'گلبهی': '#ac8888',
-            'آبی': '#a9c4df',
-            'سبز': '#abd4bd',
-            'طلایی': '#d4af37',
-            'شرابی': '#8B0000',
-            'طوسی': '#2c3e50',
-            'کرم': '#f5f5dc',
-            'ارغوانی': '#5a012e',
-            'صورتی': '#d81b83'
-        };
-        return map[colorName] || '#cccccc';
-    }
-
-    function updateInventory(input) {
-        const color = input.dataset.color;
-        const size = input.dataset.size;
-        const value = parseInt(input.value) || 0;
-
-        if (!colorInventory[color]) {
-            colorInventory[color] = {};
+            // ===== اضافه کردن ردیف دوم به صفحه (این خط باعث نمایش دکمه می‌شود) =====
+            grid.appendChild(thumbRow);
         }
-        colorInventory[color][size] = Math.max(0, value);
-    }
 
-    function removeColor(colorName) {
-        selectedColors = selectedColors.filter(c => c !== colorName);
-        delete colorInventory[colorName];
-        document.querySelectorAll('.color-option').forEach(opt => {
-            if (opt.getAttribute('data-color') === colorName) {
-                opt.classList.remove('selected');
+        function setMainImage(id) {
+            imageFiles.forEach(img => {
+                img.isMain = (img.id === id);
+            });
+            renderImages();
+            showToast('✅ عکس اصلی انتخاب شد');
+        }
+
+        function deleteImage(id) {
+            const img = imageFiles.find(i => i.id === id);
+            if (img && img.isMain && imageFiles.length > 1) {
+                const remaining = imageFiles.filter(i => i.id !== id);
+                if (remaining.length > 0) {
+                    remaining[0].isMain = true;
+                }
             }
-        });
-        renderColorInventory();
-    }
-
-    // ===== SUBMIT =====
-    function submitProduct() {
-        const productName = document.getElementById('productName').value.trim();
-        const category = document.getElementById('category').value;
-        const description = document.getElementById('description').value.trim();
-
-        const fabricType = document.getElementById('fabricType').value.trim();
-        const collarType = document.getElementById('collarType').value.trim();
-        const sleeveType = document.getElementById('sleeveType').value.trim();
-        const fabricThickness = document.getElementById('fabricThickness').value.trim();
-
-        if (!productName) {
-            showToast('لطفاً نام محصول را وارد کنید');
-            return;
-        }
-        if (!category) {
-            showToast('لطفاً دسته‌بندی را انتخاب کنید');
-            return;
-        }
-        if (selectedColors.length === 0) {
-            showToast('حداقل یک رنگ برای محصول انتخاب کنید');
-            return;
+            imageFiles = imageFiles.filter(img => img.id !== id);
+            renderImages();
         }
 
-        let hasPrice = false;
-        for (const size in sizePrices) {
-            if (sizePrices[size] > 0) hasPrice = true;
-        }
-        if (!hasPrice) {
-            showToast('حداقل یک سایز با قیمت بیشتر از صفر وارد کنید');
-            return;
-        }
-
-        let hasStock = false;
-        for (const color in colorInventory) {
-            for (const size in colorInventory[color]) {
-                if (colorInventory[color][size] > 0) hasStock = true;
-            }
-        }
-        if (!hasStock) {
-            showToast('حداقل یک رنگ با موجودی بیشتر از صفر وارد کنید');
-            return;
-        }
-
-        if (imageFiles.length === 0) {
-            showToast('حداقل یک تصویر برای محصول انتخاب کنید');
-            return;
-        }
-
-        const categoryMap = {
-            'زنانه': 1,
-            'مردانه': 2,
-            'بچگانه': 3
-        };
-
-        const productData = {
-            product_name: productName,
-            category_id: categoryMap[category] || 1,
-            description: description || 'بدون توضیحات',
-            specifications: {
-                'جنس پارچه': fabricType,
-                'مدل یقه': collarType,
-                'نوع آستین': sleeveType,
-                'ضخامت پارچه': fabricThickness,
-            },
-            size_prices: sizePrices,
-            colors: selectedColors.map(color => ({
-                name: color,
-                code: getColorCode(color),
-                inventory: colorInventory[color] || {}
-            })),
-            images: imageFiles.map(img => img.data)
-        };
-
-        // ===== اصلاح: مسیر جدید =====
-        fetch('/tailor-panel/products/register/submit/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: JSON.stringify(productData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showToast('✅ محصول با موفقیت ثبت شد!');
-                setTimeout(() => clearForm(), 500);
-            } else {
-                showToast('❌ خطا: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error("❌ خطا:", error);
-            showToast('❌ خطا در ارتباط با سرور');
-        });
-    }
-
-    function getCsrfToken() {
-        const cookieValue = document.cookie.match(/csrftoken=([^;]+)/);
-        return cookieValue ? cookieValue[1] : '';
-    }
-
-    // ===== CLEAR FORM =====
-    function clearForm() {
-        if (confirm('آیا از پاک کردن فرم مطمئن هستید؟')) {
-            document.getElementById('productName').value = '';
-            document.getElementById('category').value = '';
-            document.getElementById('description').value = '';
+        // ============================================================
+        // ===== CATEGORY =====
+        // ============================================================
+        function selectCategory(btn, categoryName) {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('category').value = categoryName;
+        }
 
-            selectedColors = [];
-            colorInventory = {};
-            sizePrices = {};
-            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+        // ============================================================
+        // ===== SIZE PRICES & AVERAGE CALCULATION =====
+        // ============================================================
+        function renderSizePrices() {
+            const container = document.getElementById('sizePriceGrid');
+            container.innerHTML = '';
+
+            fixedSizes.forEach(size => {
+                const div = document.createElement('div');
+                div.className = 'size-price-item';
+                div.innerHTML = `
+                    <label>سایز ${size}</label>
+                    <input type="number" class="size-price-input" 
+                           value="${sizePrices[size] || 0}" 
+                           min="0" 
+                           step="1000"
+                           data-size="${size}"
+                           oninput="updateSizePrice(this)">
+                    <span>تومان</span>
+                `;
+                container.appendChild(div);
+            });
+
+            calculateAveragePrice();
+        }
+
+        function updateSizePrice(input) {
+            const size = input.dataset.size;
+            const value = parseInt(input.value) || 0;
+            sizePrices[size] = Math.max(0, value);
+            calculateAveragePrice();
+        }
+
+        function calculateAveragePrice() {
+            let total = 0;
+            let count = 0;
+
+            for (const size in sizePrices) {
+                if (sizePrices[size] > 0) { // فقط سایزهای غیر صفر در میانگین محاسبه شوند
+                    total += sizePrices[size];
+                    count++;
+                }
+            }
+
+            const average = count > 0 ? Math.round(total / count) : 0;
+            
+            const displayField = document.getElementById('basePriceDisplay');
+            if (displayField) {
+                displayField.value = average.toLocaleString(); 
+            }
+            document.getElementById('basePrice').value = average;
+        }
+
+        // ============================================================
+        // ===== COLORS =====
+        // ============================================================
+        let defaultColors = [
+            { name: 'مشکی', code: '#1e1e2f' },
+            { name: 'سفید', code: '#ffffff' },
+            { name: 'گلبهی', code: '#ac8888' },
+            { name: 'آبی', code: '#a9c4df' },
+            { name: 'سبز', code: '#abd4bd' },
+            { name: 'طلایی', code: '#d4af37' },
+            { name: 'شرابی', code: '#8B0000' },
+            { name: 'طوسی', code: '#2c3e50' },
+            { name: 'کرم', code: '#f5f5dc' },
+            { name: 'ارغوانی', code: '#5a012e' },
+            { name: 'صورتی', code: '#d81b83' }
+        ];
+
+        function renderDefaultColors() {
+            const container = document.getElementById('defaultColors');
+            container.innerHTML = '';
+
+            defaultColors.forEach(color => {
+                const div = document.createElement('div');
+                div.className = 'color-option';
+                div.style.background = color.code;
+                div.setAttribute('data-color', color.name);
+                div.setAttribute('data-code', color.code);
+
+                if (selectedColors.includes(color.name)) {
+                    div.classList.add('selected');
+                }
+
+                div.onclick = function() { toggleColor(this); };
+                container.appendChild(div);
+            });
+        }
+
+        function addCustomColor() {
+            const picker = document.getElementById('customColorPicker');
+            const nameInput = document.getElementById('customColorName');
+            const colorName = nameInput.value.trim() || 'رنگ دلخواه';
+            const colorCode = picker.value;
+
+            const exists = defaultColors.some(c => c.name === colorName || c.code === colorCode);
+            if (exists) {
+                showToast('⚠️ این رنگ قبلاً وجود دارد');
+                return;
+            }
+
+            defaultColors.push({ name: colorName, code: colorCode });
+            renderDefaultColors();
+            nameInput.value = '';
+            picker.value = '#e74c3c';
+            showToast('✅ رنگ "' + colorName + '" با موفقیت اضافه شد');
+        }
+
+        function toggleColor(element) {
+            const colorName = element.getAttribute('data-color');
+            const index = selectedColors.indexOf(colorName);
+
+            if (index !== -1) {
+                selectedColors.splice(index, 1);
+                element.classList.remove('selected');
+                delete colorInventory[colorName];
+            } else {
+                selectedColors.push(colorName);
+                element.classList.add('selected');
+                colorInventory[colorName] = {};
+                fixedSizes.forEach(size => {
+                    colorInventory[colorName][size] = 0;
+                });
+            }
 
             renderColorInventory();
-            renderSizePrices();
-            imageFiles = [];
-            renderImages();
-            showToast('فرم پاک شد');
         }
-    }
 
-    // ===== INIT =====
-    renderSizePrices();
-    renderColorInventory();
-</script>
+        function renderColorInventory() {
+            const container = document.getElementById('colorInventoryContainer');
+            container.innerHTML = '';
+
+            if (selectedColors.length === 0) {
+                container.innerHTML =
+                    `<div style="color:#aaa; text-align:center; padding:20px; font-size:14px;">
+                        <i class="fas fa-hand-pointer"></i> روی رنگ‌ها کلیک کنید تا موجودی وارد کنید
+                    </div>`;
+                return;
+            }
+
+            selectedColors.forEach(colorName => {
+                const block = document.createElement('div');
+                block.className = 'color-inventory-block';
+
+                let sizesHTML = '';
+                fixedSizes.forEach(size => {
+                    const qty = colorInventory[colorName]?.[size] || 0;
+                    sizesHTML += `
+                        <div class="inv-size-row">
+                            <span class="inv-size-label">${size}</span>
+                            <input type="number" class="inv-qty-input" 
+                                   value="${qty}" 
+                                   min="0" 
+                                   step="1"
+                                   data-color="${colorName}"
+                                   data-size="${size}"
+                                   oninput="updateInventory(this)">
+                        </div>
+                    `;
+                });
+
+                const colorCode = getColorCode(colorName);
+                block.innerHTML = `
+                    <div class="color-inv-header">
+                        <span class="color-dot" style="background:${colorCode}; border:1px solid #ccc;"></span>
+                        <span class="color-name">${colorName}</span>
+                        <span class="remove-color" onclick="removeColor('${colorName}')">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                    </div>
+                    <div class="color-inv-sizes">
+                        ${sizesHTML}
+                    </div>
+                `;
+
+                container.appendChild(block);
+            });
+        }
+
+        function getColorCode(colorName) {
+            const found = defaultColors.find(c => c.name === colorName);
+            return found ? found.code : '#cccccc';
+        }
+
+        function updateInventory(input) {
+            const color = input.dataset.color;
+            const size = input.dataset.size;
+            const value = parseInt(input.value) || 0;
+
+            if (!colorInventory[color]) {
+                colorInventory[color] = {};
+            }
+            colorInventory[color][size] = Math.max(0, value);
+        }
+
+        function removeColor(colorName) {
+            selectedColors = selectedColors.filter(c => c !== colorName);
+            delete colorInventory[colorName];
+
+            const index = defaultColors.findIndex(c => c.name === colorName);
+            if (index !== -1) {
+                defaultColors.splice(index, 1);
+            }
+
+            renderDefaultColors();
+            renderColorInventory();
+
+            document.querySelectorAll('.color-option').forEach(opt => {
+                if (opt.getAttribute('data-color') === colorName) {
+                    opt.classList.remove('selected');
+                }
+            });
+        }
+
+        // ============================================================
+        // ===== SUBMIT =====
+        // ============================================================
+        function submitProduct() {
+            const productName = document.getElementById('productName').value.trim();
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value.trim();
+
+            const fabricType = document.getElementById('fabricType').value.trim();
+            const collarType = document.getElementById('collarType').value.trim();
+            const sleeveType = document.getElementById('sleeveType').value.trim();
+            const fabricThickness = document.getElementById('fabricThickness').value.trim();
+
+            if (!productName) {
+                showToast('لطفاً نام محصول را وارد کنید');
+                return;
+            }
+            // مقدار basePrice از فیلد مخفی خوانده می‌شود (که میانگین محاسبه شده را دارد)
+            const basePrice = parseInt(document.getElementById("basePrice").value);
+            if (!basePrice || basePrice <= 0) {
+                showToast("لطفاً حداقل برای یک سایز قیمت وارد کنید");
+                return;
+            }
+            if (!category) {
+                showToast('لطفاً دسته‌بندی را انتخاب کنید');
+                return;
+            }
+            if (selectedColors.length === 0) {
+                showToast('حداقل یک رنگ برای محصول انتخاب کنید');
+                return;
+            }
+
+            let hasPrice = false;
+            for (const size in sizePrices) {
+                if (sizePrices[size] > 0) hasPrice = true;
+            }
+            if (!hasPrice) {
+                showToast('حداقل یک سایز با قیمت بیشتر از صفر وارد کنید');
+                return;
+            }
+
+            let hasStock = false;
+            for (const color in colorInventory) {
+                for (const size in colorInventory[color]) {
+                    if (colorInventory[color][size] > 0) hasStock = true;
+                }
+            }
+            if (!hasStock) {
+                showToast('حداقل یک رنگ با موجودی بیشتر از صفر وارد کنید');
+                return;
+            }
+
+            if (imageFiles.length === 0) {
+                showToast('حداقل یک تصویر برای محصول انتخاب کنید');
+                return;
+            }
+
+            const genderMap = {
+                'زنانه': 'female',
+                'مردانه': 'male',
+                'بچگانه': 'kids'
+            };
+
+            const productData = {
+                product_name: productName,
+                base_price: parseInt(document.getElementById("basePrice").value) || 0,
+                discount_percent: parseInt(document.getElementById('discountPercent').value) || 0,
+                gender: genderMap[category],
+                description: description || 'بدون توضیحات',
+                specifications: {
+                    'جنس پارچه': fabricType,
+                    'مدل یقه': collarType,
+                    'نوع آستین': sleeveType,
+                    'ضخامت پارچه': fabricThickness,
+                },
+                size_prices: sizePrices,
+                colors: selectedColors.map(color => ({
+                    name: color,
+                    code: getColorCode(color),
+                    inventory: colorInventory[color] || {}
+                })),
+                images: imageFiles.map(img => img.data),
+                main_image_index: imageFiles.findIndex(img => img.isMain) || 0
+            };
+
+            fetch('/tailor-panel/products/register/submit/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify(productData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('✅ محصول با موفقیت ثبت شد!');
+                    setTimeout(() => clearForm(), 500);
+                } else {
+                    showToast('❌ خطا: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("❌ خطا:", error);
+                showToast('❌ خطا در ارتباط با سرور');
+            });
+        }
+
+        function getCsrfToken() {
+            const cookieValue = document.cookie.match(/csrftoken=([^;]+)/);
+            return cookieValue ? cookieValue[1] : '';
+        }
+
+        // ============================================================
+        // ===== CLEAR FORM =====
+        // ============================================================
+        function clearForm() {
+            if (confirm('آیا از پاک کردن فرم مطمئن هستید؟')) {
+                document.getElementById('productName').value = '';
+                document.getElementById('basePriceDisplay').value = '';
+                document.getElementById('basePrice').value = '0';
+                document.getElementById('category').value = '';
+                document.getElementById('description').value = '';
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+
+                selectedColors = [];
+                colorInventory = {};
+                sizePrices = {};
+                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+
+                renderColorInventory();
+                renderSizePrices();
+                imageFiles = [];
+                renderImages();
+                showToast('فرم پاک شد');
+            }
+        }
+
+        // ============================================================
+        // ===== INIT =====
+        // ============================================================
+        renderImages();
+        renderDefaultColors();
+        renderColorInventory();
+        renderSizePrices();
+    </script>
 
 </body>
 

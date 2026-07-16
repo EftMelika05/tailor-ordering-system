@@ -45,6 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.humanize"
+]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +136,13 @@ STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'dozino/static')
 ]
 
-AUTH_USER_MODEL='Account.User'
+# ===== تنظیمات ورود و خروج =====
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'
+
+AUTH_USER_MODEL= 'Account.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT =os.path.join(BASE_DIR / 'media')
+
