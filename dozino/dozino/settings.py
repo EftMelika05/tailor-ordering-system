@@ -31,7 +31,7 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = [
-    "tailor-ordering-system.onrender.com",
+    "Dozino.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
