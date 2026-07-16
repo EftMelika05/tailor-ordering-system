@@ -31,7 +31,7 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = [
-    "Dozino.onrender.com",
+    "dozino-knitwear.onrender.com/",
     "localhost",
     "127.0.0.1",
 ]
