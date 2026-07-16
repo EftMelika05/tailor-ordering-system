@@ -29,7 +29,12 @@ SECRET_KEY = 'django-insecure-sjn@^#w&&6xq^x42esu_(37g!_p7=^rk-_r24-l%^0q-y*6niq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = [
+    "tailor-ordering-system.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
