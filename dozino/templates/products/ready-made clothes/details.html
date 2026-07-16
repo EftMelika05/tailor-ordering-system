@@ -2,535 +2,579 @@
 {% load humanize %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>جزئیات محصول | دوزینو</title>
 
-    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/product detail.css' %}">
-</head>
+    <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'css/product detail.css' %}" />
+  </head>
 
-<body>
-
+  <body>
     <header class="topbar">
-        <nav>
-            <ul>
-                <li><a href="{% url 'index' %}">خانه</a></li>
-                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
-                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-                <li><a href="{% url 'index' %}#about">درباره ما</a></li>
-            </ul>
-        </nav>
-        <div class="logo">DOZINO</div>
-        <div class="header-icons">
-            {% if user.is_authenticated %}
-            <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
-            {% else %}
-            <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
-            {% endif %}
+      <nav>
+        <ul>
+          <li>
+            <a href="{% url 'index' %}">خانه</a>
+          </li>
+          <li>
+            <a href="{% url 'list' %}">محصولات آماده</a>
+          </li>
+          <li>
+            <a href="{% url 'index' %}#custom-section">دوخت سفارشی</a>
+          </li>
+          <li>
+            <a href="{% url 'index' %}#about">درباره ما</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="logo">DOZINO</div>
+      <div class="header-icons">
+        {% if user.is_authenticated %}
+          <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+        {% else %}
+          <a href="{% url 'login' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+        {% endif %}
 
-            {% if user.is_authenticated %}
-            <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
-            {% else %}
-            <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
-            {% endif %}
-        </div>
+        {% if user.is_authenticated %}
+          <a href="{% url 'profile' %}"><i class="fa-regular fa-user"></i></a>
+        {% else %}
+          <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
+        {% endif %}
+      </div>
     </header>
 
     <section class="product-detail">
-        <div class="container">
-            <div class="product-main">
-                <div class="product-gallery">
-                    {% if images %}
-                    <img src="{{ images.first.image.url }}" alt="تصویر اصلی" class="main-image" id="mainImage">
-                    {% else %}
-                    <img src="{% static 'imag/no-image.png' %}" alt="بدون عکس">
-                    {% endif %}
-                    <div class="thumbnail-list">
-                        {% for image in images %}
-                        <img src="{{ image.image.url }}" data-image="{{ image.image.url }}"
-                            class="thumbnail{% if forloop.first %} active{% endif %}" onclick="changeImage(this)">
-                        {% endfor %}
-                    </div>
-                </div>
+      <div class="container">
+        <div class="product-main">
+          <div class="product-gallery">
+            {% if images %}
+              <img src="{{ images.first.image.url }}" alt="تصویر اصلی" class="main-image" id="mainImage" />
+            {% else %}
+              <img src="{% static 'imag/no-image.png' %}" alt="بدون عکس" />
+            {% endif %}
+            <div class="thumbnail-list">
+              {% for image in images %}
+                <img src="{{ image.image.url }}" data-image="{{ image.image.url }}" class="thumbnail{% if forloop.first %} active{% endif %}" onclick="changeImage(this)" />
+              {% endfor %}
+            </div>
+          </div>
 
-                <div class="product-info-detail">
-                    <h1 class="product-title">{{ product.name }}</h1>
+          <div class="product-info-detail">
+            <h1 class="product-title">{{ product.name }}</h1>
 
-                    <div class="product-price-section">
-                        <span class="current-price" id="productPrice">{{ default_price|floatformat:0|intcomma }}</span>
-                        <span class="currency">تومان</span>
-                        
-                        {% if discount_percent > 0 %}
-                        <span class="old-price" id="originalPrice">{{ default_original_price|floatformat:0|intcomma }} تومان</span>
-                        <span class="discount-badge"><i class="fa-solid fa-fire"></i> {{ discount_percent }}% تخفیف ویژه</span>
-                        {% endif %}
-                    </div>
+            <div class="product-price-section">
+              <span class="current-price" id="productPrice">{{ default_price|floatformat:0|intcomma }}</span>
+              <span class="currency">تومان</span>
 
-                    <div class="size-selector">
-                        <div class="selector-title">
-                            <i class="fas fa-ruler-combined"></i> انتخاب سایز:
-                        </div>
-                        <div class="size-buttons" id="sizeButtons">
-                            {% for size in unique_sizes %}
-                            <button class="size-btn{% if size.name == 'M' %} active-size{% endif %}"
-                                data-size="{{ size.name }}" 
-                                data-price="{{ size.price }}" 
-                                data-original_price="{{ size.original_price }}"
-                                onclick="selectSize(this)">
-                                {{ size.name }}
-                            </button>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="color-selector">
-                        <div class="selector-title">
-                            <i class="fas fa-palette"></i> انتخاب رنگ:
-                        </div>
-                        <div class="color-buttons">
-                            {% for color in colors %}
-                            <div class="color-btn" style="background-color: {{ color.code|default:'#cccccc' }};"
-                                data-color="{{ color.name }}" onclick="selectColor(this, '{{ color.name }}')"></div>
-                            {% endfor %}
-                        </div>
-                        <div class="selected-color-text" id="selectedColorText">رنگ انتخاب شده: {{ colors.first.name }}
-                        </div>
-                    </div>
-
-                    <div class="quantity-selector">
-                        <div class="quantity-box">
-                            <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
-                            <input type="text" id="quantityInput" class="quantity-input" value="1" readonly>
-                            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
-                        </div>
-                    </div>
-
-                    <button class="btn-primary add-to-cart-detail" onclick="addToCartDetail()">
-                        <i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید
-                    </button>
-                    <div id="cartMessage" class="cart-message"></div>
-                </div>
+              {% if discount_percent > 0 %}
+                <span class="old-price" id="originalPrice">{{ default_original_price|floatformat:0|intcomma }} تومان</span>
+                <span class="discount-badge"><i class="fa-solid fa-fire"></i> {{ discount_percent }}% تخفیف ویژه</span>
+              {% endif %}
             </div>
 
-            <div class="product-tabs">
-                <div class="tabs-header">
-                    <button class="tab-btn active-tab" data-tab="desc"><i class="fas fa-align-right"></i> توضیحات
-                        محصول</button>
-                    <button class="tab-btn" data-tab="specs"><i class="fas fa-cog"></i> مشخصات فنی</button>
-                    <button class="tab-btn" data-tab="shipping"><i class="fas fa-truck"></i> راهنمای سایز و
-                        ارسال</button>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane active-pane" id="desc">
-                        <h3>معرفی محصول</h3>
-                        <p>{{ product.description }}</p>
-                        <br>
-                        <p><strong>ویژگی‌های برجسته:</strong></p>
-                        <ul>
-                            <li><i class="fa-solid fa-check"></i> جنس: پارچه تریکو مرغوب با کیفیت بالا</li>
-                            <li><i class="fa-solid fa-check"></i> دارای پارچه نرم و لطیف</li>
-                            <li><i class="fa-solid fa-check"></i> مناسب برای: خانه، دورهمی‌های دوستانه</li>
-                            <li><i class="fa-solid fa-check"></i> روش شستشو: ماشین لباسشویی</li>
-                            <li><i class="fa-solid fa-check"></i> ارسال سریع</li>
-                        </ul>
-                    </div>
-                    <div class="tab-pane" id="specs">
-                        <ul class="specs-list">
-                            {% for spec in specifications %}
-                            <li><strong>{{ spec.spec_name }}</strong> {{ spec.spec_value }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="tab-pane" id="shipping">
-                        <h3><i class="fas fa-ruler-combined"></i> جدول سایزبندی</h3>
-                        <div id="kidsTable" class="size-table-container" style="display: none;">
-                            <table class="size-table">
-                                <thead>
-                                    <tr>
-                                        <th>کدک</th>
-                                        <th>قد لباس</th>
-                                        <th>پایین لباس</th>
-                                        <th>قد آستین</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>۲ سال</td>
-                                        <td>۳۱</td>
-                                        <td>۳۰</td>
-                                        <td>۱۲</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۳ سال</td>
-                                        <td>۳۶.۵</td>
-                                        <td>۳۲</td>
-                                        <td>۱۳</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۴ سال</td>
-                                        <td>۳۷</td>
-                                        <td>۳۲</td>
-                                        <td>۱۳</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۵ سال</td>
-                                        <td>۴۰.۵</td>
-                                        <td>۳۴</td>
-                                        <td>۱۴</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۶ سال</td>
-                                        <td>۴۳</td>
-                                        <td>۳۴</td>
-                                        <td>۱۵</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۷ سال</td>
-                                        <td>۴۶.۵</td>
-                                        <td>۳۸</td>
-                                        <td>۱۶</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۹-۱۰ سال</td>
-                                        <td>۴۹</td>
-                                        <td>۴۰</td>
-                                        <td>۱۷</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۱۱-۱۲ سال</td>
-                                        <td>۵۱.۵</td>
-                                        <td>۴۲</td>
-                                        <td>۱۷</td>
-                                    </tr>
-                                    <tr>
-                                        <td>۱۳-۱۴ سال</td>
-                                        <td>۵۴</td>
-                                        <td>۴۲</td>
-                                        <td>۱۷</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="menTable" class="size-table-container" style="display: none;">
-                            <table class="size-table">
-                                <thead>
-                                    <tr>
-                                        <th>سایز</th>
-                                        <th>قد لباس</th>
-                                        <th>پایین لباس</th>
-                                        <th>قد آستین</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>S</td>
-                                        <td>۷۱</td>
-                                        <td>۵۴</td>
-                                        <td>۲۲</td>
-                                    </tr>
-                                    <tr>
-                                        <td>M</td>
-                                        <td>۷۲</td>
-                                        <td>۵۷</td>
-                                        <td>۲۴</td>
-                                    </tr>
-                                    <tr>
-                                        <td>L</td>
-                                        <td>۷۳</td>
-                                        <td>۵۸</td>
-                                        <td>۲۵</td>
-                                    </tr>
-                                    <tr>
-                                        <td>XL</td>
-                                        <td>۷۴</td>
-                                        <td>۶۳</td>
-                                        <td>۲۵</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="womenTable" class="size-table-container" style="display: block;">
-                            <table class="size-table">
-                                <thead>
-                                    <tr>
-                                        <th>سایز</th>
-                                        <th>قد لباس</th>
-                                        <th>پایین لباس</th>
-                                        <th>قد آستین</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>M</td>
-                                        <td>۶۱.۵</td>
-                                        <td>۵۲</td>
-                                        <td>۱۸</td>
-                                    </tr>
-                                    <tr>
-                                        <td>L</td>
-                                        <td>۶۶</td>
-                                        <td>۵۶</td>
-                                        <td>۱۸.۵</td>
-                                    </tr>
-                                    <tr>
-                                        <td>XL</td>
-                                        <td>۶۷.۵</td>
-                                        <td>۶۰</td>
-                                        <td>۲۱</td>
-                                    </tr>
-                                    <tr>
-                                        <td>XXL</td>
-                                        <td>۶۹.۵</td>
-                                        <td>۶۵</td>
-                                        <td>۲۳</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <h3><i class="fas fa-truck"></i> شرایط ارسال</h3>
-                        <p>ارسال رایگان برای خرید‌های بالای ۷۰۰ هزار تومان. زمان تحویل ۲ تا ۴ روز کاری در کرمان و ۳ تا ۷
-                            روز کاری در سایر شهرها.</p>
-                    </div>
-                </div>
+            <div class="size-selector">
+              <div class="selector-title">
+                <i class="fas fa-ruler-combined"></i> انتخاب سایز:
+              </div>
+              <div class="size-buttons" id="sizeButtons">
+                {% for size in unique_sizes %}
+                  <button class="size-btn{% if size.name == 'M' %} active-size{% endif %}" data-size="{{ size.name }}" data-price="{{ size.price }}" data-original_price="{{ size.original_price }}" onclick="selectSize(this)">{{ size.name }}</button>
+                {% endfor %}
+              </div>
             </div>
 
-            <div class="related-products">
-                <h2 class="related-title"><i class="fas fa-tag"></i> محصولات مرتبط</h2>
-                <div class="products-grid">
-                    {% for item in related_products %}
-                    <div class="product-card">
-                        <a href="{% url 'detail' item.slug %}">
-                            {% if item.images.first %}
-                            <img src="{{ item.images.first.image.url }}" alt="{{ item.name }}">
-                            {% else %}
-                            <img src="{% static 'imag/no-image.png' %}" alt="بدون عکس">
-                            {% endif %}
-                        </a>
-                        <div class="product-info">
-                            <h3><a href="{% url 'detail' item.slug %}">{{ item.name }}</a></h3>
-                        </div>
-                        <div class="product-price">
-                            <span>{{ item.price|floatformat:0|intcomma }}</span> تومان
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+            <div class="color-selector">
+              <div class="selector-title">
+                <i class="fas fa-palette"></i> انتخاب رنگ:
+              </div>
+              <div class="color-buttons">
+                {% for color in colors %}
+                  <div class="color-btn" style="background-color: {{ color.code|default:'#cccccc' }};" data-color="{{ color.name }}" onclick="selectColor(this, '{{ color.name }}')"></div>
+                {% endfor %}
+              </div>
+              <div class="selected-color-text" id="selectedColorText">رنگ انتخاب شده: {{ colors.first.name }}</div>
             </div>
+
+            <div class="quantity-selector">
+              <div class="quantity-box">
+                <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                <input type="text" id="quantityInput" class="quantity-input" value="1" readonly />
+                <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+              </div>
+            </div>
+
+            <button class="btn-primary add-to-cart-detail" onclick="addToCartDetail()"><i class="fa-solid fa-cart-plus"></i> افزودن به سبد خرید</button>
+            <div id="cartMessage" class="cart-message"></div>
+          </div>
         </div>
+
+        <div class="product-tabs">
+          <div class="tabs-header">
+            <button class="tab-btn active-tab" data-tab="desc"><i class="fas fa-align-right"></i> توضیحات محصول</button>
+            <button class="tab-btn" data-tab="specs"><i class="fas fa-cog"></i> مشخصات فنی</button>
+            <button class="tab-btn" data-tab="shipping"><i class="fas fa-truck"></i> راهنمای سایز و ارسال</button>
+          </div>
+          <div class="tab-content">
+            <div class="tab-pane active-pane" id="desc">
+              <h3>معرفی محصول</h3>
+              <p>{{ product.description }}</p>
+              <br />
+              <p>
+                <strong>ویژگی‌های برجسته:</strong>
+              </p>
+              <ul>
+                <li>
+                  <i class="fa-solid fa-check"></i> جنس: پارچه تریکو مرغوب با کیفیت بالا
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> دارای پارچه نرم و لطیف
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> مناسب برای: خانه، دورهمی‌های دوستانه
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> روش شستشو: ماشین لباسشویی
+                </li>
+                <li>
+                  <i class="fa-solid fa-check"></i> ارسال سریع
+                </li>
+              </ul>
+            </div>
+            <div class="tab-pane" id="specs">
+              <ul class="specs-list">
+                {% for spec in specifications %}
+                  <li>
+                    <strong>{{ spec.spec_name }}</strong> {{ spec.spec_value }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="tab-pane" id="shipping">
+              <h3><i class="fas fa-ruler-combined"></i> جدول سایزبندی</h3>
+              <div id="kidsTable" class="size-table-container" style="display: none;">
+                <table class="size-table">
+                  <thead>
+                    <tr>
+                      <th>کدک</th>
+                      <th>قد لباس</th>
+                      <th>پایین لباس</th>
+                      <th>قد آستین</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>۲ سال</td>
+                      <td>۳۱</td>
+                      <td>۳۰</td>
+                      <td>۱۲</td>
+                    </tr>
+                    <tr>
+                      <td>۳ سال</td>
+                      <td>۳۶.۵</td>
+                      <td>۳۲</td>
+                      <td>۱۳</td>
+                    </tr>
+                    <tr>
+                      <td>۴ سال</td>
+                      <td>۳۷</td>
+                      <td>۳۲</td>
+                      <td>۱۳</td>
+                    </tr>
+                    <tr>
+                      <td>۵ سال</td>
+                      <td>۴۰.۵</td>
+                      <td>۳۴</td>
+                      <td>۱۴</td>
+                    </tr>
+                    <tr>
+                      <td>۶ سال</td>
+                      <td>۴۳</td>
+                      <td>۳۴</td>
+                      <td>۱۵</td>
+                    </tr>
+                    <tr>
+                      <td>۷ سال</td>
+                      <td>۴۶.۵</td>
+                      <td>۳۸</td>
+                      <td>۱۶</td>
+                    </tr>
+                    <tr>
+                      <td>۹-۱۰ سال</td>
+                      <td>۴۹</td>
+                      <td>۴۰</td>
+                      <td>۱۷</td>
+                    </tr>
+                    <tr>
+                      <td>۱۱-۱۲ سال</td>
+                      <td>۵۱.۵</td>
+                      <td>۴۲</td>
+                      <td>۱۷</td>
+                    </tr>
+                    <tr>
+                      <td>۱۳-۱۴ سال</td>
+                      <td>۵۴</td>
+                      <td>۴۲</td>
+                      <td>۱۷</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="menTable" class="size-table-container" style="display: none;">
+                <table class="size-table">
+                  <thead>
+                    <tr>
+                      <th>سایز</th>
+                      <th>قد لباس</th>
+                      <th>پایین لباس</th>
+                      <th>قد آستین</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>S</td>
+                      <td>۷۱</td>
+                      <td>۵۴</td>
+                      <td>۲۲</td>
+                    </tr>
+                    <tr>
+                      <td>M</td>
+                      <td>۷۲</td>
+                      <td>۵۷</td>
+                      <td>۲۴</td>
+                    </tr>
+                    <tr>
+                      <td>L</td>
+                      <td>۷۳</td>
+                      <td>۵۸</td>
+                      <td>۲۵</td>
+                    </tr>
+                    <tr>
+                      <td>XL</td>
+                      <td>۷۴</td>
+                      <td>۶۳</td>
+                      <td>۲۵</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="womenTable" class="size-table-container" style="display: block;">
+                <table class="size-table">
+                  <thead>
+                    <tr>
+                      <th>سایز</th>
+                      <th>قد لباس</th>
+                      <th>پایین لباس</th>
+                      <th>قد آستین</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>M</td>
+                      <td>۶۱.۵</td>
+                      <td>۵۲</td>
+                      <td>۱۸</td>
+                    </tr>
+                    <tr>
+                      <td>L</td>
+                      <td>۶۶</td>
+                      <td>۵۶</td>
+                      <td>۱۸.۵</td>
+                    </tr>
+                    <tr>
+                      <td>XL</td>
+                      <td>۶۷.۵</td>
+                      <td>۶۰</td>
+                      <td>۲۱</td>
+                    </tr>
+                    <tr>
+                      <td>XXL</td>
+                      <td>۶۹.۵</td>
+                      <td>۶۵</td>
+                      <td>۲۳</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <br />
+              <h3><i class="fas fa-truck"></i> شرایط ارسال</h3>
+              <p>ارسال رایگان برای خرید‌های بالای ۷۰۰ هزار تومان. زمان تحویل ۲ تا ۴ روز کاری در کرمان و ۳ تا ۷ روز کاری در سایر شهرها.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="related-products">
+          <h2 class="related-title"><i class="fas fa-tag"></i> محصولات مرتبط</h2>
+          <div class="products-grid">
+            {% for item in related_products %}
+              <div class="product-card">
+                <a href="{% url 'detail' item.slug %}">
+                  {% if item.images.first %}
+                    <img src="{{ item.images.first.image.url }}" alt="{{ item.name }}" />
+                  {% else %}
+                    <img src="{% static 'imag/no-image.png' %}" alt="بدون عکس" />
+                  {% endif %}
+                </a>
+                <div class="product-info">
+                  <h3><a href="{% url 'detail' item.slug %}">{{ item.name }}</a></h3>
+                </div>
+                <div class="product-price">
+                  <span>{{ item.price|floatformat:0|intcomma }}</span> تومان
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </section>
 
     <footer>
-        <div class="footer-col">
-            <h2>DOZINO</h2>
-            <p>همراه شما در طراحی و دوخت لباس</p>
-            <div class="social">
-                <a href="https://instagram.com/YOURPAGE" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://t.me/YOURCHANNEL" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-                <a href="https://wa.me/989123456789" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
-            </div>
+      <div class="footer-col">
+        <h2>DOZINO</h2>
+        <p>همراه شما در طراحی و دوخت لباس</p>
+        <div class="social">
+          <a href="https://instagram.com/YOURPAGE" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://t.me/YOURCHANNEL" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+          <a href="https://wa.me/989123456789" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
-        <div class="footer-col">
-            <h3>دسترسی سریع</h3>
-            <ul>
-                <li><a href="{% url 'index' %}">خانه</a></li>
-                <li><a href="{% url 'list' %}">محصولات آماده</a></li>
-                <li><a href="{% url 'index' %}#custom-section">دوخت سفارشی</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h3>خدمات مشتریان</h3>
-            <ul>
-                <li><a href="{% url 'index' %}#userGuide">راهنمای خرید</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h3>خبرنامه</h3>
-            <input type="email" placeholder="ایمیل شما">
-            <button class="btn-subscribe"><i class="fa-regular fa-envelope"></i> عضویت</button>
-        </div>
-        <div class="footer-col">
-            <h3>تماس با ما</h3>
-            <p class="address" ><i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری</p>
-            <p><i class="fa-solid fa-phone"></i> شماره: 09139389391</p>
-        </div>
+      </div>
+      <div class="footer-col">
+        <h3>دسترسی سریع</h3>
+        <ul>
+          <li>
+            <a href="{% url 'index' %}">خانه</a>
+          </li>
+          <li>
+            <a href="{% url 'list' %}">محصولات آماده</a>
+          </li>
+          <li>
+            <a href="{% url 'index' %}#custom-section">دوخت سفارشی</a>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>خدمات مشتریان</h3>
+        <ul>
+          <li>
+            <a href="{% url 'index' %}#userGuide">راهنمای خرید</a>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>خبرنامه</h3>
+        <input type="email" placeholder="ایمیل شما" />
+        <button class="btn-subscribe"><i class="fa-regular fa-envelope"></i> عضویت</button>
+      </div>
+      <div class="footer-col">
+        <h3>تماس با ما</h3>
+        <p class="address">
+          <i class="fa-solid fa-location-dot"></i> آدرس: کرمان،بلوار هوانیروز/بلوار ستاری
+        </p>
+        <p>
+          <i class="fa-solid fa-phone"></i> شماره: 09139389391
+        </p>
+      </div>
     </footer>
 
     <script>
-        function changeImage(element) {
-            const imgSrc = element.dataset.image;
-            document.getElementById('mainImage').src = imgSrc;
-            document.querySelectorAll('.thumbnail').forEach(thumb => {
-                thumb.classList.remove('active');
-            });
-            element.classList.add('active');
+      function changeImage(element) {
+        const imgSrc = element.dataset.image
+        document.getElementById('mainImage').src = imgSrc
+        document.querySelectorAll('.thumbnail').forEach((thumb) => {
+          thumb.classList.remove('active')
+        })
+        element.classList.add('active')
+      }
+      
+      function selectSize(element) {
+        document.querySelectorAll('.size-btn').forEach((btn) => btn.classList.remove('active-size'))
+        element.classList.add('active-size')
+      
+        const price = parseInt(element.dataset.price) || 0
+        const originalPrice = parseInt(element.dataset.original_price) || 0
+      
+        // ===== نمایش قیمت با تخفیف =====
+        if (price) {
+          document.getElementById('productPrice').textContent = price.toLocaleString()
         }
-
-        function selectSize(element) {
-            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active-size'));
-            element.classList.add('active-size');
-            
-            const price = parseInt(element.dataset.price) || 0;
-            const originalPrice = parseInt(element.dataset.original_price) || 0;
-            
-            // ===== نمایش قیمت با تخفیف =====
-            if (price) {
-                document.getElementById('productPrice').textContent = price.toLocaleString();
-            }
-            
-            // ===== نمایش قیمت اصلی (قبل از تخفیف) =====
-            const originalPriceEl = document.getElementById('originalPrice');
-            if (originalPrice > 0 && originalPrice > price) {
-                originalPriceEl.textContent = originalPrice.toLocaleString() + ' تومان';
-                originalPriceEl.style.display = 'inline';
-            } else {
-                originalPriceEl.style.display = 'none';
-            }
+      
+        // ===== نمایش قیمت اصلی (قبل از تخفیف) =====
+        const originalPriceEl = document.getElementById('originalPrice')
+        if (originalPrice > 0 && originalPrice > price) {
+          originalPriceEl.textContent = originalPrice.toLocaleString() + ' تومان'
+          originalPriceEl.style.display = 'inline'
+        } else {
+          originalPriceEl.style.display = 'none'
         }
-
-        function selectColor(element, colorName) {
-            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active-color'));
-            element.classList.add('active-color');
-            document.getElementById('selectedColorText').innerHTML = 'رنگ انتخاب شده: ' + colorName;
+      }
+      
+      function selectColor(element, colorName) {
+        document.querySelectorAll('.color-btn').forEach((btn) => btn.classList.remove('active-color'))
+        element.classList.add('active-color')
+        document.getElementById('selectedColorText').innerHTML = 'رنگ انتخاب شده: ' + colorName
+      }
+      
+      let quantity = 1
+      
+      function changeQuantity(delta) {
+        let newQty = quantity + delta
+        if (newQty >= 1 && newQty <= 50) {
+          quantity = newQty
+          document.getElementById('quantityInput').value = quantity
         }
-
-        let quantity = 1;
-
-        function changeQuantity(delta) {
-            let newQty = quantity + delta;
-            if (newQty >= 1 && newQty <= 50) {
-                quantity = newQty;
-                document.getElementById('quantityInput').value = quantity;
-            }
+      }
+      
+      function addToCartDetail() {
+        // گرفتن سایز انتخاب شده
+        let selectedSize = 'M'
+        const activeSize = document.querySelector('.size-btn.active-size')
+        if (activeSize) {
+          selectedSize = activeSize.getAttribute('data-size')
         }
-
-        function addToCartDetail() {
-            // گرفتن سایز انتخاب شده
-            let selectedSize = "M";
-            const activeSize = document.querySelector('.size-btn.active-size');
-            if (activeSize) {
-                selectedSize = activeSize.getAttribute('data-size');
+      
+        // گرفتن رنگ
+        let selectedColor = null
+        const colorText = document.getElementById('selectedColorText')
+        if (colorText) {
+          const text = colorText.textContent
+          const parts = text.split('رنگ انتخاب شده: ')
+          if (parts.length > 1) {
+            selectedColor = parts[1].trim()
+          } else {
+            const match = text.match(/رنگ انتخاب شده:\s*(.+)/)
+            if (match && match[1]) {
+              selectedColor = match[1].trim()
             }
-            
-            // گرفتن رنگ
-            let selectedColor = null;
-            const colorText = document.getElementById('selectedColorText');
-            if (colorText) {
-                const text = colorText.textContent;
-                const parts = text.split('رنگ انتخاب شده: ');
-                if (parts.length > 1) {
-                    selectedColor = parts[1].trim();
-                } else {
-                    const match = text.match(/رنگ انتخاب شده:\s*(.+)/);
-                    if (match && match[1]) {
-                        selectedColor = match[1].trim();
-                    }
-                }
-            }
-
-            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
-            const productId = parseInt('{{ product.id }}');
-
-            fetch('/cart/add/ready/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    size: selectedSize,
-                    color: selectedColor,
-                    quantity: quantity
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    showToast('✅ محصول به سبد خرید اضافه شد!');
-                } else {
-                    showToast('❌ خطا: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('❌ خطا در ارتباط با سرور');
-            });
+          }
         }
-
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const panes = document.querySelectorAll('.tab-pane');
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function () {
-                const tabId = this.getAttribute('data-tab');
-                tabBtns.forEach(b => b.classList.remove('active-tab'));
-                this.classList.add('active-tab');
-                panes.forEach(pane => pane.classList.remove('active-pane'));
-                document.getElementById(tabId).classList.add('active-pane');
-            });
-        });
-
-        const productCategory = "{{ product.category.name }}";
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const kidsTable = document.getElementById('kidsTable');
-            const menTable = document.getElementById('menTable');
-            const womenTable = document.getElementById('womenTable');
-
-            if (kidsTable) kidsTable.style.display = 'none';
-            if (menTable) menTable.style.display = 'none';
-            if (womenTable) womenTable.style.display = 'none';
-
-            if (productCategory === 'kids') {
-                if (kidsTable) kidsTable.style.display = 'block';
-            } else if (productCategory === 'men') {
-                if (menTable) menTable.style.display = 'block';
-            } else {
-                if (womenTable) womenTable.style.display = 'block';
+      
+        const quantity = parseInt(document.getElementById('quantityInput').value) || 1
+        const productId = parseInt('{{ product.id }}')
+      
+        fetch('/cart/add/ready/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({
+            product_id: productId,
+            size: selectedSize,
+            color: selectedColor,
+            quantity: quantity
+          })
+        })
+          .then((response) => {
+            // ===== اگر لاگین نباشه =====
+            if (response.status === 403 || response.status === 401 || response.redirected) {
+              // نمایش پیام با استایل قرمز (خطا)
+              showToast('⚠️ لطفاً ابتدا وارد حساب کاربری خود شوید.', 'error')
+              // بعد از 1.5 ثانیه هدایت به صفحه لاگین
+              setTimeout(() => {
+                window.location.href = "{% url 'login' %}?next={{ request.path }}"
+              }, 1500)
+              return Promise.reject('Unauthorized')
             }
-        });
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
+            return response.json()
+          })
+          .then((data) => {
+            if (data && data.status === 'success') {
+              showToast('✅ محصول به سبد خرید اضافه شد!', 'success')
+            } else if (data && data.status === 'error') {
+              showToast('❌ خطا: ' + data.message, 'error')
             }
-            return cookieValue;
+          })
+          .catch((error) => {
+            if (error === 'Unauthorized') {
+              return
+            }
+            console.error('Error:', error)
+            showToast('❌ خطا در ارتباط با سرور', 'error')
+          })
+      }
+      
+      // ===== تابع showToast با پشتیبانی از نوع پیام =====
+      function showToast(message, type = 'success') {
+        const msgDiv = document.getElementById('cartMessage')
+        msgDiv.innerHTML = message
+      
+        if (type === 'success') {
+          msgDiv.style.background = '#d4edda'
+          msgDiv.style.color = '#155724'
+          msgDiv.style.border = '2px solid #c3e6cb'
+        } else {
+          msgDiv.style.background = '#f8d7da'
+          msgDiv.style.color = '#721c24'
+          msgDiv.style.border = '2px solid #f5c6cb'
         }
-
-        function showToast(message) {
-            const msgDiv = document.getElementById('cartMessage');
-            msgDiv.innerHTML = message;
-            msgDiv.style.background = "#d4edda";
-            msgDiv.style.color = "#155724";
-            msgDiv.style.border = "2px solid #c3e6cb";
-            msgDiv.style.borderRadius = "12px";
-            msgDiv.style.padding = "15px";
-            msgDiv.style.marginTop = "15px";
-            msgDiv.style.fontSize = "16px";
-            msgDiv.style.lineHeight = "2";
-
-            setTimeout(() => {
-                msgDiv.innerHTML = "";
-                msgDiv.style.background = "";
-                msgDiv.style.border = "";
-                msgDiv.style.padding = "";
-            }, 3000);
+      
+        msgDiv.style.borderRadius = '12px'
+        msgDiv.style.padding = '15px'
+        msgDiv.style.marginTop = '15px'
+        msgDiv.style.fontSize = '16px'
+        msgDiv.style.lineHeight = '2'
+        msgDiv.style.display = 'block'
+      
+        setTimeout(() => {
+          msgDiv.innerHTML = ''
+          msgDiv.style.display = 'none'
+          msgDiv.style.background = ''
+          msgDiv.style.border = ''
+          msgDiv.style.padding = ''
+        }, 3000)
+      }
+      
+      const tabBtns = document.querySelectorAll('.tab-btn')
+      const panes = document.querySelectorAll('.tab-pane')
+      
+      tabBtns.forEach((btn) => {
+        btn.addEventListener('click', function () {
+          const tabId = this.getAttribute('data-tab')
+          tabBtns.forEach((b) => b.classList.remove('active-tab'))
+          this.classList.add('active-tab')
+          panes.forEach((pane) => pane.classList.remove('active-pane'))
+          document.getElementById(tabId).classList.add('active-pane')
+        })
+      })
+      
+      const productCategory = '{{ product.category.name }}'
+      
+      document.addEventListener('DOMContentLoaded', function () {
+        const kidsTable = document.getElementById('kidsTable')
+        const menTable = document.getElementById('menTable')
+        const womenTable = document.getElementById('womenTable')
+      
+        if (kidsTable) kidsTable.style.display = 'none'
+        if (menTable) menTable.style.display = 'none'
+        if (womenTable) womenTable.style.display = 'none'
+      
+        if (productCategory === 'kids') {
+          if (kidsTable) kidsTable.style.display = 'block'
+        } else if (productCategory === 'men') {
+          if (menTable) menTable.style.display = 'block'
+        } else {
+          if (womenTable) womenTable.style.display = 'block'
         }
+      })
+      
+      function getCookie(name) {
+        let cookieValue = null
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';')
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim()
+            if (cookie.substring(0, name.length + 1) === name + '=') {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
+              break
+            }
+          }
+        }
+        return cookieValue
+      }
+      
+      
     </script>
-
-</body>
-
+  </body>
 </html>

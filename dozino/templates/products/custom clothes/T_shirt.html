@@ -375,11 +375,28 @@
     let toastTimer = null;
 
     function showToast(msg) {
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    
+    // تغییر استایل بر اساس نوع پیام
+    if (msg.includes('⚠️') || msg.includes('❌') || msg.includes('خطا')) {
+        toastEl.style.background = "#f8d7da";
+        toastEl.style.color = "#721c24";
+        toastEl.style.border = "2px solid #f5c6cb";
+    } else {
+        toastEl.style.background = "#d4edda";
+        toastEl.style.color = "#155724";
+        toastEl.style.border = "2px solid #c3e6cb";
     }
+    
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        toastEl.classList.remove('show');
+        toastEl.style.background = "";
+        toastEl.style.color = "";
+        toastEl.style.border = "";
+    }, 2500);
+}
     // ---------- آپدیت پیش‌نمایش ----------
     function updatePreview() {
 
@@ -447,85 +464,59 @@
 
     // ---------- رویداد ثبت سفارش ----------
     async function handleOrder() {
+    // ===== بررسی اینکه قیمت محاسبه شده یا نه =====
+    if (!priceIsFresh) {
+        showToast("⚠️ لطفاً ابتدا قیمت را محاسبه کنید.");
+        return;
+    }
 
-      if (!priceIsFresh) return;
+    const fabric = document.querySelector('input[name="fabric"]:checked').dataset.id;
+    const collar = document.querySelector('input[name="collar"]:checked').dataset.id;
+    const collarStyle = document.querySelector('input[name="collar"]:checked').value;
+    const sticker = document.querySelector('input[name="sticker"]:checked').dataset.id;
+    const color = document.querySelector('input[name="color"]:checked').dataset.color;
+    const bodyHeight = lenInput.value;
+    const bodyWidth = widInput.value;
+    const sleeveHeight = sleeveInput.value;
+    const quantity = qtyInput.value;
 
-      const fabric =
-        document.querySelector(
-          'input[name="fabric"]:checked'
-        ).dataset.id;
-
-      const collar =
-        document.querySelector(
-          'input[name="collar"]:checked'
-        ).dataset.id;
-
-      const collarStyle =
-        document.querySelector(
-          'input[name="collar"]:checked'
-        ).value;
-
-      const sticker =
-        document.querySelector(
-          'input[name="sticker"]:checked'
-        ).dataset.id;
-
-      const color =
-        document.querySelector(
-          'input[name="color"]:checked'
-        ).dataset.color;
-
-      const bodyHeight = lenInput.value;
-
-      const bodyWidth = widInput.value;
-
-      const sleeveHeight = sleeveInput.value;
-
-      const quantity = qtyInput.value;
-
-      const response = await fetch(
-        "/cart/add/tshirt/",
-        {
-          method: "POST",
-
-          headers: {
+    const response = await fetch("/cart/add/tshirt/", {
+        method: "POST",
+        headers: {
             "Content-Type": "application/json",
-
             "X-CSRFToken": getCookie("csrftoken")
-          },
-
-          body: JSON.stringify({
-
+        },
+        body: JSON.stringify({
             fabric: fabric,
             collar: collar,
             collar_style: collarStyle,
             sticker: sticker,
             color: color,
-
             body_height: bodyHeight,
             body_width: bodyWidth,
             sleeve_height: sleeveHeight,
-
             quantity: quantity,
             final_price: lastTotal
+        })
+    });
 
-          })
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.status === "success") {
-
-        showToast("به سبد خرید اضافه شد ✓");
-
-      } else {
-
-        showToast("خطا در افزودن به سبد خرید");
-
-      }
-
+     // ===== اگر لاگین نباشه (فقط 401 و 403) =====
+    if (response.status === 403 || response.status === 401) {
+        showToast("⚠️ لطفاً ابتدا وارد حساب کاربری خود شوید.");
+        setTimeout(() => {
+            window.location.href = "{% url 'login' %}?next={{ request.path }}";
+        }, 1500);
+        return;
     }
+
+    const data = await response.json();
+    if (data.status === "success") {
+        showToast("✅ به سبد خرید اضافه شد ✓");
+    } else {
+        showToast("❌ خطا در افزودن به سبد خرید: " + (data.message || ''));
+    }
+}
+
     function getCookie(name) {
 
       let cookieValue = null;

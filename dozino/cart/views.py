@@ -64,120 +64,140 @@ def cart_page(request):
 
     return render(request, "cart/cart.html", context)
 
-
 # ============================================================
 # افزودن تیشرت به سبد خرید
 # ============================================================
-@login_required
 def add_tshirt_to_cart(request):
-    if request.method != "POST":
-        return JsonResponse({"status": "error"})
-
-    data = json.loads(request.body)
+    # ===== بررسی لاگین =====
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "login_required"}, status=401)
     
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
-    fabric = Fabric.objects.get(id=data["fabric"])
-    collar = CollarType.objects.get(id=data["collar"])
+    try:
+        data = json.loads(request.body)
+        
+        cart, created = Cart.objects.get_or_create(user=request.user)
 
-    sticker = None
-    if data.get("sticker") and data["sticker"] != "0":
-        sticker = Sticker.objects.get(id=data["sticker"])
+        fabric = Fabric.objects.get(id=data["fabric"])
+        collar = CollarType.objects.get(id=data["collar"])
 
-    CustomTshirtCartItem.objects.create(
-        cart=cart,
-        fabric=fabric,
-        collar=collar,
-        sticker=sticker,
-        collar_style=data["collar_style"],
-        custom_color=data["color"],
-        body_height=data["body_height"],
-        body_width=data["body_width"],
-        sleeve_height=data["sleeve_height"],
-        quantity=data["quantity"],
-        final_price=data["final_price"]
-    )
+        sticker = None
+        if data.get("sticker") and data["sticker"] != "0":
+            sticker = Sticker.objects.get(id=data["sticker"])
 
-    return JsonResponse({"status": "success"})
+        CustomTshirtCartItem.objects.create(
+            cart=cart,
+            fabric=fabric,
+            collar=collar,
+            sticker=sticker,
+            collar_style=data["collar_style"],
+            custom_color=data["color"],
+            body_height=data["body_height"],
+            body_width=data["body_width"],
+            sleeve_height=data["sleeve_height"],
+            quantity=data["quantity"],
+            final_price=data["final_price"]
+        )
+
+        return JsonResponse({"status": "success"})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)})
 
 
 # ============================================================
 # افزودن هودی به سبد خرید
 # ============================================================
-@login_required
 def add_hoodie_to_cart(request):
-    if request.method != "POST":
-        return JsonResponse({"status": "error"})
-
-    data = json.loads(request.body)
+    # ===== بررسی لاگین =====
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "login_required"}, status=401)
     
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
-    fabric = Fabric.objects.get(id=data["fabric"])
-    hood = HoodType.objects.get(id=data["hood"])
-    zipper = ZipperType.objects.get(id=data["zipper"])
+    try:
+        data = json.loads(request.body)
+        
+        cart, created = Cart.objects.get_or_create(user=request.user)
 
-    sticker = None
-    if data.get("sticker") and data["sticker"] != "0":
-        sticker = Sticker.objects.get(id=data["sticker"])
+        fabric = Fabric.objects.get(id=data["fabric"])
+        hood = HoodType.objects.get(id=data["hood"])
+        zipper = ZipperType.objects.get(id=data["zipper"])
 
-    CustomHoodieCartItem.objects.create(
-        cart=cart,
-        fabric=fabric,
-        hood=hood,
-        zipper=zipper,
-        sticker=sticker,
-        custom_color=data["color"],
-        body_height=data["body_height"],
-        body_width=data["body_width"],
-        sleeve_height=data["sleeve_height"],
-        quantity=data["quantity"],
-        final_price=data["final_price"]
-    )
+        sticker = None
+        if data.get("sticker") and data["sticker"] != "0":
+            sticker = Sticker.objects.get(id=data["sticker"])
 
-    return JsonResponse({"status": "success"})
+        CustomHoodieCartItem.objects.create(
+            cart=cart,
+            fabric=fabric,
+            hood=hood,
+            zipper=zipper,
+            sticker=sticker,
+            custom_color=data["color"],
+            body_height=data["body_height"],
+            body_width=data["body_width"],
+            sleeve_height=data["sleeve_height"],
+            quantity=data["quantity"],
+            final_price=data["final_price"]
+        )
+
+        return JsonResponse({"status": "success"})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)})
 
 
 # ============================================================
 # افزودن شلوار به سبد خرید
 # ============================================================
-@login_required
 def add_pants_to_cart(request):
-    if request.method != "POST":
-        return JsonResponse({"status": "error"})
-
-    data = json.loads(request.body)
+    # ===== بررسی لاگین =====
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "login_required"}, status=401)
     
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
-    fabric = Fabric.objects.get(id=data["fabric"])
-    leg = LegType.objects.get(id=data["leg"])
-    pocket = PocketOption.objects.get(id=data["pocket"])
+    try:
+        data = json.loads(request.body)
+        
+        cart, created = Cart.objects.get_or_create(user=request.user)
 
-    CustomPantsCartItem.objects.create(
-        cart=cart,
-        fabric=fabric,
-        leg=leg,
-        pocket=pocket,
-        custom_color=data["color"],
-        pants_length=data["pants_height"],
-        waist=data["waist_width"],
-        hip_width=data["hip_width"],
-        thigh_width=data["thigh_width"],
-        quantity=data["quantity"],
-        final_price=data["final_price"]
-    )
+        fabric = Fabric.objects.get(id=data["fabric"])
+        leg = LegType.objects.get(id=data["leg"])
+        pocket = PocketOption.objects.get(id=data["pocket"])
 
-    return JsonResponse({"status": "success"})
+        CustomPantsCartItem.objects.create(
+            cart=cart,
+            fabric=fabric,
+            leg=leg,
+            pocket=pocket,
+            custom_color=data["color"],
+            pants_length=data["pants_height"],
+            waist=data["waist_width"],
+            hip_width=data["hip_width"],
+            thigh_width=data["thigh_width"],
+            quantity=data["quantity"],
+            final_price=data["final_price"]
+        )
+
+        return JsonResponse({"status": "success"})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)})
 
 
 # ============================================================
 # افزودن محصول آماده به سبد خرید
 # ============================================================
-@login_required
 def add_ready_to_cart(request):
+    # ===== بررسی لاگین =====
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "login_required"}, status=401)
+    
     if request.method != "POST":
-        return JsonResponse({"status": "error", "message": "Method not allowed"})
+        return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
     try:
         data = json.loads(request.body)
@@ -234,8 +254,7 @@ def add_ready_to_cart(request):
         
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)})
-
-
+    
 # ============================================================
 # حذف آیتم از سبد خرید
 # ============================================================
