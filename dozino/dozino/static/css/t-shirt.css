@@ -927,3 +927,96 @@ footer ul a:hover {
     margin-left: 8px;
     color: inherit;
 }
+
+@media (max-width: 992px) {
+    header {
+        flex-direction: column;
+        height: auto;
+        padding: 20px 40px;
+        gap: 15px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .logo {
+        font-size: 32px;
+    }
+
+    nav {
+        position: static;
+        width: 100%;
+    }
+
+    nav ul {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    nav a {
+        font-size: 16px;
+    }
+
+    .header-icons {
+        position: static;
+        gap: 18px;
+        font-size: 18px;
+    }
+
+    footer {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+        padding: 50px 5%;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+        gap: 12px;
+    }
+
+    .logo {
+        font-size: 28px;
+    }
+
+    nav ul {
+        gap: 14px;
+    }
+
+    nav a {
+        font-size: 14px;
+    }
+
+    .header-icons {
+        gap: 14px;
+        font-size: 16px;
+    }
+
+    footer {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    footer h2 {
+        font-size: 28px;
+    }
+
+    footer h3 {
+        font-size: 18px;
+    }
+
+    .social {
+        justify-content: center;
+    }
+
+    .footer-col input {
+        width: 100%;
+    }
+
+    .footer-col button {
+        width: 100%;
+        justify-content: center;
+    }
+}

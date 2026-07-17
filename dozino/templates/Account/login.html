@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'fonts/web/font-face.css' %}">
-    <link rel="stylesheet" href="{$ static 'assets/FontAwesome.Pro.7.2.0/css/all.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <style>
         * {
@@ -18,14 +18,13 @@
 
         @font-face {
             font-family: 'Gandom';
-            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot');
-            src: url('assets/font/gandom-font-v0.5.1/Gandom.eot?#iefix') format('embedded-opentype'),
-                url('assets/font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
-                url('assets/font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
+            src: url('{% static "font/gandom-font-v0.5.1/Gandom.eot" %}');
+            src: url('{% static "font/gandom-font-v0.5.1/Gandom.eot?#iefix" %}') format('embedded-opentype'),
+            url('{% static "font/gandom-font-v0.5.1/Gandom.woff" %}') format('woff'),
+            url('{% static "font/gandom-font-v0.5.1/Gandom.ttf" %}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
-
 
         html,
         body {
@@ -43,8 +42,6 @@
 
         }
 
-
-        /* Top Bar */
         .topbar {
             width: 100%;
             height: 90px;
@@ -82,9 +79,7 @@
             fill: #c9a86a;
         }
 
-
         .logo {
-            font-family: Tahoma, sans-serif !important;
             font-size: 34px;
             color: #c9a86a;
             line-height: 1;
@@ -92,8 +87,6 @@
             margin-right: auto;
             direction: ltr;
         }
-
-
 
         .auth-card {
             display: grid;
@@ -165,12 +158,18 @@
             opacity: .7;
         }
 
-        .eye {
+        .field .eye-btn {
+            background: none;
             border: none;
-            background: transparent;
+            color: #a0988a;
+            font-size: 18px;
             cursor: pointer;
-            font-size: 16px;
-            opacity: .7;
+            padding: 0;
+            transition: 0.3s;
+        }
+
+        .field .eye-btn:hover {
+            color: #c9a86a;
         }
 
         .btn {
@@ -209,7 +208,6 @@
             text-decoration: underline;
         }
 
-
         .right {
             position: relative;
             min-height: 520px;
@@ -228,7 +226,6 @@
             object-position: center;
         }
 
-        /* ریسپانسیو */
         @media(max-width: 800px) {
             .auth-card {
                 grid-template-columns: 1fr;
@@ -244,9 +241,7 @@
 <body>
 
     <header class="topbar">
-
         <a class="home-link" href="{% url 'index'%}" aria-label="صفحه اصلی" title="صفحه اصلی">
-            <!-- SVG Home Icon -->
             <svg class="home-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                     d="M12 3.2 3 10.4v10.4c0 .6.4 1 1 1h5.5v-7.2c0-.6.4-1 1-1h3c.6 0 1 .4 1 1V22H20c.6 0 1-.4 1-1V10.4l-9-7.2z" />
@@ -258,31 +253,36 @@
     <div class="auth-card">
         <div class="left">
             <header class="brand">
-                <img src="{% static 'imag/logo.png' %}"  alt="logo" class="logo-mark">
+                <img src="{% static 'imag/logo.png' %}" alt="logo" class="logo-mark">
                 <div class="brand-name">Dozino</div>
             </header>
 
-            {% include 'includes/messages.html' %}             
+            {% include 'includes/messages.html' %}
+
             <form id="loginForm" method="POST">
-                     {% csrf_token %}
+                {% csrf_token %}
+
                 <div class="field">
-                    <label class="field-icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></label>
-                    <input type="tel" id="phoneInput" name="username" placeholder="username" required />
+                    <span class="field-icon"><i class="fa-solid fa-phone"></i></span>
+                    <input type="tel" id="phoneInput" name="username" placeholder="phone number" required>
                 </div>
                 <div class="field">
-                    <label class="field-icon" aria-hidden="true">🔒</label>
-                    <input type="password"  name="password" placeholder="Password" required />
+                    <span class="field-icon"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" id="passwordInput" name="password" placeholder="password" required>
+                    <button type="button" class="eye-btn" onclick="togglePassword()">
+                        <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                    </button>
                 </div>
                 <button type="submit" class="btn">ورود</button>
 
                 <p class="link">
-                    حساب هنوز کاربری ندارید؟ <a href="{% url 'register' %}">ثبت نام کنید </a>
+                    هنوز اکانت نداری؟ <a href="{% url 'register' %}">ثبت نام کن</a>
                 </p>
                 <p class="link">
-                    پسورد خود را فراموش کرده اید ؟ <a href="{% url 'resetpassword'  %}">رمز خود  را بازیابی کنید</a>
+                    پسوردت رو فراموش کردی؟ <a href="{% url 'resetpassword' %}">رمز خود را بازیابی کن</a>
                 </p>
 
-            </form >
+            </form>
         </div>
         <div class="right">
             <img src="{% static 'imag/home/L-R.png' %}" alt="image" />
@@ -290,6 +290,31 @@
     </div>
 
     <br>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.className = 'fa-regular fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.className = 'fa-regular fa-eye';
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            // فرم به صورت عادی به سرور ارسال میشه
+        });
+
+        function downloadGuide() {
+            const imageUrl = "{% static 'images/size-guide.dors.jpg' %}";
+            window.open(imageUrl, '_blank');
+        }
+    </script>
+
 </body>
 
 </html>

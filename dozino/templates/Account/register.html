@@ -8,8 +8,8 @@
     <title>sign up</title>
 
     <link rel="shortcut icon" href="{% static 'imag/Dozino_Logo_Transparent.png' %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'font/font-face.css' %}">
-    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'fonts/web/font-face.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 
     <style>
@@ -20,10 +20,10 @@
 
         @font-face {
             font-family: 'Gandom';
-            src: url('font/gandom-font-v0.5.1/Gandom.eot');
-            src: url('font/gandom-font-v0.5.1/Gandom.eot?#iefix') format('embedded-opentype'),
-                url('font/gandom-font-v0.5.1/Gandom.woff') format('woff'),
-                url('font/gandom-font-v0.5.1/gandom.ttf') format('truetype');
+            src: url('{% static "font/gandom-font-v0.5.1/Gandom.eot" %}');
+            src: url('{% static "font/gandom-font-v0.5.1/Gandom.eot?#iefix" %}') format('embedded-opentype'),
+            url('{% static "font/gandom-font-v0.5.1/Gandom.woff" %}') format('woff'),
+            url('{% static "font/gandom-font-v0.5.1/Gandom.ttf" %}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -296,8 +296,8 @@
                 <h1 class="title">به دوزینو خوش اومدید</h1>
                 <p class="subtitle">در یک دقیقه اکانت خود را بسازید</p>
                 {% include 'includes/messages.html' %}
-                <form class="form" method="POST" >
-                        {% csrf_token %}
+                <form class="form" method="POST">
+                    {% csrf_token %}
                     <div class="field">
                         <label class="field-icon" aria-hidden="true"><i class="fas fa-user"></i></label>
                         <input type="text" name="username" placeholder="Username" required />
@@ -379,7 +379,7 @@
         document.querySelector('input[name="password2"]').addEventListener('input', function () {
             this.setCustomValidity('');
         });
- 
+
     </script>
 
 </body>
